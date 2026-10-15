@@ -74,11 +74,9 @@ function input(obj, key, attrs = {}) {
   n.value = obj[key] ?? ""; n.addEventListener("input", () => { obj[key] = n.value; });
   return n;
 }
-function genPassword() {
-  const k = "bcdfghjklmnprstw", v = "aiueo"; let s = "";
-  for (let i = 0; i < 4; i++) s += k[Math.floor(Math.random()*k.length)] + v[Math.floor(Math.random()*v.length)];
-  return s + Math.floor(10 + Math.random()*90);
-}
+// Sandi awal seragam untuk akun baru & reset. Wajib diganti pemiliknya saat pertama masuk.
+const SANDI_AWAL = "password";
+function genPassword() { return SANDI_AWAL; }
 const toEmail = u => { u = u.trim().toLowerCase(); return u.includes("@") ? u : `${u}@${DOMAIN}`; };
 async function fnErr(error) {
   try { const b = await error.context.json(); return b.error || error.message; } catch { return error.message || "Terjadi kesalahan."; }
@@ -179,6 +177,32 @@ function renderSetup() {
       btn, msg)));
 }
 
+function renderWajibGanti() {
+  const f = { p:"", p2:"" };
+  const msg = el("p", { class:"hint" }, "Sandimu masih sandi awal dari admin. Ganti dulu dengan sandi milikmu sendiri sebelum mulai, supaya tidak ada orang lain yang bisa masuk ke akunmu.");
+  const btn = el("button", { class:"btn", type:"submit" }, "Simpan sandi baru");
+  const salah = t => { msg.className = "err"; msg.textContent = t; };
+  root().replaceChildren(authShell(
+    el("h2", { style:"margin-top:16px" }, `Halo, ${S.me.nama}!`),
+    el("form", { onsubmit: async e => {
+      e.preventDefault();
+      if (f.p.length < 8) return salah("Sandi baru minimal 8 karakter.");
+      if (f.p.trim().toLowerCase() === SANDI_AWAL) return salah("Pilih sandi lain, jangan sama dengan sandi awal.");
+      if (f.p !== f.p2) return salah("Konfirmasi sandi tidak sama.");
+      btn.disabled = true; msg.className = "hint"; msg.textContent = "Menyimpan…";
+      const { error } = await sb.auth.updateUser({ password: f.p });
+      if (error) { btn.disabled = false; return salah("Gagal menyimpan: " + error.message); }
+      await sb.rpc("selesai_ganti_sandi");
+      toast("Sandi baru tersimpan");
+      boot();
+    }},
+      msg,
+      el("label", { class:"lbl" }, "Sandi baru (minimal 8 karakter)", input(f, "p", { type:"password", autocomplete:"new-password" })),
+      el("label", { class:"lbl" }, "Ulangi sandi baru", input(f, "p2", { type:"password", autocomplete:"new-password" })),
+      btn,
+      el("button", { class:"btn ghost", type:"button", onclick: async () => { await sb.auth.signOut(); boot(); } }, "Keluar"))));
+}
+
 /* ================= BOOT & SHELL ================= */
 let hashBound = false;
 async function boot() {
@@ -196,6 +220,7 @@ async function boot() {
       return;
     }
     S.me = me;
+    if (me.wajib_ganti_sandi) return renderWajibGanti();
     await loadBase();
     if (!hashBound) { window.addEventListener("hashchange", route); hashBound = true; }
     route();
@@ -726,7 +751,9 @@ async function viewAkun() {
       el("div", el("button", { class:"btn", onclick: async () => {
         if (f.p.length < 8) { msg.className = "err"; msg.textContent = "Minimal 8 karakter."; return; }
         if (f.p !== f.p2) { msg.className = "err"; msg.textContent = "Konfirmasi tidak sama."; return; }
+        if (f.p.trim().toLowerCase() === SANDI_AWAL) { msg.className = "err"; msg.textContent = "Pilih sandi lain, jangan sama dengan sandi awal."; return; }
         const { error } = await sb.auth.updateUser({ password: f.p });
+        if (!error) await sb.rpc("selesai_ganti_sandi");
         msg.className = error ? "err" : "ok"; msg.textContent = error ? "Gagal: " + error.message : "Kata sandi berhasil diganti.";
       } }, "Simpan kata sandi")), msg),
     el("div", el("button", { class:"btn ghost", onclick: async () => { await sb.auth.signOut(); location.hash = ""; boot(); } }, "Keluar")));
@@ -907,11 +934,11 @@ async function viewAtur() {
     const teks = hasil.map(h => `${h.nama}\nUsername: ${h.username}\nKata sandi: ${h.pw}`).join("\n\n");
     const baru = { nama:"", username:"", peran:"sms" };
     box.replaceChildren(
-      el("div", el("h1", "Atur tim"), el("p", { class:"hint" }, `Anggota login di ${location.host} dengan username dan kata sandi, tanpa email. Kirim username dan sandi lewat WhatsApp; mereka bisa menggantinya sendiri di menu Akun.`)),
+      el("div", el("h1", "Atur tim"), el("p", { class:"hint" }, `Anggota login di ${location.host} dengan username dan sandi awal "${SANDI_AWAL}", tanpa email. Saat pertama masuk, mereka wajib mengganti sandinya sendiri. Reset sandi juga mengembalikan ke sandi awal.`)),
       hasil.length ? el("section", { class:"panel pad stack", style:"gap:10px;border-color:var(--brand)" },
         el("div", { class:"row between" }, el("h2", "Kirimkan ke masing-masing anggota"),
           el("button", { class:"btn sm", onclick: async () => { try { await navigator.clipboard.writeText(teks); toast("Disalin"); } catch { toast("Salin manual dari tabel"); } } }, "Salin semua")),
-        el("div", { class:"note warn" }, "Kata sandi ini hanya ditampilkan sekali. Salin sekarang sebelum pindah halaman."),
+        el("div", { class:"note warn" }, `Sandi awal semua akun adalah "${SANDI_AWAL}". Setiap anggota wajib menggantinya sendiri saat pertama kali masuk.`),
         el("div", { class:"table-wrap" }, el("table", el("thead", el("tr", el("th", "Nama"), el("th", "Username"), el("th", "Kata sandi"))),
           el("tbody", hasil.map(h => el("tr", el("td", h.nama), el("td", h.username), el("td", el("code", h.pw)))))))) : null,
       resets.length ? el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Permintaan reset sandi"),
