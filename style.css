@@ -1,5 +1,5 @@
 /* =====================================================================
-   Teras — gaya "Pop brutalis", seragam dengan Live Hub.
+   Spill — gaya "Pop brutalis", seragam dengan Live Hub.
    Garis hitam tebal, bayangan offset, blok warna cerah, latar bertitik.
    ===================================================================== */
 @font-face{font-family:"Bricolage Grotesque";font-weight:500;font-display:swap;src:url(/fonts/bricolage-grotesque-latin-500-normal.woff2) format("woff2")}
@@ -156,6 +156,8 @@ button.card:hover{box-shadow:var(--sh)}
 .tile{border:2px solid var(--ink);border-radius:18px;box-shadow:var(--sh);padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:4px;min-height:96px;justify-content:flex-end}
 .tile b{font-family:var(--disp);font-weight:800;font-size:1.15rem;letter-spacing:-.02em}
 .tile small{font-weight:600;opacity:.75}
+.tiles.links{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.tile .chip{color:var(--ink)}
 .t-lime{background:var(--lime)}.t-sky{background:var(--sky)}.t-pink{background:var(--pink);color:#fff}.t-orange{background:var(--orange)}.t-yellow{background:var(--yellow)}.t-white{background:#fff}
 
 /* ---------- ringkasan tim ---------- */
@@ -193,6 +195,77 @@ button.card:hover{box-shadow:var(--sh)}
 #toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-size:.9rem;font-weight:700;opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;max-width:90vw;box-shadow:3px 3px 0 var(--lime)}
 #toast.show{opacity:1}
 
+/* ---------- logo Spill ---------- */
+.logo-wrap{display:inline-flex;align-items:center;gap:4px}
+.logo-wrap svg{width:36px;height:auto;flex:none;margin-top:4px}
+.logo{text-transform:lowercase}
+.auth .logo-wrap svg{width:44px}
+.auth .logo{font-size:1.6rem}
+
+/* ---------- struktur tim ---------- */
+.org{display:flex;flex-direction:column;align-items:center}
+.org-level{display:flex;flex-direction:column;align-items:center;gap:10px;width:100%}
+.org-line{width:3px;height:26px;background:var(--ink);border-radius:2px}
+.org-label{font-size:.76rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:2px 12px}
+.org-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;width:100%}
+.org-divs{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;align-items:flex-start;width:100%}
+.org-div{flex:0 1 auto;border:2px dashed var(--ink);border-radius:22px;padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;background:rgba(255,255,255,.45)}
+.org-div.lebar{flex:1 1 560px}
+.org-card{display:flex;gap:10px;align-items:center;background:#fff;border:2px solid var(--ink);border-radius:16px;box-shadow:var(--sh);padding:10px 14px;width:200px}
+.org-card.lead{background:var(--lime);width:260px}
+.org-card b{display:block;font-size:.95rem}
+.org-card small{display:block;color:var(--muted);font-size:.78rem;line-height:1.3}
+.org-card small.peg{color:var(--ink);font-weight:600;margin-top:2px}
+td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
+@media (max-width:620px){.org-card{width:100%}.org-card.lead{width:100%}}
+
+/* ---------- papan juara & lencana ---------- */
+.juara-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;align-items:start}
+.juara{overflow:hidden}
+.juara-head{display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-bottom:2px solid var(--ink);background:var(--yellow)}
+.juara-grid .juara:nth-child(4n+2) .juara-head{background:var(--sky)}
+.juara-grid .juara:nth-child(4n+3) .juara-head{background:var(--lime)}
+.juara-grid .juara:nth-child(4n+4) .juara-head{background:var(--orange)}
+.juara-head .hint{color:var(--ink);opacity:.75;margin-top:2px;font-size:.8rem}
+.juara-emoji{font-size:1.9rem;line-height:1}
+.podium{list-style:none;margin:0;padding:10px 14px 14px;display:flex;flex-direction:column;gap:8px}
+.podium li{display:flex;gap:10px;align-items:center;border:2px solid var(--ink);border-radius:14px;padding:8px 12px;background:#fff}
+.podium li:first-child{background:var(--yellow);box-shadow:3px 3px 0 var(--ink)}
+.podium li.aku{outline:3px solid var(--pink);outline-offset:1px}
+.podium b{display:block}
+.podium small{display:block;color:var(--muted);font-size:.78rem}
+.medali{font-size:1.5rem}
+.lencana-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.lencana{border:2px solid var(--ink);border-radius:16px;background:#fff;padding:12px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px;box-shadow:2px 2px 0 var(--ink)}
+.lencana span{font-size:1.8rem;line-height:1.2}
+.lencana b{font-size:.88rem}
+.lencana small{font-size:.74rem;color:var(--muted)}
+.lencana.belum{opacity:.55;box-shadow:none;border-style:dashed}
+.lencana-mini{font-size:1.15rem;margin-right:2px;cursor:help}
+
+/* ---------- spill menang ---------- */
+.menang-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px;align-items:start}
+.menang{overflow:hidden}
+.menang.viral{background:var(--yellow)}
+.menang img{display:block;width:100%;max-height:340px;object-fit:cover;border-bottom:2px solid var(--ink)}
+.menang-angka{font-family:var(--disp);font-weight:800;font-size:1.3rem;letter-spacing:-.02em;line-height:1.15}
+.mot.apr{background:var(--lime)}
+.mot.apr::after{background:var(--sky)}
+
+/* ---------- motivasi harian ---------- */
+.overlay{position:fixed;inset:0;z-index:80;background:rgba(18,18,18,.45);display:grid;place-items:center;padding:20px;animation:muncul .2s ease-out}
+.mot{width:100%;max-width:460px;background:var(--yellow);border:2px solid var(--ink);border-radius:24px;box-shadow:8px 8px 0 var(--ink);padding:26px 26px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;position:relative;overflow:hidden}
+.mot::after{content:"";position:absolute;right:-34px;top:-34px;width:120px;height:120px;border-radius:42% 58% 63% 37%/45% 38% 62% 55%;background:var(--pink);border:2px solid var(--ink)}
+.mot .sticker{background:var(--sky);color:var(--ink);position:relative;z-index:1}
+.mot-sapa{font-weight:800;font-size:1rem;position:relative;z-index:1}
+.mot-teks{margin:0;font-family:var(--disp);font-weight:800;font-size:1.65rem;line-height:1.15;letter-spacing:-.03em;position:relative;z-index:1}
+.mot .btn{background:#fff;margin-top:4px}
+.mot-mini{background:var(--yellow);border:2px solid var(--ink);border-radius:16px;box-shadow:var(--sh);padding:12px 16px}
+.mot-mini small{display:block;font-size:.74rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;opacity:.7}
+.mot-mini p{font-family:var(--disp);font-weight:800;font-size:1.08rem;line-height:1.25;letter-spacing:-.02em;margin-top:2px}
+@keyframes muncul{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.overlay{animation:none}}
+
 /* ---------- HP ---------- */
 @media (max-width:899px){
   .shell{grid-template-columns:1fr}
@@ -217,4 +290,5 @@ button.card:hover{box-shadow:var(--sh)}
   .bub{max-width:90%}
   .stat b{font-size:1.7rem}
   .tiles{grid-template-columns:1fr 1fr}
+  .tiles.links{grid-template-columns:1fr}
 }

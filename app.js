@@ -2,7 +2,15 @@
 /* ================= KONFIGURASI ================= */
 const SB_URL = "https://qkkeeifefgmzkzdawpzr.supabase.co";
 const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFra2VlaWZlZmdtemt6ZGF3cHpyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwMjEyMzQsImV4cCI6MjEwNzU5NzIzNH0.mZue4Yx778SLzIlMb8-fpdNktMCrFOUd6IdAxeANpSk";
+// Domain internal untuk akun login. JANGAN diganti walaupun nama aplikasi berubah, karena akun yang sudah ada memakai domain ini.
 const DOMAIN = "teras.cerebrum.id";
+const LOGO_MARK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 66 74" aria-hidden="true"><g transform="translate(1,1) scale(1)"><path d="M18 4 H44 A14 14 0 0 1 58 18 V26 A14 14 0 0 1 44 40 H28 V50 A5 5 0 0 1 18 50 V40 A14 14 0 0 1 4 26 V18 A14 14 0 0 1 18 4 Z" transform="translate(3.5,3.5)" fill="#121212"/><path d="M23 57 C23 57 18 62.5 18 65 A5 5 0 0 0 28 65 C28 62.5 23 57 23 57 Z" transform="translate(2.2,2.2)" fill="#121212"/><path d="M18 4 H44 A14 14 0 0 1 58 18 V26 A14 14 0 0 1 44 40 H28 V50 A5 5 0 0 1 18 50 V40 A14 14 0 0 1 4 26 V18 A14 14 0 0 1 18 4 Z" fill="#ff4f8b" stroke="#121212" stroke-width="3.2" stroke-linejoin="round"/><path d="M23 57 C23 57 18 62.5 18 65 A5 5 0 0 0 28 65 C28 62.5 23 57 23 57 Z" fill="#ff4f8b" stroke="#121212" stroke-width="2.72" stroke-linejoin="round"/><circle cx="20" cy="22" r="3.8" fill="#121212"/><circle cx="31" cy="22" r="3.8" fill="#121212"/><circle cx="42" cy="22" r="3.8" fill="#121212"/></g></svg>`;
+function logo() {
+  const s = document.createElement("span");
+  s.className = "logo-wrap";
+  s.innerHTML = LOGO_MARK + '<span class="logo">spill</span>';
+  return s;
+}
 const sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
 const HAMBATAN = ["Tidak ada hambatan","Tidak tahu caranya","Menunggu orang lain","Tidak yakin prioritas","Waktu habis untuk hal lain","Energi sedang turun"];
@@ -16,6 +24,75 @@ const PANDUAN = {
 const PLATFORM = ["TikTok","Instagram","Web","YouTube","Threads"];
 const FORMAT = ["Video pendek","Carousel","Single post","Story","Live"];
 const ENERGI = ["Lelah sekali","Kurang","Biasa","Baik","Semangat"];
+// Kata motivasi harian: semua orang melihat kalimat yang sama di hari yang sama, berganti setiap hari.
+const MOTIVASI = [
+ "Algoritma boleh labil, kamu jangan. Gas posting!",
+ "Overthinking caption 3 jam? Posting dulu, revisi belakangan. Yang penting tayang, bestie.",
+ "Engagement lagi sepi? Tenang, mantan aja bisa balik, apalagi views.",
+ "Hari ini mungkin belum masuk FYP, tapi tetap hari yang pas buat bikin konten lebih bagus dari kemarin.",
+ "Mager itu manusiawi. Deadline-nya yang nggak manusiawi. Yuk, satu tugas dulu.",
+ "Kamu bukan robot, jadi wajar capek. Bedanya, robot nggak bisa bikin hook sekreatif kamu.",
+ "Eksperimen gagal? Selamat, kamu baru nemu satu cara yang nggak perlu dicoba lagi. Hemat waktu, kan?",
+ "Kopi boleh dingin, semangat jangan.",
+ "Bikin konten itu kayak masak mi instan: ada aturannya, tapi topping-nya bebas berkreasi.",
+ "Malu bertanya, sesat di dashboard insight. Kalau bingung, tanya aja.",
+ "Musuh terbesar hari ini bukan deadline, tapi tab TikTok yang kebuka \"cuma sebentar\".",
+ "Satu komentar dibalas = satu calon pejuang ASN merasa didengar. Itu bukan receh, itu impact.",
+ "Reminder: angka engagement bukan angka harga diri. Kamu tetap keren walaupun views lagi diet.",
+ "Riset kompetitor itu bukan stalking, tapi studi banding. Profesional dong.",
+ "Kalau hari ini cuma kuat ngerjain satu hal, pilih yang paling penting. Itu bukan red flag, itu prioritas.",
+ "Ide brilian sering muncul pas mandi. Jadi kalau lagi buntu… ya, mandi dulu juga boleh.",
+ "Jangan bandingin behind the scene kamu sama highlight akun orang lain.",
+ "Low battery boleh, low effort jangan. Isi daya dulu, terus gas lagi.",
+ "Hook yang bagus itu kayak chat dari crush: bikin orang langsung berhenti scroll.",
+ "Kamu nggak telat, kamu cuma lagi loading. Yang penting jangan force close.",
+ "Konsisten nggak harus heboh. Yang penting nongol tiap hari, kayak notifikasi grup kantor.",
+ "Healing terbaik hari ini: checklist 100%, terus pulang tepat waktu.",
+ "Ada yang bikin macet? Spill di check-in. Leader bukan cenayang, nggak bisa nebak sendiri.",
+ "Data engagement itu kayak zodiak, bedanya ini beneran bisa dipakai buat ambil keputusan.",
+ "Semua ahli pernah bikin konten yang sekarang bikin dia malu sendiri pas nonton ulang. Santai.",
+ "Mood hari ini: sedikit lelah, banyak berkah, dan semoga nggak ada revisi mendadak.",
+ "Kerja tim itu kayak duet TikTok: harus nyambung, bukan saling ngalahin.",
+ "Capek? Istirahat. Udah segar? Comeback lebih kuat, kayak idol K-pop.",
+ "Satu persen lebih baik tiap hari. Setahun kemudian? Jauh banget. Matematika pun setuju.",
+ "Bukan soal viral sekali, tapi soal dipercaya berkali-kali.",
+ "Draft pertama jelek itu wajib hukumnya. Yang nggak boleh itu berhenti di draft pertama.",
+ "Hari ini jadi main character di kerjaanmu sendiri. Plot twist-nya: kamu berhasil.",
+ "Insight lagi turun? Jangan ikut turun. Ambil pelajarannya, terus coba lagi.",
+ "Kerjaan numpuk? Pecah jadi kecil-kecil. Kayak makan pizza, nggak ada yang langsung telan satu loyang.",
+ "Ngerjain checklist sambil dengerin playlist favorit itu legal. Yang ilegal itu nunda sampai jam 5 sore.",
+ "Konten edukasimu bisa jadi alasan seseorang lolos seleksi. Secara teknis kamu pahlawan, cuma nggak pakai jubah.",
+ "Nggak harus selalu semangat 100%. 60% asal tetap jalan juga udah keren.",
+ "Komentar julid itu bahan konten gratis. Makasih, netizen.",
+ "Jangan lupa minum air putih. Hidrasi dulu, kreasi kemudian.",
+ "Makasih udah hadir hari ini. Tanpa kamu, tim ini kurang satu karakter penting."
+];
+function motivasiHariIni() {
+  const d = new Date();
+  const n = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 864e5);
+  return MOTIVASI[n % MOTIVASI.length];
+}
+function sapaan() {
+  const j = new Date().getHours();
+  return j < 11 ? "Selamat pagi" : j < 15 ? "Selamat siang" : j < 18 ? "Selamat sore" : "Selamat malam";
+}
+// Muncul sekali per hari setelah login, di setiap perangkat.
+function tampilkanMotivasi() {
+  const kunci = "spill-motivasi-" + today() + "-" + S.me.id;
+  try { if (localStorage.getItem(kunci)) return; } catch (e) {}
+  const tutup = () => { try { localStorage.setItem(kunci, "1"); } catch (e) {} ov.remove(); document.removeEventListener("keydown", esc); };
+  const esc = e => { if (e.key === "Escape") tutup(); };
+  const btn = el("button", { class:"btn", onclick: tutup }, "Gas, mulai!");
+  const ov = el("div", { class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"mot-judul", onclick: e => { if (e.target === ov) tutup(); } },
+    el("div", { class:"mot" },
+      el("span", { class:"sticker" }, fmt(today(), { weekday:"long", day:"numeric", month:"long" })),
+      el("p", { id:"mot-judul", class:"mot-sapa" }, `${sapaan()}, ${S.me.nama}!`),
+      el("blockquote", { class:"mot-teks" }, motivasiHariIni()),
+      btn));
+  document.body.append(ov);
+  document.addEventListener("keydown", esc);
+  btn.focus();
+}
 const PERAN_LABEL = { sms:"Social media specialist", kerja:"Marketplace & live / asisten", leader:"Leader" };
 
 /* ================= UTIL ================= */
@@ -89,7 +166,7 @@ function weekBars(vals) {
 }
 
 /* ================= STATE ================= */
-const S = { session:null, me:null, members:[], items:[], route:"", timDate:null, rekapBulan:null };
+const S = { session:null, me:null, members:[], items:[], route:"", timDate:null, rekapBulan:null, juaraPeriode:null };
 const memberById = id => S.members.find(m => m.id === id);
 const namaOf = id => memberById(id)?.nama ?? "?";
 const team = () => S.members.filter(m => m.peran !== "leader" && m.aktif);
@@ -113,7 +190,7 @@ function pctOf(dc, m, k) {
 const root = () => document.getElementById("root");
 function authShell(...kids) {
   return el("div", { class:"auth" }, el("div", { class:"panel" },
-    el("div", { class:"brand" }, el("span", { class:"logo" }, "Teras"), el("span", "Check-in harian tim social media")), ...kids));
+    el("div", { class:"brand" }, logo(), el("span", "Tempat spill kabar harian tim")), ...kids));
 }
 function renderLogin(pesan = "") {
   const f = { u:"", p:"" };
@@ -224,6 +301,8 @@ async function boot() {
     await loadBase();
     if (!hashBound) { window.addEventListener("hashchange", route); hashBound = true; }
     route();
+    tampilkanMotivasi();
+    cekApresiasi();
   } catch (e) {
     console.error(e);
     root().replaceChildren(authShell(el("p", { class:"err", style:"margin-top:16px" }, "Gagal memuat: " + (e.message || e)),
@@ -241,8 +320,11 @@ function tabs() {
   if (me.peran !== "leader") t.push({ k:"hari", label:"Hari ini", g:"Harian" });
   if (me.peran === "kerja") t.push({ k:"kerja", label:"Papan kerja", g:"Harian" });
   if (me.is_admin) t.push({ k:"tim", label:"Ringkasan tim", g:"Tim" }, { k:"rekap", label:"Rekap checklist", g:"Tim" });
-  t.push({ k:"pesan", label:"Pesan", g: me.is_admin ? "Tim" : "Harian" });
+  t.push({ k:"masukan", label:"Kritik & saran", g: me.is_admin ? "Tim" : "Harian" });
+  t.push({ k:"juara", label:"Papan juara", g:"Juara & ide" }, { k:"menang", label:"Spill Menang", g:"Juara & ide" }, { k:"ide", label:"Kotak ide", g:"Juara & ide" });
   if (me.peran === "sms" || me.is_admin) t.push({ k:"eksperimen", label:"Eksperimen", g:"Belajar bareng" }, { k:"riset", label:"Riset kompetitor", g:"Belajar bareng" });
+  t.push({ k:"modul", label:"Modul belajar", g:"Belajar bareng" });
+  t.push({ k:"link", label:"Link kerja", g:"Ruang tim" }, { k:"struktur", label:"Struktur tim", g:"Ruang tim" });
   if (me.is_admin) t.push({ k:"atur", label:"Atur tim", g:"Pengaturan" });
   t.push({ k:"akun", label:"Akun", g:"Pengaturan" });
   return t;
@@ -250,7 +332,7 @@ function tabs() {
 // Tiga tab utama di bawah layar HP; sisanya masuk ke halaman Lainnya.
 function tabUtama(t) {
   const me = S.me;
-  const pilih = me.peran === "leader" ? ["tim", "pesan", "rekap"] : me.peran === "kerja" ? ["hari", "kerja", "pesan"] : ["hari", "eksperimen", "pesan"];
+  const pilih = me.peran === "leader" ? ["tim", "juara", "masukan"] : me.peran === "kerja" ? ["hari", "kerja", "juara"] : ["hari", "juara", "menang"];
   return pilih.map(k => t.find(x => x.k === k)).filter(Boolean);
 }
 function parseHash() {
@@ -268,17 +350,17 @@ async function route() {
   const badge = () => { const b = el("span", { class:"badge", hidden:true }); badges.push(b); return b; };
   const grup = [...new Set(t.map(x => x.g))];
   const side = el("aside", { class:"side" },
-    el("div", { class:"brand" }, el("span", { class:"logo" }, "Teras")),
+    el("div", { class:"brand" }, logo()),
     el("nav", { class:"snav" }, grup.map(g => [el("div", { class:"g" }, g),
-      t.filter(x => x.g === g).map(x => el("a", { href:"#/" + x.k, class: x.k === r ? "on" : "" }, el("span", x.label), x.k === "pesan" ? badge() : null))])),
+      t.filter(x => x.g === g).map(x => el("a", { href:"#/" + x.k, class: x.k === r ? "on" : "" }, el("span", x.label), x.k === "masukan" ? badge() : null))])),
     el("div", { class:"me" }, el("span", { class:"av" }, S.me.nama.slice(0, 1).toUpperCase()),
       el("div", el("b", S.me.nama), el("small", PERAN_LABEL[S.me.peran] + (S.me.is_admin ? " · admin" : "")))));
   const utama = tabUtama(t);
   const lainAktif = r === "lainnya" || !utama.find(x => x.k === r);
   const mtabs = el("nav", { class:"mtabs" },
-    utama.map(x => el("a", { href:"#/" + x.k, class: x.k === r ? "on" : "" }, x.label, x.k === "pesan" ? badge() : null)),
+    utama.map(x => el("a", { href:"#/" + x.k, class: x.k === r ? "on" : "" }, { masukan:"Masukan", juara:"Juara", menang:"Menang", kerja:"Kerja" }[x.k] || x.label, x.k === "masukan" ? badge() : null)),
     el("a", { href:"#/lainnya", class: lainAktif ? "on" : "" }, "Lainnya"));
-  const mtop = el("header", { class:"mtop" }, el("span", { class:"logo" }, "Teras"), el("span", { class:"who" }, S.me.nama));
+  const mtop = el("header", { class:"mtop" }, logo(), el("span", { class:"who" }, S.me.nama));
   root().replaceChildren(el("div", { class:"shell" }, side, el("div", { class:"col-main" }, mtop, main)), mtabs);
   hitungBelumDibaca().then(n => { if (n > 0) badges.forEach(b => { b.textContent = n; b.hidden = false; }); }).catch(() => {});
   try {
@@ -300,29 +382,30 @@ async function viewLainnya() {
     el("div", el("button", { class:"btn ghost", onclick: async () => { await sb.auth.signOut(); location.hash = ""; boot(); } }, "Keluar")));
 }
 async function hitungBelumDibaca() {
-  const me = S.me; let n = 0;
-  if (me.peran !== "leader") {
-    const { count } = await sb.from("messages").select("id", { count:"exact", head:true }).eq("member_id", me.id).neq("author_id", me.id).eq("dibaca", false);
-    n += count || 0;
-  }
-  if (me.is_admin) {
-    const rows = await q(sb.from("messages").select("member_id,author_id").eq("dibaca", false).neq("member_id", me.id));
-    n += rows.filter(x => x.author_id === x.member_id).length;
-  }
-  return n;
+  if (S.me.peran !== "leader") return 0;
+  const { count } = await sb.from("masukan").select("id", { count:"exact", head:true }).eq("status", "baru");
+  return count || 0;
 }
 
 /* ================= HARI INI ================= */
 async function viewHari() {
   const me = S.me, t = today(), wk = isWeekend(t);
-  const [ci, dc, riset] = await Promise.all([
+  const [ci, dc, riset, dariLeader] = await Promise.all([
     q(sb.from("checkins").select("*").eq("member_id", me.id).eq("tanggal", t).maybeSingle()),
     q(sb.from("daily_checklists").select("*").eq("member_id", me.id).eq("tanggal", t).maybeSingle()),
-    me.peran === "sms" ? q(sb.from("riset_kompetitor").select("*").eq("member_id", me.id).eq("tanggal", t).maybeSingle()) : null]);
+    me.peran === "sms" ? q(sb.from("riset_kompetitor").select("*").eq("member_id", me.id).eq("tanggal", t).maybeSingle()) : null,
+    q(sb.from("messages").select("*").eq("member_id", me.id).neq("author_id", me.id).gte("created_at", parseKey(addDays(t, -6)).toISOString()).order("created_at", { ascending:false }).limit(3))]);
+  const belumDibaca = dariLeader.filter(m => !m.dibaca).map(m => m.id);
+  if (belumDibaca.length) sb.from("messages").update({ dibaca:true }).in("id", belumDibaca).then(() => {});
   return el("div", { class:"stack" },
     el("div", { class:"page-head" },
       el("div", el("h1", `Halo, ${me.nama}!`), el("p", { class:"hint" }, fmt(t) + (wk ? " · akhir pekan" : ""))),
       el("span", { class:"sticker" }, wk ? "Akhir pekan" : ci ? "Sudah check-in" : "Belum check-in")),
+    el("div", { class:"mot-mini" }, el("small", "Motivasi hari ini"), el("p", motivasiHariIni())),
+    dariLeader.length ? el("section", { class:"panel pad stack", style:"gap:10px" },
+      el("div", { class:"row between" }, el("h2", "Dari leader"), belumDibaca.length ? el("span", { class:"chip attn" }, belumDibaca.length + " baru") : null),
+      dariLeader.map(m => el("div", { class:"bub" + (m.jenis === "apresiasi" ? " appr" : ""), style:"max-width:100%" },
+        el("small", namaOf(m.author_id) + " · " + jam(m.created_at) + (m.jenis === "apresiasi" ? " · apresiasi" : m.jenis === "1on1" ? " · ajakan 1:1" : "")), m.body))) : null,
     wk ? el("div", { class:"note" }, "Akhir pekan: tidak ada check-in. " + (me.peran === "sms" ? "Cukup centang Story hari ini." : "Tidak ada checklist wajib.")) : checkinCard(ci, t),
     checklistCard(dc, t, wk, riset));
 }
@@ -683,55 +766,712 @@ async function viewRiset() {
   return box;
 }
 
-/* ================= PESAN ================= */
+/* ================= PESAN DARI LEADER ================= */
 async function kirimPesan(memberId, body, jenis = "pesan") {
   await q(sb.from("messages").insert({ member_id: memberId, author_id: S.me.id, body, jenis }));
 }
-function threadView(memberId, msgs, onSent) {
-  const me = S.me;
-  const wrap = el("section", { class:"panel pad stack" });
-  const f = { v:"" };
-  const ta = input(f, "v", { multiline:true, rows:"2", placeholder: memberId === me.id ? "Tulis pesan untuk leader…" : `Tulis pesan untuk ${namaOf(memberId)}…` });
-  const btn = el("button", { class:"btn" }, "Kirim");
-  const listEl = el("div", { class:"msgs" }, msgs.length ? msgs.map(m => el("div", { class:"bub" + (m.author_id === me.id ? " me" : "") + (m.jenis === "apresiasi" && m.author_id !== me.id ? " appr" : "") },
-    el("small", (m.author_id === me.id ? "Kamu" : namaOf(m.author_id)) + " · " + jam(m.created_at) + (m.jenis === "apresiasi" ? " · apresiasi" : m.jenis === "1on1" ? " · ajakan 1:1" : "")),
-    m.body)) : el("p", { class:"empty" }, memberId === me.id ? "Belum ada pesan. Kamu bisa menyapa leader kapan saja di sini." : "Belum ada pesan."));
-  btn.onclick = async () => {
-    if (!f.v.trim()) return;
+
+/* ================= KRITIK & SARAN (ANONIM) ================= */
+const JENIS_MASUKAN = [{ v:"kritik", label:"Kritik" }, { v:"saran", label:"Saran" }, { v:"apresiasi", label:"Apresiasi" }];
+const warnaJenis = { kritik:"attn", saran:"brand", apresiasi:"appr" };
+function kartuTanggapan(x) {
+  return el("article", { class:"panel pad stack", style:"gap:8px" },
+    el("div", { class:"row between" }, el("span", { class:"chip " + warnaJenis[x.jenis] }, JENIS_MASUKAN.find(j => j.v === x.jenis).label), el("span", { class:"hint" }, fmt(x.tanggal))),
+    el("p", { style:"white-space:pre-wrap" }, x.isi),
+    x.tanggapan ? el("div", { class:"note" }, el("b", "Tanggapan leader: "), x.tanggapan) : null);
+}
+async function viewMasukan() {
+  if (S.me.peran === "leader") return viewMasukanLeader();
+  const publik = await q(sb.from("masukan").select("*").eq("publik", true).order("tanggal", { ascending:false }).order("id", { ascending:false }).limit(50));
+  const f = { jenis:null, isi:"" };
+  const msg = el("p", { class:"hint" });
+  const ta = input(f, "isi", { multiline:true, rows:"5", placeholder:"Tulis apa saja: cara kerja tim, cara leader memimpin, beban kerja, ide perbaikan, atau hal yang menurutmu sudah bagus." });
+  const btn = el("button", { class:"btn", type:"submit" }, "Kirim secara anonim");
+  const form = el("form", { class:"panel pad stack", style:"gap:14px", onsubmit: async e => {
+    e.preventDefault();
+    if (!f.jenis) { msg.className = "err"; msg.textContent = "Pilih dulu: kritik, saran, atau apresiasi."; return; }
+    if (f.isi.trim().length < 5) { msg.className = "err"; msg.textContent = "Tulis sedikit lebih panjang ya."; return; }
     btn.disabled = true;
-    try { await kirimPesan(memberId, f.v.trim()); f.v = ""; onSent(); } catch (e) { toast("Gagal mengirim: " + e.message); btn.disabled = false; }
-  };
-  wrap.append(el("h2", memberId === me.id ? "Percakapan dengan leader" : "Percakapan dengan " + namaOf(memberId)), listEl, ta, el("div", btn));
-  setTimeout(() => { listEl.scrollTop = listEl.scrollHeight; }, 0);
-  return wrap;
-}
-async function viewPesan() {
-  const me = S.me;
-  const { p } = parseHash();
-  if (!me.is_admin) {
-    const msgs = await q(sb.from("messages").select("*").eq("member_id", me.id).order("created_at"));
-    const unread = msgs.filter(m => m.author_id !== me.id && !m.dibaca).map(m => m.id);
-    if (unread.length) await sb.from("messages").update({ dibaca:true }).in("id", unread);
-    return el("div", { class:"stack" }, threadView(me.id, msgs, route));
-  }
-  const all = await q(sb.from("messages").select("*").order("created_at"));
-  const orang = team();
-  let pilih = p.get("m") || (me.peran !== "leader" ? me.id : null);
-  const last = {}, belum = {};
-  all.forEach(m => { last[m.member_id] = m; if (!m.dibaca && m.author_id === m.member_id && m.member_id !== me.id) belum[m.member_id] = (belum[m.member_id] || 0) + 1; });
-  const urut = [...orang].sort((a, b) => (last[b.id]?.created_at || "").localeCompare(last[a.id]?.created_at || ""));
-  if (!pilih && urut.length) pilih = urut[0].id;
-  const msgs = all.filter(m => m.member_id === pilih);
-  const unreadIds = msgs.filter(m => !m.dibaca && (pilih === me.id ? m.author_id !== me.id : m.author_id === pilih)).map(m => m.id);
-  if (unreadIds.length) await sb.from("messages").update({ dibaca:true }).in("id", unreadIds);
+    const { error } = await sb.rpc("kirim_masukan", { p_jenis: f.jenis, p_isi: f.isi.trim() });
+    btn.disabled = false;
+    if (error) { msg.className = "err"; msg.textContent = "Gagal mengirim: " + error.message; return; }
+    f.isi = ""; ta.value = ""; msg.className = "ok"; msg.textContent = "Terkirim secara anonim. Makasih sudah jujur!";
+    toast("Masukan terkirim");
+  }},
+    el("div", { class:"lbl" }, "Jenis masukan", pilihan(JENIS_MASUKAN, { get: () => f.jenis, set: v => f.jenis = v })),
+    el("label", { class:"lbl" }, "Isi masukan", ta),
+    el("div", { class:"row" }, btn), msg);
   return el("div", { class:"stack" },
-    el("div", el("h1", "Pesan"), el("p", { class:"hint" }, "Percakapan satu-satu dengan setiap anggota. Hanya anggota itu dan admin yang bisa membacanya.")),
-    el("div", { class:"threads" },
-      el("nav", { class:"panel tlist" }, urut.map(m => el("a", { href:`#/pesan?m=${m.id}`, class: m.id === pilih ? "on" : "" },
-        el("span", el("b", m.id === me.id ? m.nama + " (saya)" : m.nama), el("small", last[m.id] ? last[m.id].body : "Belum ada pesan")),
-        belum[m.id] ? el("span", { class:"badge" }, belum[m.id]) : null))),
-      pilih ? threadView(pilih, msgs, route) : el("p", { class:"empty" }, "Pilih anggota.")));
+    el("div", el("h1", "Kritik & saran"), el("p", { class:"hint", style:"margin-top:6px" }, "Untuk leader. Sampaikan apa saja dengan jujur, tidak perlu basa-basi.")),
+    el("div", { class:"note warn" }, el("b", "Anonim: "), "nama, akun, dan jam kirim tidak disimpan. Leader hanya melihat jenis, tanggal, dan isi masukan. Supaya tetap anonim, hindari menulis detail yang hanya kamu yang tahu."),
+    form,
+    el("div", { class:"stack", style:"gap:12px" },
+      el("h2", "Sudah ditanggapi leader"),
+      publik.length ? publik.map(kartuTanggapan) : el("p", { class:"hint" }, "Belum ada masukan yang ditanggapi secara terbuka.")));
 }
+async function viewMasukanLeader() {
+  let rows = await q(sb.from("masukan").select("*").order("tanggal", { ascending:false }).order("id", { ascending:false }).limit(300));
+  const baru = rows.filter(x => x.status === "baru").map(x => x.id);
+  if (baru.length) await sb.from("masukan").update({ status:"dibaca" }).in("id", baru);
+  let filter = "semua";
+  const box = el("div", { class:"stack" });
+  function kartu(x) {
+    const f = { tanggapan: x.tanggapan, publik: x.publik };
+    const card = el("article", { class:"panel pad stack", style:"gap:10px" });
+    const simpan = async (patch, pesan) => {
+      try { await q(sb.from("masukan").update(patch).eq("id", x.id)); Object.assign(x, patch); toast(pesan); draw(); }
+      catch (e) { toast("Gagal: " + e.message); }
+    };
+    card.append(
+      el("div", { class:"row between" },
+        el("div", { class:"row", style:"gap:6px" },
+          el("span", { class:"chip " + warnaJenis[x.jenis] }, JENIS_MASUKAN.find(j => j.v === x.jenis).label),
+          baru.includes(x.id) ? el("span", { class:"chip attn" }, "Baru") : null,
+          x.status === "ditindaklanjuti" ? el("span", { class:"chip calm" }, "Ditindaklanjuti") : null,
+          x.publik ? el("span", { class:"chip" }, "Tampil ke tim") : null),
+        el("span", { class:"hint" }, fmt(x.tanggal))),
+      el("p", { style:"white-space:pre-wrap;font-size:1rem" }, x.isi),
+      el("label", { class:"lbl" }, "Tanggapanmu (opsional)", input(f, "tanggapan", { multiline:true, rows:"2", placeholder:"Contoh: Terima kasih, mulai minggu depan briefing dipindah ke jam 10." })),
+      el("label", { class:"row", style:"font-size:.9rem;font-weight:600" },
+        el("input", { type:"checkbox", style:"width:18px;height:18px;accent-color:var(--ink)", ...(f.publik ? { checked:true } : {}), onchange: e => { f.publik = e.target.checked; } }),
+        "Tampilkan masukan & tanggapan ini ke seluruh tim"),
+      el("div", { class:"row" },
+        el("button", { class:"btn sm", onclick: () => simpan({ tanggapan: f.tanggapan.trim(), publik: f.publik }, "Tanggapan tersimpan") }, "Simpan tanggapan"),
+        x.status !== "ditindaklanjuti"
+          ? el("button", { class:"btn ghost sm", onclick: () => simpan({ status:"ditindaklanjuti" }, "Ditandai sudah ditindaklanjuti") }, "Tandai ditindaklanjuti")
+          : el("button", { class:"btn ghost sm", onclick: () => simpan({ status:"dibaca" }, "Status dikembalikan") }, "Batalkan tanda")));
+    return card;
+  }
+  function draw() {
+    const list = rows.filter(x => filter === "semua" || x.jenis === filter || (filter === "belum" && x.status !== "ditindaklanjuti"));
+    const hitung = j => rows.filter(x => x.jenis === j).length;
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Kritik & saran"), el("p", { class:"hint" }, "Masukan anonim dari tim. Nama, akun, dan jam kirim tidak tersimpan, jadi kamu pun tidak bisa tahu siapa pengirimnya.")),
+        el("span", { class:"sticker" }, rows.length + " masukan")),
+      el("div", { class:"stats" },
+        el("div", { class:"stat" }, el("b", String(rows.filter(x => x.status !== "ditindaklanjuti").length)), el("span", "Belum ditindaklanjuti")),
+        el("div", { class:"stat attn" }, el("b", String(hitung("kritik"))), el("span", "Kritik")),
+        el("div", { class:"stat appr" }, el("b", String(hitung("apresiasi"))), el("span", "Apresiasi")),
+        el("div", { class:"stat" }, el("b", String(hitung("saran"))), el("span", "Saran"))),
+      pilihan([{ v:"semua", label:"Semua" }, { v:"belum", label:"Belum ditindaklanjuti" }, ...JENIS_MASUKAN], { get: () => filter, set: v => filter = v, onChange: draw }),
+      list.length ? el("div", { class:"stack", style:"gap:14px" }, list.map(kartu)) : el("p", { class:"empty" }, rows.length ? "Tidak ada masukan di filter ini." : "Belum ada masukan masuk."));
+  }
+  draw();
+  return box;
+}
+
+
+/* ================= MODUL BELAJAR ================= */
+const KATEGORI_MODUL = ["Hook & copywriting", "Konten video", "Desain & carousel", "Analitik & data", "Tools & otomasi", "Materi CPNS & produk", "SOP tim", "Umum"];
+async function viewModul() {
+  const me = S.me;
+  const [mods, prog] = await Promise.all([
+    q(sb.from("modul").select("*").eq("aktif", true).order("urutan").order("id")),
+    q(sb.from("modul_progress").select("*"))]);
+  const mine = Object.fromEntries(prog.filter(p => p.member_id === me.id).map(p => [p.modul_id, p]));
+  const box = el("div", { class:"stack" });
+  const peserta = team();
+  let edit = null, buka = null;
+  async function setStatus(m, status, catatan = "") {
+    try {
+      if (!status) await q(sb.from("modul_progress").delete().eq("member_id", me.id).eq("modul_id", m.id));
+      else await q(sb.from("modul_progress").upsert({ member_id: me.id, modul_id: m.id, status, catatan, updated_at: new Date().toISOString() }));
+      route();
+    } catch (e) { toast("Gagal: " + e.message); }
+  }
+  function kartuModul(m) {
+    const p = mine[m.id];
+    const card = el("div", { class:"card" },
+      el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip brand" }, m.kategori), m.wajib ? el("span", { class:"chip attn" }, "Wajib") : null),
+      el("span", { class:"t" }, m.judul),
+      m.deskripsi ? el("span", { class:"m" }, m.deskripsi) : null,
+      p?.status === "selesai" && p.catatan ? el("span", { class:"m" }, "Catatanku: " + p.catatan) : null);
+    const acts = el("div", { class:"row", style:"gap:6px" });
+    if (m.url) acts.append(el("a", { class:"btn ghost sm", href: m.url, target:"_blank", rel:"noopener" }, "Buka materi ↗"));
+    if (!p) acts.append(el("button", { class:"btn sm", onclick: () => setStatus(m, "sedang") }, "Mulai belajar"));
+    else if (p.status === "sedang") acts.append(el("button", { class:"btn sm", onclick: () => { buka = m.id; draw(); } }, "Tandai selesai"));
+    else acts.append(el("button", { class:"btn ghost sm", onclick: () => setStatus(m, "sedang") }, "Ulangi"));
+    card.append(acts);
+    if (buka === m.id) {
+      const f = { c:"" };
+      card.append(el("div", { class:"subform" },
+        el("label", { class:"lbl" }, "Satu hal yang kamu pelajari (opsional)", input(f, "c", { multiline:true, rows:"2", placeholder:"Contoh: hook terbaik muncul di 2 detik pertama, bukan di caption" })),
+        el("div", { class:"row" }, el("button", { class:"btn sm", onclick: () => setStatus(m, "selesai", f.c.trim()) }, "Simpan"), el("button", { class:"btn ghost sm", onclick: () => { buka = null; draw(); } }, "Batal"))));
+    }
+    return card;
+  }
+  function formModul() {
+    const f = { judul:"", deskripsi:"", url:"", kategori:"Umum", wajib:false, urutan:0, ...(edit === "baru" ? {} : edit) };
+    const msg = el("p", { class:"hint" });
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("div", { class:"row between" }, el("h2", edit === "baru" ? "Tambah modul" : "Ubah modul"), el("button", { class:"btn ghost sm", onclick: () => { edit = null; draw(); } }, "Tutup")),
+      el("label", { class:"lbl" }, "Judul *", input(f, "judul", { placeholder:"Contoh: Rumus hook 3 detik pertama" })),
+      el("label", { class:"lbl" }, "Ringkasan singkat", input(f, "deskripsi", { multiline:true, rows:"2", placeholder:"Apa yang akan dipelajari dari modul ini?" })),
+      el("label", { class:"lbl" }, "Link materi (video, dokumen, slide)", input(f, "url", { placeholder:"https://…" })),
+      el("div", { class:"lbl" }, "Kategori", pilihan(KATEGORI_MODUL, { get: () => f.kategori, set: v => f.kategori = v })),
+      el("label", { class:"row", style:"font-size:.9rem;font-weight:600" }, el("input", { type:"checkbox", style:"width:18px;height:18px;accent-color:var(--ink)", ...(f.wajib ? { checked:true } : {}), onchange: e => f.wajib = e.target.checked }), "Wajib dipelajari semua anggota"),
+      el("div", { class:"row" },
+        el("button", { class:"btn", onclick: async () => {
+          if (!f.judul.trim()) { msg.className = "err"; msg.textContent = "Judul wajib diisi."; return; }
+          if (f.url && !/^https?:\/\//i.test(f.url.trim())) { msg.className = "err"; msg.textContent = "Link harus diawali http:// atau https://"; return; }
+          const data = { judul: f.judul.trim(), deskripsi: f.deskripsi.trim(), url: f.url.trim(), kategori: f.kategori, wajib: f.wajib };
+          try {
+            if (edit === "baru") await q(sb.from("modul").insert(data)); else await q(sb.from("modul").update(data).eq("id", edit.id));
+            toast("Modul tersimpan"); route();
+          } catch (e) { msg.className = "err"; msg.textContent = "Gagal: " + e.message; }
+        } }, "Simpan modul"),
+        edit !== "baru" ? el("button", { class:"btn danger", onclick: async () => {
+          if (!confirm("Hapus modul ini? Progres belajar anggota untuk modul ini ikut terhapus.")) return;
+          try { await q(sb.from("modul").delete().eq("id", edit.id)); toast("Modul dihapus"); route(); } catch (e) { toast("Gagal: " + e.message); }
+        } }, "Hapus") : null),
+      msg);
+  }
+  function rekapAdmin() {
+    if (!me.is_admin || !mods.length) return null;
+    return el("section", { class:"panel pad stack", style:"gap:10px" },
+      el("h2", "Progres tim"),
+      el("div", { class:"table-wrap" }, el("table",
+        el("thead", el("tr", el("th", "Modul"), el("th", { class:"num" }, "Selesai"), el("th", { class:"num" }, "Sedang"), el("th", ""))),
+        el("tbody", mods.map(m => {
+          const ps = prog.filter(p => p.modul_id === m.id && peserta.some(x => x.id === p.member_id));
+          const sel = ps.filter(p => p.status === "selesai");
+          const det = el("tr", { hidden:true }, el("td", { colspan:"4" }, el("div", { class:"stack", style:"gap:6px" },
+            sel.length ? sel.map(p => el("div", el("b", namaOf(p.member_id)), p.catatan ? ": " + p.catatan : "")) : el("span", { class:"hint" }, "Belum ada yang selesai."),
+            el("span", { class:"hint" }, "Belum mulai: " + (peserta.filter(x => !ps.some(p => p.member_id === x.id)).map(x => x.nama).join(", ") || "–")))));
+          return [el("tr",
+            el("td", m.judul, m.wajib ? el("span", { class:"chip attn", style:"margin-left:6px" }, "Wajib") : null),
+            el("td", { class:"num" }, el("span", { class:"chip " + (sel.length === peserta.length ? "calm" : "") }, `${sel.length}/${peserta.length}`)),
+            el("td", { class:"num" }, String(ps.length - sel.length)),
+            el("td", el("div", { class:"row", style:"gap:6px;flex-wrap:nowrap;justify-content:flex-end" },
+              el("button", { class:"btn ghost sm", onclick: () => { det.hidden = !det.hidden; } }, "Siapa saja"),
+              el("button", { class:"btn ghost sm", onclick: () => { edit = m; draw(); window.scrollTo({ top:0, behavior:"smooth" }); } }, "Ubah")))), det];
+        })))));
+  }
+  function draw() {
+    const kolom = [["belum", "Belum mulai", m => !mine[m.id]], ["sedang", "Sedang dipelajari", m => mine[m.id]?.status === "sedang"], ["selesai", "Selesai", m => mine[m.id]?.status === "selesai"]];
+    const ikut = me.peran !== "leader";
+    const selesai = mods.filter(m => mine[m.id]?.status === "selesai").length;
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Modul belajar"), el("p", { class:"hint" }, "Materi pilihan untuk naik level bareng. Buka materinya, tandai progresmu, dan tulis satu hal yang kamu pelajari.")),
+        el("div", { class:"row" }, ikut && mods.length ? el("span", { class:"sticker" }, `${selesai}/${mods.length} selesai`) : null,
+          me.is_admin ? el("button", { class:"btn", onclick: () => { edit = "baru"; draw(); } }, "+ Tambah modul") : null)),
+      edit ? formModul() : null,
+      !mods.length ? el("div", { class:"panel pad" }, el("p", { class:"empty" }, me.is_admin ? "Belum ada modul. Tambahkan modul pertama dengan tombol di atas." : "Belum ada modul. Leader akan segera menambahkan materi.")) : null,
+      ikut && mods.length ? el("div", { class:"board" }, kolom.map(([k, label, fn]) => {
+        const xs = mods.filter(fn);
+        return el("div", { class:"col" }, el("div", { class:"col-head" }, el("span", label), el("span", { class:"hint" }, String(xs.length))),
+          xs.length ? xs.map(kartuModul) : el("p", { class:"empty" }, "Kosong"));
+      })) : null,
+      me.peran === "leader" && mods.length ? el("div", { class:"stack", style:"gap:12px" }, mods.map(m => el("div", { class:"card" },
+        el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip brand" }, m.kategori), m.wajib ? el("span", { class:"chip attn" }, "Wajib") : null),
+        el("span", { class:"t" }, m.judul), m.deskripsi ? el("span", { class:"m" }, m.deskripsi) : null,
+        m.url ? el("div", el("a", { class:"btn ghost sm", href:m.url, target:"_blank", rel:"noopener" }, "Buka materi ↗")) : null))) : null,
+      rekapAdmin());
+  }
+  draw();
+  return box;
+}
+
+/* ================= LINK KERJA ================= */
+const KATEGORI_LINK = ["Kalender konten", "Aset & Drive", "Template", "Dashboard & data", "SOP & panduan", "Akun & tools", "Lainnya"];
+async function viewTautan() {
+  const me = S.me;
+  let rows = await q(sb.from("tautan").select("*").order("disematkan", { ascending:false }).order("kategori").order("judul"));
+  let cari = "", kat = null, edit = null;
+  const box = el("div", { class:"stack" });
+  const bisaUbah = x => x.dibuat_oleh === me.id || me.is_admin;
+  const list = el("div", { class:"stack", style:"gap:18px" });
+  function form() {
+    const f = { judul:"", url:"", kategori:"Lainnya", keterangan:"", ...(edit === "baru" ? {} : edit) };
+    const msg = el("p", { class:"hint" });
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("div", { class:"row between" }, el("h2", edit === "baru" ? "Tambah link" : "Ubah link"), el("button", { class:"btn ghost sm", onclick: () => { edit = null; draw(); } }, "Tutup")),
+      el("div", { class:"grid2" },
+        el("label", { class:"lbl" }, "Nama link *", input(f, "judul", { placeholder:"Contoh: Kalender konten Oktober" })),
+        el("label", { class:"lbl" }, "URL *", input(f, "url", { placeholder:"https://…" }))),
+      el("div", { class:"lbl" }, "Kategori", pilihan(KATEGORI_LINK, { get: () => f.kategori, set: v => f.kategori = v })),
+      el("label", { class:"lbl" }, "Keterangan (opsional)", input(f, "keterangan", { placeholder:"Contoh: diisi setiap Jumat sebelum jam 3" })),
+      el("div", { class:"row" },
+        el("button", { class:"btn", onclick: async () => {
+          if (!f.judul.trim() || !/^https?:\/\/\S+$/i.test(f.url.trim())) { msg.className = "err"; msg.textContent = "Isi nama dan URL lengkap (diawali https://)."; return; }
+          const data = { judul: f.judul.trim(), url: f.url.trim(), kategori: f.kategori, keterangan: f.keterangan.trim() };
+          try {
+            if (edit === "baru") await q(sb.from("tautan").insert({ ...data, dibuat_oleh: me.id })); else await q(sb.from("tautan").update(data).eq("id", edit.id));
+            toast("Link tersimpan"); route();
+          } catch (e) { msg.className = "err"; msg.textContent = "Gagal: " + e.message; }
+        } }, "Simpan link"),
+        edit !== "baru" ? el("button", { class:"btn danger", onclick: async () => {
+          if (!confirm("Hapus link ini?")) return;
+          try { await q(sb.from("tautan").delete().eq("id", edit.id)); toast("Link dihapus"); route(); } catch (e) { toast("Gagal: " + e.message); }
+        } }, "Hapus") : null),
+      msg);
+  }
+  function tile(x, i) {
+    const warnaKat = { "Kalender konten":"t-yellow", "Aset & Drive":"t-sky", "Template":"t-lime", "Dashboard & data":"t-orange", "SOP & panduan":"t-white", "Akun & tools":"t-sky", "Lainnya":"t-white" };
+    const warna = warnaKat[x.kategori] || "t-white";
+    let host = ""; try { host = new URL(x.url).hostname.replace(/^www\./, ""); } catch (e) {}
+    return el("div", { class:"tile " + (x.disematkan ? "t-pink" : warna), style:"justify-content:space-between;min-height:130px" },
+      el("div", { class:"stack", style:"gap:4px" },
+        el("div", { class:"row", style:"gap:6px" }, x.disematkan ? el("span", { class:"chip" }, "📌 Disematkan") : null, el("small", x.kategori)),
+        el("a", { href:x.url, target:"_blank", rel:"noopener", style:"text-decoration:none" }, el("b", x.judul + " ↗")),
+        x.keterangan ? el("small", x.keterangan) : null),
+      el("div", { class:"row between", style:"margin-top:8px" },
+        el("small", host + (x.dibuat_oleh ? " · " + namaOf(x.dibuat_oleh) : "")),
+        el("div", { class:"row", style:"gap:4px" },
+          me.is_admin ? el("button", { class:"btn ghost sm", title: x.disematkan ? "Lepas sematan" : "Sematkan di atas", onclick: async () => {
+            try { await q(sb.from("tautan").update({ disematkan: !x.disematkan }).eq("id", x.id)); route(); } catch (e) { toast("Gagal: " + e.message); } } }, x.disematkan ? "Lepas" : "📌") : null,
+          bisaUbah(x) ? el("button", { class:"btn ghost sm", onclick: () => { edit = x; draw(); window.scrollTo({ top:0, behavior:"smooth" }); } }, "Ubah") : null)));
+  }
+  function drawList() {
+    const s = cari.trim().toLowerCase();
+    const xs = rows.filter(x => (!kat || x.kategori === kat) && (!s || (x.judul + " " + x.keterangan + " " + x.url).toLowerCase().includes(s)));
+    const pin = xs.filter(x => x.disematkan), lain = xs.filter(x => !x.disematkan);
+    const grup = [...new Set(lain.map(x => x.kategori))];
+    list.replaceChildren(
+      !rows.length ? el("div", { class:"panel pad" }, el("p", { class:"empty" }, "Belum ada link. Tambahkan link kerja pertama tim, misalnya kalender konten atau folder aset.")) : null,
+      rows.length && !xs.length ? el("p", { class:"empty" }, "Tidak ada link yang cocok.") : null,
+      pin.length ? el("div", { class:"tiles links" }, pin.map(tile)) : null,
+      grup.map(g => el("div", { class:"stack", style:"gap:10px" }, el("h2", g), el("div", { class:"tiles links" }, lain.filter(x => x.kategori === g).map(tile)))));
+  }
+  function draw() {
+    const cariIn = el("input", { class:"field", placeholder:"Cari link…", style:"max-width:320px", value: cari });
+    cariIn.addEventListener("input", () => { cari = cariIn.value; drawList(); });
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Link kerja"), el("p", { class:"hint" }, "Semua link penting tim di satu tempat: kalender konten, folder aset, template, dashboard. Siapa pun di tim bisa menambahkan.")),
+        el("button", { class:"btn", onclick: () => { edit = "baru"; draw(); } }, "+ Tambah link")),
+      edit ? form() : null,
+      rows.length ? el("div", { class:"row" }, cariIn, pilihan(KATEGORI_LINK.filter(k => rows.some(x => x.kategori === k)).map(v => ({ v, label:v, toggle:true })), { get: () => kat, set: v => kat = v, onChange: drawList })) : null,
+      list);
+    drawList();
+  }
+  draw();
+  return box;
+}
+
+/* ================= STRUKTUR TIM ================= */
+const URUTAN_DIVISI = ["Leader", "Asisten", "Social Media", "Marketplace & Live"];
+// Nama akun sesuai baris 1 tab DRM MARKETING di spreadsheet
+const DAFTAR_AKUN = ["CEREBRUM", "JADIASN", "JADIBUMN", "JADIPCPM", "JADIPOLISI", "JADIPPPK", "JADISEKDIN", "JADIPRAJURIT", "PSIKOTES KERJA", "JADIBEASISWA", "JADIPPG", "JADIOJK", "TOEFL ACADEMY", "JAGOTPA"];
+async function viewStruktur() {
+  await loadBase();
+  const pegangan = await q(sb.from("akun_pegangan").select("*"));
+  const akunOf = id => pegangan.filter(p => p.member_id === id).map(p => p.akun);
+  const me = S.me;
+  const orang = S.members.filter(m => m.aktif);
+  const divisi = [...new Set([...URUTAN_DIVISI.filter(d => orang.some(m => m.divisi === d)), ...orang.map(m => m.divisi || "Lainnya")])];
+  const warnaAv = ["var(--sky)", "var(--lime)", "var(--yellow)", "var(--orange)", "var(--pink)"];
+  const box = el("div", { class:"stack" });
+  let edit = null;
+  const avatar = (m, i) => el("span", { class:"av", style:`background:${warnaAv[i % warnaAv.length]}` }, m.nama.slice(0, 1).toUpperCase());
+  function bagan() {
+    let i = 0;
+    const kartu = (m, d) => el("div", { class:"org-card" + (d === "Leader" ? " lead" : "") },
+      avatar(m, i++), el("div", el("b", m.nama), el("small", m.jabatan || PERAN_LABEL[m.peran]), akunOf(m.id).length ? el("small", { class:"peg" }, akunOf(m.id).join(", ")) : m.pegangan ? el("small", { class:"peg" }, m.pegangan) : null));
+    const isi = d => orang.filter(m => (m.divisi || "Lainnya") === d);
+    const atas = divisi.filter(d => d === "Leader" || d === "Asisten");
+    const bawah = divisi.filter(d => !atas.includes(d));
+    return el("section", { class:"org" },
+      atas.map((d, di) => el("div", { class:"org-level" },
+        di > 0 ? el("span", { class:"org-line", "aria-hidden":"true" }) : null,
+        el("div", { class:"org-label" }, d),
+        el("div", { class:"org-row" }, isi(d).map(m => kartu(m, d))))),
+      bawah.length ? el("span", { class:"org-line", "aria-hidden":"true" }) : null,
+      bawah.length ? el("div", { class:"org-divs" }, bawah.map(d => el("div", { class:"org-div" + (isi(d).length > 3 ? " lebar" : "") },
+        el("div", { class:"org-label" }, d + ` · ${isi(d).length} orang`),
+        el("div", { class:"org-row" }, isi(d).map(m => kartu(m, d)))))) : null);
+  }
+  function tabel() {
+    const urut = [...orang].sort((a, b) => (URUTAN_DIVISI.indexOf(a.divisi) + 99) % 99 - (URUTAN_DIVISI.indexOf(b.divisi) + 99) % 99 || a.nama.localeCompare(b.nama));
+    return el("section", { class:"panel pad stack", style:"gap:10px" },
+      el("div", { class:"row between" }, el("h2", "Tabel tim"), el("span", { class:"hint" }, orang.length + " orang")),
+      el("div", { class:"table-wrap" }, el("table",
+        el("thead", el("tr", el("th", "Nama"), el("th", "Jabatan"), el("th", "Divisi"), el("th", "Akun yang dipegang"), el("th", "Tanggung jawab lain"), el("th", "Kontak"), me.is_admin ? el("th", "") : null)),
+        el("tbody", urut.map(m => {
+          if (edit === m.id) {
+            const f = { jabatan: m.jabatan, divisi: m.divisi, pegangan: m.pegangan, kontak: m.kontak, akun: akunOf(m.id) };
+            return el("tr",
+              el("td", el("b", m.nama)),
+              el("td", input(f, "jabatan")), el("td", input(f, "divisi", { list:"daftar-divisi" })),
+              el("td", { style:"min-width:260px" }, pilihan(DAFTAR_AKUN, { get: () => f.akun, multi:true })),
+              el("td", input(f, "pegangan", { placeholder:"Contoh: koordinator event" })), el("td", input(f, "kontak", { placeholder:"Contoh: 08xx" })),
+              el("td", el("div", { class:"row", style:"gap:6px;flex-wrap:nowrap" },
+                el("button", { class:"btn sm", onclick: async () => {
+                  try {
+                    await q(sb.from("members").update({ jabatan: f.jabatan.trim(), divisi: f.divisi.trim(), pegangan: f.pegangan.trim(), kontak: f.kontak.trim() }).eq("id", m.id));
+                    await q(sb.from("akun_pegangan").delete().eq("member_id", m.id));
+                    if (f.akun.length) await q(sb.from("akun_pegangan").insert(f.akun.map(akun => ({ member_id: m.id, akun }))));
+                    toast("Tersimpan"); edit = null; await loadBase(); route(); }
+                  catch (e) { toast("Gagal: " + e.message); } } }, "Simpan"),
+                el("button", { class:"btn ghost sm", onclick: () => { edit = null; draw(); } }, "Batal"))));
+          }
+          return el("tr",
+            el("td", el("b", m.nama), m.id === me.id ? el("span", { class:"hint" }, " (kamu)") : null),
+            el("td", m.jabatan || "–"), el("td", m.divisi || "–"),
+            el("td", akunOf(m.id).length ? el("div", { class:"row", style:"gap:4px" }, akunOf(m.id).map(x => el("span", { class:"chip brand" }, x))) : el("span", { class:"hint" }, "–")),
+            el("td", m.pegangan || el("span", { class:"hint" }, "–")),
+            el("td", m.kontak ? (/^[0-9+ -]{8,}$/.test(m.kontak) ? el("a", { href:"https://wa.me/" + m.kontak.replace(/\D/g, "").replace(/^0/, "62"), target:"_blank", rel:"noopener" }, m.kontak) : m.kontak) : el("span", { class:"hint" }, "–")),
+            me.is_admin ? el("td", el("button", { class:"btn ghost sm", onclick: () => { edit = m.id; draw(); } }, "Ubah")) : null);
+        })))),
+      el("datalist", { id:"daftar-divisi" }, URUTAN_DIVISI.map(d => el("option", { value:d }))));
+  }
+  function draw() {
+    box.replaceChildren(
+      el("div", el("h1", "Struktur tim"), el("p", { class:"hint", style:"margin-top:6px" }, "Siapa memegang apa, supaya tahu harus bertanya ke siapa." + (me.is_admin ? " Lewat tombol Ubah, kamu bisa mengatur jabatan, divisi, kontak, dan akun yang dipegang. Akun yang dipegang dipakai untuk menghitung lencana jangkauan dari spreadsheet." : ""))),
+      bagan(), tabel());
+  }
+  draw();
+  return box;
+}
+
+
+/* ================= JUARA & LENCANA ================= */
+const KATEGORI_JUARA = [
+  { k:"jangkau", emoji:"🏆", nama:"Si Paling Jangkau", desc:"Pencapaian target jangkauan akun yang dipegang. Adil untuk akun besar maupun kecil.", sms:true },
+  { k:"naik", emoji:"📈", nama:"Si Paling Naik", desc:"Kenaikan pencapaian target jangkauan dibanding periode sebelumnya.", sms:true },
+  { k:"rajin", emoji:"🔥", nama:"Si Paling Rajin", desc:"Rata-rata checklist harian dan check-in tanpa bolong." },
+  { k:"ide", emoji:"💡", nama:"Si Paling Ide", desc:"Ide terbanyak yang dikirim ke Kotak ide." },
+  { k:"strategis", emoji:"🧠", nama:"Si Paling Strategis", desc:"Eksperimen yang selesai dengan hasil jelas, ditambah ide yang dipakai tim." },
+  { k:"detektif", emoji:"🕵️", nama:"Detektif Kompetitor", desc:"Riset kompetitor terbanyak.", sms:true },
+  { k:"ilmu", emoji:"📚", nama:"Si Paling Haus Ilmu", desc:"Modul belajar yang diselesaikan." },
+  { k:"inspiratif", emoji:"🎉", nama:"Si Paling Inspiratif", desc:"Kisah sukses yang paling banyak direaksi tim." },
+];
+const LENCANA = {
+  langkah_pertama: { emoji:"🌱", nama:"Langkah Pertama", syarat:"Check-in pertama kali" },
+  streak_5: { emoji:"⚡", nama:"Streak 5", syarat:"Check-in 5 hari kerja berturut-turut" },
+  streak_20: { emoji:"⚡", nama:"Streak 20", syarat:"Check-in 20 hari kerja berturut-turut" },
+  streak_60: { emoji:"🌩️", nama:"Streak 60", syarat:"Check-in 60 hari kerja berturut-turut" },
+  bulan_sempurna: { emoji:"✅", nama:"Bulan Sempurna", syarat:"Checklist 100% sebulan penuh" },
+  ilmuwan_konten: { emoji:"🧪", nama:"Ilmuwan Konten", syarat:"5 eksperimen selesai" },
+  hipotesis_jitu: { emoji:"🎯", nama:"Hipotesis Jitu", syarat:"3 eksperimen dengan pemenang jelas" },
+  ide_jadi_nyata: { emoji:"💡", nama:"Ide Jadi Nyata", syarat:"Ide dipakai tim (bisa berkali-kali)" },
+  viral_hunter: { emoji:"🚀", nama:"Viral Hunter", syarat:"Kisah sukses ditandai viral oleh leader" },
+  lulus_modul_wajib: { emoji:"🎓", nama:"Lulus Modul Wajib", syarat:"Semua modul wajib selesai" },
+  penyemangat: { emoji:"🤝", nama:"Penyemangat Tim", syarat:"50 reaksi & dukungan untuk rekan" },
+  pilihan_leader: { emoji:"⭐", nama:"Pilihan Leader", syarat:"Diberikan langsung oleh leader" },
+};
+function infoLencana(kode) {
+  if (kode.startsWith("juara_")) { const k = KATEGORI_JUARA.find(x => x.k === kode.slice(6)); return { emoji:"👑", nama:"Juara " + (k ? k.nama : kode.slice(6)), syarat:"Juara 1 mingguan atau bulanan" }; }
+  return LENCANA[kode] || { emoji:"🏅", nama:kode, syarat:"" };
+}
+function rentangPeriode(jenis) {
+  const t = today();
+  if (jenis === "minggu") { const d = parseKey(t); const g = (d.getDay() + 6) % 7; const awal = addDays(t, -g); return { awal, akhir: addDays(awal, 6), label:"Minggu ini (" + fmtShort(awal) + " – " + fmtShort(addDays(awal, 6)) + ")" }; }
+  if (jenis === "mingguLalu") { const d = parseKey(t); const g = (d.getDay() + 6) % 7; const awal = addDays(t, -g - 7); return { awal, akhir: addDays(awal, 6), label:"Minggu lalu (" + fmtShort(awal) + " – " + fmtShort(addDays(awal, 6)) + ")" }; }
+  const awal = t.slice(0, 8) + "01"; const [y, m] = t.split("-").map(Number);
+  if (jenis === "bulanLalu") { const a = keyOf(new Date(y, m - 2, 1)); return { awal:a, akhir: keyOf(new Date(y, m - 1, 0)), label: parseKey(a).toLocaleDateString("id-ID", { month:"long", year:"numeric" }) }; }
+  return { awal, akhir: keyOf(new Date(y, m, 0)), label: parseKey(awal).toLocaleDateString("id-ID", { month:"long", year:"numeric" }) };
+}
+async function viewJuara() {
+  const me = S.me;
+  await sb.rpc("hitung_lencana");
+  let jenis = S.juaraPeriode || "minggu";
+  const box = el("div", { class:"stack" });
+  const [lencana, pegangan, kpiAkhir] = await Promise.all([
+    q(sb.from("lencana").select("*").order("created_at", { ascending:false })),
+    q(sb.from("akun_pegangan").select("*")),
+    q(sb.from("kpi_harian").select("tanggal").eq("metrik", "jangkauan").gt("real", 0).order("tanggal", { ascending:false }).limit(1))]);
+  async function draw() {
+    const p = rentangPeriode(jenis);
+    box.replaceChildren(el("p", { class:"hint" }, "Menghitung…"));
+    const skor = await q(sb.rpc("papan", { p_awal: p.awal, p_akhir: p.akhir }));
+    const medali = ["🥇", "🥈", "🥉"];
+    const kartuKat = kat => {
+      const xs = skor.filter(s => s.kategori === kat.k && Number(s.nilai) > 0).sort((a, b) => b.nilai - a.nilai).slice(0, 3);
+      const kosong = kat.k === "jangkau" || kat.k === "naik"
+        ? (pegangan.length ? "Belum cukup data jangkauan di periode ini (minimal 3 hari per minggu)." : "Akun yang dipegang belum dipetakan. Atur di Struktur tim.")
+        : "Belum ada yang masuk papan. Kesempatan emas nih.";
+      return el("section", { class:"panel juara" },
+        el("div", { class:"juara-head" }, el("span", { class:"juara-emoji" }, kat.emoji), el("div", el("h2", kat.nama), el("p", { class:"hint" }, kat.desc))),
+        xs.length ? el("ol", { class:"podium" }, xs.map((s, i) => el("li", { class: s.member_id === me.id ? "aku" : "" },
+          el("span", { class:"medali" }, medali[i]), el("div", el("b", namaOf(s.member_id) + (s.member_id === me.id ? " (kamu)" : "")), el("small", s.detail))))) : el("p", { class:"hint", style:"padding:0 18px 16px" }, kosong));
+    };
+    const milikku = lencana.filter(l => l.member_id === me.id);
+    const kodeUnik = [...new Set(lencana.map(l => l.kode))];
+    const orang = team();
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Papan juara"), el("p", { class:"hint" }, "Banyak cara buat jadi juara: rajin, kreatif, strategis, haus ilmu, atau angkanya naik. Yang ditampilkan hanya 3 teratas di tiap kategori.")),
+        el("span", { class:"sticker" }, p.label)),
+      pilihan([{ v:"minggu", label:"Minggu ini" }, { v:"mingguLalu", label:"Minggu lalu" }, { v:"bulan", label:"Bulan ini" }, { v:"bulanLalu", label:"Bulan lalu" }], { get: () => jenis, set: v => { jenis = v; S.juaraPeriode = v; }, onChange: draw }),
+      el("p", { class:"hint" }, "Data jangkauan dari spreadsheet DRM MARKETING" + (kpiAkhir[0] ? ", terakhir terisi " + fmt(kpiAkhir[0].tanggal) + "." : ", belum tersinkron.") + " Juara 1 resmi dapat lencana 👑 setelah datanya matang (Kamis untuk mingguan, tanggal 4 untuk bulanan)."),
+      el("div", { class:"juara-grid" }, KATEGORI_JUARA.map(kartuKat)),
+      el("section", { class:"panel pad stack", style:"gap:12px" },
+        el("div", { class:"row between" }, el("h2", "Lencanaku"), el("span", { class:"sticker", style:"background:var(--lime);color:var(--ink)" }, milikku.length + " lencana")),
+        milikku.length ? el("div", { class:"lencana-grid" }, milikku.map(l => { const i = infoLencana(l.kode); return el("div", { class:"lencana", title:i.syarat }, el("span", i.emoji), el("b", i.nama), el("small", l.periode ? labelPeriode(l.periode) : fmt(l.created_at.slice(0, 10), { day:"numeric", month:"short" }))); }))
+          : el("p", { class:"hint" }, "Belum ada lencana. Check-in pertamamu langsung dapat 🌱 Langkah Pertama!")),
+      el("section", { class:"panel pad stack", style:"gap:12px" },
+        el("h2", "Koleksi lencana tim"),
+        el("div", { class:"table-wrap" }, el("table", el("tbody", [...orang].sort((x, y) => lencana.filter(l => l.member_id === y.id).length - lencana.filter(l => l.member_id === x.id).length || x.nama.localeCompare(y.nama)).map(m => { const ls = lencana.filter(l => l.member_id === m.id);
+          return el("tr", el("td", el("b", m.nama)), el("td", ls.length ? ls.map(l => el("span", { class:"lencana-mini", title: infoLencana(l.kode).nama + (l.periode ? " · " + labelPeriode(l.periode) : "") }, infoLencana(l.kode).emoji)) : el("span", { class:"hint" }, "–")), el("td", { class:"num" }, String(ls.length))); }))))),
+      el("details", { class:"panel pad" }, el("summary", { style:"cursor:pointer;font-weight:800" }, "Cara mendapatkan lencana"),
+        el("div", { class:"lencana-grid", style:"margin-top:12px" }, [...Object.entries(LENCANA).map(([k, v]) => el("div", { class:"lencana" + (kodeUnik.includes(k) ? "" : " belum") }, el("span", v.emoji), el("b", v.nama), el("small", v.syarat))),
+          el("div", { class:"lencana" }, el("span", "👑"), el("b", "Juara kategori"), el("small", "Juara 1 di papan mingguan atau bulanan"))])),
+      me.is_admin ? formPilihanLeader() : null);
+  }
+  function formPilihanLeader() {
+    const f = { m:null, alasan:"" };
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("h2", "⭐ Beri lencana Pilihan Leader"),
+      el("p", { class:"hint" }, "Untuk kontribusi yang tidak tercatat angka, misalnya membantu rekan yang kewalahan."),
+      el("div", { class:"lbl" }, "Untuk siapa", pilihan(team().map(m => ({ v:m.id, label:m.nama })), { get: () => f.m, set: v => f.m = v })),
+      el("label", { class:"lbl" }, "Alasannya", input(f, "alasan", { placeholder:"Contoh: bantu edit 5 video Zaki waktu dia sakit" })),
+      el("div", el("button", { class:"btn", onclick: async () => {
+        if (!f.m || !f.alasan.trim()) return toast("Pilih orang dan tulis alasannya dulu.");
+        try { await q(sb.from("lencana").insert({ member_id: f.m, kode:"pilihan_leader", periode: new Date().toISOString(), meta:{ alasan: f.alasan.trim() } }));
+          await kirimPesan(f.m, "Kamu dapat lencana ⭐ Pilihan Leader: " + f.alasan.trim(), "apresiasi"); toast("Lencana terkirim!"); route(); }
+        catch (e) { toast("Gagal: " + e.message); } } }, "Berikan lencana")));
+  }
+  draw();
+  return box;
+}
+function labelPeriode(p) {
+  if (/^W\d{4}-\d{2}$/.test(p)) return "Minggu ke-" + Number(p.slice(6)) + " " + p.slice(1, 5);
+  if (/^M\d{4}-\d{2}$/.test(p)) return parseKey(p.slice(1) + "-01").toLocaleDateString("id-ID", { month:"long", year:"numeric" });
+  if (/^\d{4}-\d{2}$/.test(p)) return parseKey(p + "-01").toLocaleDateString("id-ID", { month:"long", year:"numeric" });
+  if (/^\d{4}-\d{2}-\d{2}T/.test(p)) return fmt(p.slice(0, 10), { day:"numeric", month:"short", year:"numeric" });
+  return "";
+}
+
+/* ================= KOTAK IDE ================= */
+const KATEGORI_IDE = ["Konten", "Event", "Produk", "Cara kerja", "Lainnya"];
+const STATUS_IDE = { baru:["Baru",""], dibahas:["Dibahas","brand"], dipakai:["Dipakai","calm"], ditunda:["Ditunda","appr"] };
+async function viewIde() {
+  const me = S.me;
+  const [rows, duk] = await Promise.all([
+    q(sb.from("ide").select("*").order("created_at", { ascending:false }).limit(300)),
+    q(sb.from("ide_dukungan").select("*"))]);
+  let urut = "dukungan", filter = "semua";
+  const box = el("div", { class:"stack" });
+  const jml = id => duk.filter(d => d.ide_id === id).length;
+  const sayaDukung = id => duk.some(d => d.ide_id === id && d.member_id === me.id);
+  function formBaru() {
+    const f = { judul:"", isi:"", kategori:"Konten" };
+    const msg = el("p", { class:"hint" });
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("h2", "Punya ide? Spill di sini"),
+      el("label", { class:"lbl" }, "Idenya apa? *", input(f, "judul", { placeholder:"Contoh: Seri konten 'Sehari jadi ASN' bareng alumni" })),
+      el("label", { class:"lbl" }, "Ceritain lebih detail (opsional)", input(f, "isi", { multiline:true, rows:"3", placeholder:"Kenapa ide ini bagus? Gimana cara jalaninnya?" })),
+      el("div", { class:"lbl" }, "Kategori", pilihan(KATEGORI_IDE, { get: () => f.kategori, set: v => f.kategori = v })),
+      el("div", el("button", { class:"btn", onclick: async () => {
+        if (f.judul.trim().length < 3) { msg.className = "err"; msg.textContent = "Tulis idenya dulu."; return; }
+        try { await q(sb.from("ide").insert({ member_id: me.id, judul: f.judul.trim(), isi: f.isi.trim(), kategori: f.kategori })); toast("Ide terkirim! 💡"); route(); }
+        catch (e) { msg.className = "err"; msg.textContent = "Gagal: " + e.message; } } }, "Kirim ide")), msg);
+  }
+  function kartu(x) {
+    const n = jml(x.id), aku = sayaDukung(x.id), [stLabel, stWarna] = STATUS_IDE[x.status];
+    const card = el("article", { class:"panel pad stack", style:"gap:10px" },
+      el("div", { class:"row between" },
+        el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip" }, x.kategori), el("span", { class:"chip " + stWarna }, stLabel)),
+        el("span", { class:"hint" }, namaOf(x.member_id) + " · " + fmt(keyOf(new Date(x.created_at)), { day:"numeric", month:"short" }))),
+      el("h3", { style:"font-size:1.15rem" }, x.judul),
+      x.isi ? el("p", { style:"white-space:pre-wrap" }, x.isi) : null,
+      x.tanggapan ? el("div", { class:"note" }, el("b", "Tanggapan leader: "), x.tanggapan) : null,
+      el("div", { class:"row" },
+        el("button", { class:"btn sm" + (aku ? "" : " ghost"), disabled: x.member_id === me.id, title: x.member_id === me.id ? "Ide sendiri tidak bisa didukung" : "", onclick: async () => {
+          try { if (aku) await q(sb.from("ide_dukungan").delete().eq("ide_id", x.id).eq("member_id", me.id)); else await q(sb.from("ide_dukungan").insert({ ide_id: x.id, member_id: me.id })); route(); }
+          catch (e) { toast("Gagal: " + e.message); } } }, "🔥 " + n + (aku ? " · didukung" : " · dukung")),
+        (x.member_id === me.id || me.is_admin) && x.status === "baru" ? el("button", { class:"btn danger sm", onclick: async () => { if (!confirm("Hapus ide ini?")) return; await q(sb.from("ide").delete().eq("id", x.id)); route(); } }, "Hapus") : null));
+    if (me.is_admin) {
+      const f = { t: x.tanggapan };
+      card.append(el("div", { class:"subform" },
+        el("label", { class:"lbl" }, "Tanggapanmu", input(f, "t", { placeholder:"Contoh: Bagus! Kita coba minggu depan, PIC-nya kamu ya." })),
+        el("div", { class:"row", style:"gap:6px" }, Object.entries(STATUS_IDE).map(([k, [lab]]) => el("button", { class:"btn sm" + (x.status === k ? "" : " ghost"), onclick: async () => {
+          const patch = { status: k, tanggapan: f.t.trim() };
+          if (k === "dipakai" && !x.dipakai_at) patch.dipakai_at = new Date().toISOString();
+          try { await q(sb.from("ide").update(patch).eq("id", x.id));
+            if (k === "dipakai" && x.status !== "dipakai") await kirimPesan(x.member_id, `Idemu "${x.judul}" DIPAKAI tim! 💡 Kamu dapat lencana Ide Jadi Nyata.`, "apresiasi");
+            toast("Status ide: " + lab); route(); } catch (e) { toast("Gagal: " + e.message); } } }, lab)))));
+    }
+    return card;
+  }
+  function draw() {
+    let xs = rows.filter(x => filter === "semua" || (filter === "saya" ? x.member_id === me.id : x.status === filter));
+    xs = urut === "dukungan" ? [...xs].sort((a, b) => jml(b.id) - jml(a.id) || b.created_at.localeCompare(a.created_at)) : xs;
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Kotak ide"), el("p", { class:"hint" }, "Ide sekecil apa pun boleh. Dukung ide teman dengan 🔥, dan ide yang dipakai tim dapat lencana.")),
+        el("span", { class:"sticker" }, rows.length + " ide")),
+      me.peran !== "leader" ? formBaru() : null,
+      el("div", { class:"row between" },
+        pilihan([{ v:"semua", label:"Semua" }, { v:"saya", label:"Ideku" }, { v:"dipakai", label:"Dipakai" }, { v:"dibahas", label:"Dibahas" }, { v:"baru", label:"Baru" }], { get: () => filter, set: v => filter = v, onChange: draw }),
+        pilihan([{ v:"dukungan", label:"🔥 Terpopuler" }, { v:"baru", label:"Terbaru" }], { get: () => urut, set: v => urut = v, onChange: draw })),
+      xs.length ? el("div", { class:"stack", style:"gap:14px" }, xs.map(kartu)) : el("p", { class:"empty" }, "Belum ada ide di sini."));
+  }
+  draw();
+  return box;
+}
+
+/* ================= SPILL MENANG (kisah sukses) ================= */
+const REAKSI = [["api", "🔥"], ["tepuk", "👏"], ["wow", "🤯"]];
+async function kompresGambar(file) {
+  const img = await new Promise((ok, gagal) => { const i = new Image(); i.onload = () => ok(i); i.onerror = gagal; i.src = URL.createObjectURL(file); });
+  const skala = Math.min(1, 1280 / Math.max(img.width, img.height));
+  const c = document.createElement("canvas"); c.width = Math.round(img.width * skala); c.height = Math.round(img.height * skala);
+  c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+  return await new Promise(ok => c.toBlob(ok, "image/jpeg", 0.82));
+}
+async function viewMenang() {
+  const me = S.me;
+  const [rows, reaksi] = await Promise.all([
+    q(sb.from("kisah").select("*").order("created_at", { ascending:false }).limit(200)),
+    q(sb.from("kisah_reaksi").select("*"))]);
+  let filter = "semua", buat = false;
+  const box = el("div", { class:"stack" });
+  const urlGambar = p => p ? SB_URL + "/storage/v1/object/public/kisah/" + p : "";
+  function form() {
+    const f = { judul:"", url:"", platform:"", format:"", angka:"", cara:"", pelajaran:"", file:null };
+    const msg = el("p", { class:"hint" });
+    const btn = el("button", { class:"btn" }, "Bagikan kemenangan");
+    const fileIn = el("input", { type:"file", accept:"image/*", class:"field" });
+    fileIn.addEventListener("change", () => { f.file = fileIn.files[0] || null; });
+    btn.onclick = async () => {
+      if (!f.judul.trim() || !f.angka.trim() || !f.cara.trim()) { msg.className = "err"; msg.textContent = "Judul, hasil, dan cara yang dilakukan wajib diisi."; return; }
+      if (f.url && !/^https?:\/\//i.test(f.url.trim())) { msg.className = "err"; msg.textContent = "Link harus diawali https://"; return; }
+      btn.disabled = true; msg.className = "hint"; msg.textContent = "Mengunggah…";
+      try {
+        let gambar = "";
+        if (f.file) {
+          const blob = await kompresGambar(f.file);
+          gambar = me.id + "/" + Date.now() + ".jpg";
+          const { error } = await sb.storage.from("kisah").upload(gambar, blob, { contentType:"image/jpeg" });
+          if (error) throw error;
+        }
+        await q(sb.from("kisah").insert({ member_id: me.id, judul: f.judul.trim(), url: f.url.trim(), platform: f.platform || "", format: f.format || "", angka: f.angka.trim(), cara: f.cara.trim(), pelajaran: f.pelajaran.trim(), gambar }));
+        toast("Kemenanganmu tayang! 🎉"); route();
+      } catch (e) { btn.disabled = false; msg.className = "err"; msg.textContent = "Gagal: " + e.message; }
+    };
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("div", { class:"row between" }, el("h2", "Spill kemenanganmu"), el("button", { class:"btn ghost sm", onclick: () => { buat = false; draw(); } }, "Tutup")),
+      el("label", { class:"lbl" }, "Judul *", input(f, "judul", { placeholder:"Contoh: Video deret tembus 300 ribu views" })),
+      el("div", { class:"grid2" },
+        el("label", { class:"lbl" }, "Hasilnya *", input(f, "angka", { placeholder:"Contoh: 312rb views, 9rb share, 140 download" })),
+        el("label", { class:"lbl" }, "Link konten", input(f, "url", { placeholder:"https://…" }))),
+      el("div", { class:"lbl" }, "Platform", pilihan(PLATFORM.map(v => ({ v, label:v, toggle:true })), { get: () => f.platform, set: v => f.platform = v || "" })),
+      el("div", { class:"lbl" }, "Format", pilihan(FORMAT.map(v => ({ v, label:v, toggle:true })), { get: () => f.format, set: v => f.format = v || "" })),
+      el("label", { class:"lbl" }, "Cara yang dilakukan *", input(f, "cara", { multiline:true, rows:"3", placeholder:"Apa yang beda dari biasanya? Hook-nya, jam posting, CTA, topik?" })),
+      el("label", { class:"lbl" }, "Pelajaran buat tim", input(f, "pelajaran", { multiline:true, rows:"2", placeholder:"Kalau tim mau niru, apa yang paling penting?" })),
+      el("label", { class:"lbl" }, "Screenshot (opsional)", fileIn),
+      el("div", { class:"row" }, btn), msg);
+  }
+  function kartu(x) {
+    const rs = reaksi.filter(r => r.kisah_id === x.id);
+    return el("article", { class:"panel menang" + (x.viral ? " viral" : "") },
+      x.gambar ? el("a", { href: urlGambar(x.gambar), target:"_blank", rel:"noopener" }, el("img", { src: urlGambar(x.gambar), alt:"Screenshot " + x.judul, loading:"lazy" })) : null,
+      el("div", { class:"stack", style:"gap:8px;padding:16px 18px" },
+        el("div", { class:"row", style:"gap:6px" }, x.viral ? el("span", { class:"chip attn" }, "🚀 Viral") : null, x.platform ? el("span", { class:"chip brand" }, x.platform) : null, x.format ? el("span", { class:"chip" }, x.format) : null),
+        el("h3", { style:"font-size:1.15rem" }, x.judul),
+        el("p", { class:"menang-angka" }, x.angka),
+        el("p", { class:"hint" }, "oleh " + namaOf(x.member_id) + " · " + fmt(keyOf(new Date(x.created_at)), { day:"numeric", month:"short" })),
+        el("div", el("b", "Caranya: "), x.cara),
+        x.pelajaran ? el("div", { class:"note" }, el("b", "Pelajaran: "), x.pelajaran) : null,
+        x.url ? el("div", el("a", { class:"btn ghost sm", href:x.url, target:"_blank", rel:"noopener" }, "Lihat konten ↗")) : null,
+        el("div", { class:"row", style:"gap:6px" },
+          REAKSI.map(([k, e]) => { const n = rs.filter(r => r.emoji === k).length, aku = rs.some(r => r.emoji === k && r.member_id === me.id);
+            return el("button", { class:"btn sm" + (aku ? "" : " ghost"), onclick: async () => {
+              try { if (aku) await q(sb.from("kisah_reaksi").delete().eq("kisah_id", x.id).eq("member_id", me.id).eq("emoji", k)); else await q(sb.from("kisah_reaksi").insert({ kisah_id: x.id, member_id: me.id, emoji: k })); route(); }
+              catch (er) { toast("Gagal: " + er.message); } } }, e + " " + n); }),
+          me.is_admin ? el("button", { class:"btn ghost sm", onclick: async () => {
+            try { await q(sb.from("kisah").update({ viral: !x.viral }).eq("id", x.id));
+              if (!x.viral) await kirimPesan(x.member_id, `Kisahmu "${x.judul}" ditandai VIRAL 🚀 Lencana Viral Hunter buat kamu!`, "apresiasi");
+              route(); } catch (er) { toast("Gagal: " + er.message); } } }, x.viral ? "Batal viral" : "Tandai viral 🚀") : null,
+          x.member_id === me.id || me.is_admin ? el("button", { class:"btn danger sm", onclick: async () => {
+            if (!confirm("Hapus kisah ini?")) return;
+            try { if (x.gambar) await sb.storage.from("kisah").remove([x.gambar]); await q(sb.from("kisah").delete().eq("id", x.id)); route(); } catch (er) { toast("Gagal: " + er.message); } } }, "Hapus") : null)));
+  }
+  function draw() {
+    const xs = rows.filter(x => filter === "semua" || (filter === "saya" ? x.member_id === me.id : x.viral));
+    box.replaceChildren(
+      el("div", { class:"page-head" },
+        el("div", el("h1", "Spill Menang"), el("p", { class:"hint" }, "Konten yang berhasil dan cara yang berhasil. Bagikan biar tim bisa niru, kasih reaksi biar yang bikin makin semangat.")),
+        me.peran !== "leader" ? el("button", { class:"btn", onclick: () => { buat = true; draw(); } }, "+ Spill kemenangan") : null),
+      buat ? form() : null,
+      pilihan([{ v:"semua", label:"Semua" }, { v:"viral", label:"🚀 Viral" }, { v:"saya", label:"Punyaku" }], { get: () => filter, set: v => filter = v, onChange: draw }),
+      xs.length ? el("div", { class:"menang-grid" }, xs.map(kartu)) : el("div", { class:"panel pad" }, el("p", { class:"empty" }, "Belum ada kisah sukses. Jadi yang pertama, biar namamu nangkring di sini.")));
+  }
+  draw();
+  return box;
+}
+
+/* ================= POP-UP APRESIASI ================= */
+const APRESIASI_UMUM = [
+  "Welcome back! Tim ini tanpa kamu kayak caption tanpa CTA: kurang nendang.",
+  "Kamu balik lagi! Algoritma aja belum tentu sesetia kamu.",
+  "Kerja kerasmu mungkin nggak selalu masuk FYP, tapi selalu masuk hitungan kami.",
+  "Halo lagi! Sekadar info: kamu keren. Udah, itu aja. Lanjut kerja.",
+  "Kamu tuh kayak Wi-Fi kantor: kalau nggak ada, semua orang langsung kerasa.",
+  "Welcome back, bestie. Progress kecil tetap progress, jangan diremehin.",
+  "Balik lagi nih? Tandanya kamu peduli. Itu red flag… tapi red flag yang bagus.",
+  "Apresiasi hari ini buat kamu yang tetap jalan walaupun views lagi pelit.",
+  "Info penting: effort kamu kelihatan, walaupun kamu ngerjainnya diem-diem.",
+  "Kerja bagus itu nggak harus berisik. Yang kayak kamu ini contohnya.",
+  "Kalau kerja keras bisa ditukar poin, kamu udah bisa redeem liburan.",
+  "Kamu balik! Grup chat kantor aja nggak seantusias ini nyambut kamu.",
+  "Makasih udah jadi orang yang bikin tim ini nggak cuma jalan, tapi jalan bareng.",
+  "Apresiasi spesial buat kamu yang masih semangat walau kopi udah dingin.",
+  "Kamu tuh aset. Bukan aset Canva, aset beneran.",
+  "Satu konten mungkin flop, tapi kamu nggak pernah flop di mata tim.",
+  "Plot twist hari ini: kamu lebih jago dari yang kamu kira.",
+  "Kalau ada penghargaan 'Paling Bisa Diandalkan', kandidatnya kamu. Juri: kami semua.",
+  "Hari ini kamu belum dipuji siapa-siapa? Nah, ini dia: kamu hebat. Sama-sama.",
+  "Tim tanpa kamu tuh kayak konten tanpa hook: orang langsung skip.",
+];
+function apresiasiPersonal(data) {
+  const { me, lencanaBaru, streak, kemarin100, ideDipakai, reaksiMinggu, risetMinggu } = data;
+  if (lencanaBaru) { const i = infoLencana(lencanaBaru.kode); return `Lencana baru mendarat: ${i.emoji} ${i.nama}! Mau dipajang di bio? Boleh. Pamer ke grup? Wajib.`; }
+  if (ideDipakai) return `Idemu "${ideDipakai.judul}" dipakai tim. Kamu resmi jadi otak di balik layar, tinggal kurang jas lab doang.`;
+  if (reaksiMinggu >= 3) return `Kisah suksesmu dapet ${reaksiMinggu} reaksi minggu ini. Selebgram internal kantor detected. 🔥`;
+  if (streak >= 3) return `Streak check-in ${streak} hari kerja beruntun. Konsistennya ngalahin jadwal tayang sinetron.`;
+  if (kemarin100) return "Checklist kemarin 100%. Leader liat ini auto senyum-senyum sendiri.";
+  if (risetMinggu >= 3) return `Udah ${risetMinggu} riset kompetitor minggu ini. Kompetitor kita kayaknya mulai ngerasa diawasin. 🕵️`;
+  return APRESIASI_UMUM[Math.floor(Math.random() * APRESIASI_UMUM.length)];
+}
+async function cekApresiasi() {
+  if (!S.me || S.me.peran === "leader" || document.querySelector(".overlay")) return;
+  const kAktif = "spill-aktif-" + S.me.id, kHari = "spill-apr-" + today() + "-" + S.me.id, kLihat = "spill-lencana-lihat-" + S.me.id;
+  let terakhir = 0, kali = 0, lihat = "";
+  try { terakhir = Number(localStorage.getItem(kAktif) || 0); kali = Number(localStorage.getItem(kHari) || 0); lihat = localStorage.getItem(kLihat) || ""; } catch (e) {}
+  const motivasiSudah = (() => { try { return !!localStorage.getItem("spill-motivasi-" + today() + "-" + S.me.id); } catch (e) { return false; } })();
+  const tandai = () => { try { localStorage.setItem(kAktif, String(Date.now())); } catch (e) {} };
+  // Muncul saat membuka ulang setelah ≥ 60 menit pergi, maksimal 3 kali sehari, dan tidak di kunjungan pertama hari ini (itu jatah motivasi).
+  if (!motivasiSudah || !terakhir || Date.now() - terakhir < 60 * 60 * 1000 || kali >= 3) { tandai(); return; }
+  tandai();
+  const me = S.me, t = today(), awalMinggu = rentangPeriode("minggu").awal;
+  const [ls, cis, dcK, ide, kisah] = await Promise.all([
+    q(sb.from("lencana").select("*").eq("member_id", me.id).order("created_at", { ascending:false }).limit(1)),
+    q(sb.from("checkins").select("tanggal").eq("member_id", me.id).gte("tanggal", addDays(t, -40)).order("tanggal", { ascending:false })),
+    (() => { let k = addDays(t, -1); while (isWeekend(k)) k = addDays(k, -1); return q(sb.from("daily_checklists").select("*").eq("member_id", me.id).eq("tanggal", k).maybeSingle()).then(r => ({ r, k })); })(),
+    q(sb.from("ide").select("judul,dipakai_at").eq("member_id", me.id).eq("status", "dipakai").gte("dipakai_at", parseKey(addDays(t, -7)).toISOString()).limit(1)),
+    q(sb.from("kisah").select("id").eq("member_id", me.id))]).catch(() => [[], [], { r:null }, [], []]);
+  let streak = 0; const ada = new Set(cis.map(c => c.tanggal));
+  for (let k = ada.has(t) ? t : addDays(t, -1), i = 0; i < 60; i++, k = addDays(k, -1)) { if (isWeekend(k)) continue; if (ada.has(k)) streak++; else break; }
+  let reaksiMinggu = 0;
+  if (kisah.length) { const rs = await q(sb.from("kisah_reaksi").select("member_id,created_at").in("kisah_id", kisah.map(x => x.id)).gte("created_at", parseKey(awalMinggu).toISOString())).catch(() => []); reaksiMinggu = rs.filter(r => r.member_id !== me.id).length; }
+  let risetMinggu = 0;
+  if (me.peran === "sms") { const { count } = await sb.from("riset_kompetitor").select("id", { count:"exact", head:true }).eq("member_id", me.id).gte("tanggal", awalMinggu); risetMinggu = count || 0; }
+  const baru = ls[0] && ls[0].created_at > lihat ? ls[0] : null;
+  const teks = apresiasiPersonal({ me, lencanaBaru: baru, streak, kemarin100: dcK.r && pctOf(dcK.r, me, dcK.k) === 100, ideDipakai: ide[0], reaksiMinggu, risetMinggu });
+  try { localStorage.setItem(kHari, String(kali + 1)); if (baru) localStorage.setItem(kLihat, baru.created_at); } catch (e) {}
+  const tutup = () => { ov.remove(); document.removeEventListener("keydown", esc); };
+  const esc = e => { if (e.key === "Escape") tutup(); };
+  const btn = el("button", { class:"btn", onclick: tutup }, "Makasih, gas lagi!");
+  const ov = el("div", { class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"apr-judul", onclick: e => { if (e.target === ov) tutup(); } },
+    el("div", { class:"mot apr" },
+      el("span", { class:"sticker" }, "Apresiasi buat " + me.nama),
+      el("p", { id:"apr-judul", class:"mot-sapa" }, "Welcome back! 👋"),
+      el("blockquote", { class:"mot-teks" }, teks),
+      btn));
+  document.body.append(ov);
+  document.addEventListener("keydown", esc);
+  btn.focus();
+}
+document.addEventListener("visibilitychange", () => {
+  if (!S.me) return;
+  if (document.visibilityState === "hidden") { try { localStorage.setItem("spill-aktif-" + S.me.id, String(Date.now())); } catch (e) {} }
+  else cekApresiasi();
+});
 
 /* ================= AKUN ================= */
 async function viewAkun() {
@@ -832,7 +1572,7 @@ async function viewTim() {
       el("button", { class:"btn sm", onclick: () => { form.hidden = false; ta.focus(); } }, "Balas"),
       el("button", { class:"btn ghost sm", onclick: () => kirim("Kerja bagus hari ini, terima kasih. Lanjutkan!", "apresiasi") }, "Beri apresiasi"),
       x.grup === "attn" ? el("button", { class:"btn ghost sm", onclick: () => kirim("Kita ngobrol 15 menit hari ini ya, nanti saya kabari jamnya.", "1on1") }, "Ajak 1:1") : null,
-      el("a", { class:"btn ghost sm", href:`#/pesan?m=${m.id}`, style:"text-decoration:none" }, "Buka percakapan")), form);
+), form);
     return card;
   }
   const by = g => data.filter(x => x.grup === g);
@@ -854,7 +1594,9 @@ async function viewTim() {
         group("Layak diapresiasi", "var(--appr)", by("appr"), "Belum ada."),
         group("Aman", "var(--calm)", by("calm"), "Belum ada."),
         group("Belum check-in", "var(--line)", by("belum"), "Semua sudah check-in.", x => el("div", { class:"row between", style:"padding:4px 0" },
-          el("span", x.m.nama), el("a", { class:"btn ghost sm", href:`#/pesan?m=${x.m.id}`, style:"text-decoration:none" }, "Sapa"))),
+          el("span", x.m.nama),
+          msgs.some(g => g.member_id === x.m.id && g.author_id === S.me.id) ? el("span", { class:"hint" }, "Sudah diingatkan")
+            : el("button", { class:"btn ghost sm", onclick: async () => { try { await kirimPesan(x.m.id, "Hai! Jangan lupa check-in hari ini ya, cuma 2 menit kok.", "pesan"); toast("Pengingat terkirim ke " + x.m.nama); route(); } catch (e) { toast("Gagal: " + e.message); } } }, "Ingatkan"))),
         by("cuti").length ? group("Cuti / izin", "var(--muted)", by("cuti"), "", x => el("div", { style:"padding:4px 0" }, x.m.nama)) : null)));
 }
 
@@ -985,6 +1727,6 @@ async function viewAtur() {
 }
 
 /* ================= MULAI ================= */
-const VIEWS = { lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, pesan: viewPesan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
+const VIEWS = { juara: viewJuara, ide: viewIde, menang: viewMenang, modul: viewModul, link: viewTautan, struktur: viewStruktur, lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, masukan: viewMasukan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
 sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_OUT") { S.me = null; } });
 boot();
