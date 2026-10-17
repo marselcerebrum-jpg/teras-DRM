@@ -2259,6 +2259,169 @@ function susunHook(tpl, kunci, masalah, profil, tujuan) {
   t = t.replace(/\b(\w+)\s+\1\b/gi, "$1");   // "soal soal" → "soal"
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
+
+/* ---------- Hook Generator: mode "isi rumus" ---------- */
+// Pengguna memilih rumus, lalu mengisi bagian kosong [..] sendiri. Hasilnya selalu nyambung karena isinya ditulis manusia.
+const CONTOH_SLOT = {
+  "x":"latihan soal asal banyak", "y":"masih sering kehabisan waktu", "kebiasaan umum":"ngerjain soal tanpa batas waktu",
+  "hasil yang diinginkan":"lolos SKD", "hasil":"lolos SKD", "tren":"belajar 10 jam sehari", "produk viral":"tryout gratisan",
+  "kebenaran pahit":"bikin cepat capek dan nggak efektif", "keyakinan umum":"TIU itu soal bakat", "kondisi negatif":"belum siap tes",
+  "kondisi positif":"udah paham materi", "ekspektasi":"belajar sambil rebahan", "realita":"latihan terarah tiap hari",
+  "kondisi spesifik":"sering kehabisan waktu di TIU", "struggle":"sering kehabisan waktu di TIU", "lakukan x":"ngerjain deret angka cepat",
+  "hal yang paling dibenci audiens":"hafalan rumus", "jumlah":"3", "n":"3", "angka":"30", "tools":"trik", "hacks":"trik",
+  "pesaing":"saingan tesmu", "orang lain":"saingan tesmu", "hasil spektakuler":"naik 40 poin TIU", "kondisi terbatas":"cuma belajar 30 menit sehari",
+  "target audience":"pejuang CPNS", "audiens":"pejuang CPNS", "akibat fatal":"nilai TIU jeblok", "akibat":"nilai jeblok",
+  "industri":"bimbel mahal", "orang sukses":"yang udah lolos", "hal spesifik":"trik deret angka", "aktivitas":"latihan soal",
+  "kebiasaan":"ngerjain soal sambil main HP", "masalah umum":"skor TIU stagnan", "topik":"deret angka", "hal kecil":"kebiasaan kecil",
+  "momen penting":"hari tes", "momen":"hari tes", "kehilangan besar":"gagal SKD", "hal sepele":"salah baca soal",
+  "hal yang diyakini benar":"latihan sebanyak-banyaknya", "akibat buruk":"skor stagnan", "hal biasa":"coret-coret di kertas",
+  "hasil tak terduga":"hemat waktu 10 menit", "alasan sebenarnya":"belum tahu polanya", "a":"langsung jawab", "b":"coret-coret dulu",
+  "kondisi":"masih lemah di TIU", "waktu singkat":"30 detik", "kelemahan":"bagian tersulit", "kekuatan":"bagian tercepat",
+  "metode":"latihan 15 menit sehari", "waktu":"seminggu", "kondisi buruk":"paling takut TIU", "orang":"pejuang CPNS",
+  "kejadian":"tahu trik ini", "opini":"belajar lama nggak jaminan lolos", "opini berani":"kamu nggak perlu belajar 10 jam sehari",
+  "perasaan":"capeknya", "situasi":"udah belajar tapi tetap lupa", "aksi kecil":"latihan 10 menit", "data":"tryout kami",
+  "ahli":"tutor", "tutor":"tutor", "jumlah orang":"ribuan member", "x detik":"10",
+};
+function contohSlot(label) {
+  const l = label.toLowerCase().trim();
+  if (CONTOH_SLOT[l]) return CONTOH_SLOT[l];
+  for (const bagian of l.split("/")) if (CONTOH_SLOT[bagian.trim()]) return CONTOH_SLOT[bagian.trim()];
+  const cocok = Object.keys(CONTOH_SLOT).find(k => k.length > 3 && l.includes(k));
+  return cocok ? CONTOH_SLOT[cocok] : "isi sesuai topikmu";
+}
+function slotRumus(rumus) { return [...rumus.matchAll(/\[([^\]]+)\]/g)].map(m => m[1]); }
+// Kerangka rumus yang ditulis huruf besar semua dibuat huruf biasa, kecuali kata pertama (misalnya JANGAN)
+function rakitRumus(rumus, isian) {
+  let i = 0;
+  const kerangka = rumus.replace(/\[[^\]]+\]/g, "");
+  const kapital = kerangka === kerangka.toUpperCase() && /[A-Z]/.test(kerangka);
+  let hasil = rumus.replace(/\[[^\]]+\]/g, () => "\u0000" + (i++) + "\u0000");
+  if (kapital) { const kata = hasil.split(" "); hasil = kata[0] + " " + kata.slice(1).join(" ").toLowerCase(); }
+  hasil = hasil.replace(/\u0000(\d+)\u0000/g, (_, n) => (isian[n] || "").trim() || "…");
+  hasil = hasil.replace(/\s+/g, " ").trim();
+  const tanya = /^(gimana|bagaimana|kenapa|apa|mana|pernah|tahu nggak|kamu tim|kamu masih|kamu juga|tebak|siapa|kapan|berapa)\b/i.test(hasil);
+  if (!/[.?!…:]$/.test(hasil)) hasil += tanya ? "?" : ".";
+  return hasil.charAt(0).toUpperCase() + hasil.slice(1);
+}
+function modeIsiRumus(data, kategori, jenisTopik, st, me) {
+  const box = el("div", { class:"stack" });
+  st.isi = st.isi || { rumus:null, nilai:{}, cari:"", kat:null, topik:"", jenis: st.jenis || "materi", platform:null, viral:false };
+  const s = st.isi;
+  const PLATFORM_REK = [{ v:null, label:"Semua platform" }, { v:"TikTok", label:"TikTok" }, { v:"Reels", label:"Instagram Reels" }, { v:"Shorts", label:"YouTube Shorts" }];
+  // Skor rekomendasi: cocok dengan jenis topik (wajib), pola viral, pola terbaik untuk konten edukasi, platform, dan tidak butuh data nyata
+  const skorRekomendasi = r => {
+    if (!(r.varian && r.varian[s.jenis]) && !(s.jenis === "materi" && r.template)) return -1;
+    let n = 1;
+    if (r.viral) n += 3;
+    if (r.viral && [4, 6].includes(r.viral.no) && ["materi", "tips"].includes(s.jenis)) n += 2;
+    if (s.platform && r.viral && (r.viral.kuat_di === "Semua platform" || r.viral.kuat_di.includes(s.platform))) n += 2;
+    if (r.butuh_data) n -= 2;
+    return n;
+  };
+  const alasan = r => [r.viral ? "🔥 Pola viral: " + r.viral.pola + " (paling kuat di " + r.viral.kuat_di + ")" : null,
+    r.viral && [4, 6].includes(r.viral.no) && ["materi", "tips"].includes(s.jenis) ? "📚 Pola terbaik untuk konten edukasi" : null,
+    r.butuh_data ? "⚠️ Butuh data atau kisah nyata" : null].filter(Boolean);
+  function daftarRumus() {
+    const q2 = s.cari.trim().toLowerCase();
+    const xs = data.rumus.filter(r => (!s.kat || r.kategori === s.kat) && (!q2 || (r.rumus + " " + r.nama).toLowerCase().includes(q2)));
+    const cariIn = el("input", { class:"field", placeholder:"Cari rumus, misalnya: jangan, rahasia, POV", value: s.cari });
+    cariIn.addEventListener("input", () => { s.cari = cariIn.value; daftar.replaceChildren(...isiDaftar()); });
+    const daftar = el("div", { class:"rumus-list" });
+    function isiDaftar() {
+      const ys = data.rumus.filter(r => (!s.viral || r.viral) && (!s.kat || r.kategori === s.kat) && (!s.cari.trim() || (r.rumus + " " + r.nama).toLowerCase().includes(s.cari.trim().toLowerCase())));
+      return ys.length ? ys.map(r => el("button", { class:"rumus-item" + (s.rumus === r.id ? " on" : ""), onclick: () => { s.rumus = r.id; s.nilai = {}; draw(); setTimeout(() => box.querySelector(".isi-form")?.scrollIntoView({ behavior:"smooth", block:"start" }), 50); } },
+        el("span", { class:"chip " + kategori[r.kategori].warna }, kategori[r.kategori].label),
+        el("b", r.rumus),
+        r.viral ? el("small", { class:"hint" }, "🔥 Pola viral: " + r.viral.pola) : null,
+        r.butuh_data ? el("small", { class:"err" }, "⚠️ Butuh data/kisah nyata") : el("small", { class:"hint" }, r.asal === "tim" ? "Rumus tim" : "Rumus Spill"))) : [el("p", { class:"empty" }, "Rumus tidak ditemukan.")];
+    }
+    daftar.replaceChildren(...isiDaftar());
+    const jt = (data.jenis_topik || []).map(j => ({ v:j.id, label:j.label }));
+    // Maksimal 2 rumus per pola supaya rekomendasinya bervariasi
+    const perPola = {}, rek = [];
+    for (const x of data.rumus.map(r => ({ r, n: skorRekomendasi(r) })).filter(x => x.n > 0).sort((a, b) => b.n - a.n)) {
+      const kunci = x.r.viral ? x.r.viral.no : "lain-" + x.r.kategori;
+      if ((perPola[kunci] || 0) >= 2) continue;
+      perPola[kunci] = (perPola[kunci] || 0) + 1; rek.push(x);
+      if (rek.length >= 8) break;
+    }
+    const panelRek = el("div", { class:"stack", style:"gap:10px" },
+      el("div", { class:"lbl" }, "Topik kontenmu jenis apa?", pilihan(jt, { get: () => s.jenis, set: v => s.jenis = v, onChange: draw })),
+      el("div", { class:"lbl" }, "Mau diunggah di mana?", pilihan(PLATFORM_REK, { get: () => s.platform, set: v => s.platform = v, onChange: draw })),
+      el("b", "⭐ Rekomendasi rumus untuk kamu"),
+      el("div", { class:"rumus-list rek" }, rek.map(({ r }) => el("button", { class:"rumus-item" + (s.rumus === r.id ? " on" : ""), onclick: () => { s.rumus = r.id; s.nilai = {}; draw(); setTimeout(() => box.querySelector(".isi-form")?.scrollIntoView({ behavior:"smooth", block:"start" }), 50); } },
+        el("span", { class:"chip " + kategori[r.kategori].warna }, kategori[r.kategori].label),
+        el("b", r.rumus),
+        ...alasan(r).map(t => el("small", { class: t.startsWith("⚠️") ? "err" : "hint" }, t))))),
+      el("p", { class:"hint" }, "Rekomendasi berdasarkan pola hook yang paling sering muncul di 500 video viral 2026, disesuaikan dengan jenis topik dan platformmu. Pola viral bukan jaminan viral; uji hook-mu sendiri di Papan eksperimen."));
+    return el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("h2", "1. Pilih rumus"),
+      panelRek,
+      el("b", { style:"margin-top:6px" }, "Atau cari dari semua " + data.rumus.length + " rumus"),
+      el("div", { class:"row" }, cariIn),
+      pilihan([{ v:false, label:"Semua rumus" }, { v:true, label:"🔥 Hanya pola viral" }], { get: () => s.viral, set: v => s.viral = v, onChange: () => daftar.replaceChildren(...isiDaftar()) }),
+      pilihan([{ v:null, label:"Semua jenis" }, ...data.kategori.map(k => ({ v:k.id, label:k.label }))], { get: () => s.kat, set: v => s.kat = v, onChange: () => daftar.replaceChildren(...isiDaftar()) }),
+      daftar);
+  }
+  function formIsi() {
+    const r = data.rumus.find(x => x.id === s.rumus);
+    if (!r) return el("p", { class:"hint" }, "Pilih salah satu rumus di atas untuk mulai mengisi.");
+    const slot = slotRumus(r.rumus);
+    const k = kategori[r.kategori];
+    const profil = PROFIL_AKUN[st.akun] || PROFIL_AKUN.CEREBRUM;
+    const hasilBox = el("div");
+    function gambarHasil() {
+      const teks = rakitRumus(r.rumus, s.nilai);
+      const isian = slot.map((_, i) => (s.nilai[i] || "").trim()).filter(Boolean);
+      let layar1 = r.teks_layar;
+      let layar2 = teks.split(/\s+/).length <= 9 ? teks.replace(/[.]$/, "") : isian.slice(0, 2).join(" • ");
+      layar2 = layar2 ? layar2.charAt(0).toUpperCase() + layar2.slice(1) : "";
+      const topik = s.topik.trim();
+      const jt = jenisTopik.find(x => x.id === st.jenis) || jenisTopik[0];
+      const visual = topik ? rapikan((k.visual_tpl || r.visual).replaceAll("{o}", rapikan((jt.objek || "{k}").replaceAll("{k}", topik))).replaceAll("{k}", topik).replaceAll("{a}", profil.aud)) : r.visual;
+      const lengkap = slot.every((_, i) => (s.nilai[i] || "").trim());
+      const paket = () => "🗣️ Diucapkan:\n" + teks + "\n\n📝 Teks layar:\n" + layar1 + (layar2 ? "\n" + layar2 : "") + "\n\n🎬 Visual 0–3 detik:\n" + visual;
+      hasilBox.replaceChildren(el("article", { class:"hook-kartu" },
+        el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip " + k.warna }, k.label), r.viral ? el("span", { class:"chip appr" }, "🔥 " + r.viral.pola) : null, el("span", { class:"chip" }, lengkap ? "Siap dipakai ✅" : "Lengkapi isian dulu")),
+        el("small", { class:"hook-label" }, "🗣️ Diucapkan"), el("p", { class:"hook-teks" }, "“" + teks + "”"),
+        el("small", { class:"hook-label" }, "📝 Teks layar (detik 0–3)"), el("div", { class:"hook-layar" }, el("b", layar1), layar2 ? el("span", layar2) : null),
+        el("small", { class:"hook-label" }, "🎬 Visual pembuka"),
+        el("div", { class:"hook-detail" }, el("div", visual), topik ? null : el("div", { class:"hint" }, "Isi topik konten supaya arahan visual lebih spesifik."),
+          r.catatan ? el("div", { class:"err", style:"font-size:.84rem" }, "Catatan: " + r.catatan) : null),
+        el("div", { class:"row", style:"gap:6px" },
+          el("button", { class:"btn sm", disabled: !lengkap, onclick: async () => toast(await salinTeks(paket()) ? "Hook lengkap tersalin 📋" : "Gagal menyalin") }, "📋 Salin lengkap"),
+          el("button", { class:"btn ghost sm", disabled: !lengkap, onclick: async () => toast(await salinTeks(teks) ? "Kalimat hook tersalin" : "Gagal menyalin") }, "Salin ucapan"),
+          me.peran !== "leader" ? el("button", { class:"btn ghost sm", disabled: !lengkap, onclick: async e2 => {
+            e2.target.disabled = true;
+            try { await q(sb.from("ide").insert({ member_id: me.id, judul: teks.slice(0, 200), isi: "Hook untuk konten " + st.akun + (topik ? " tentang " + topik : "") + ".\n\n" + paket() + "\n\nRumus " + r.id + ": " + r.rumus, kategori:"Konten", status:"baru" })); toast("Masuk Bank Ide 💡"); }
+            catch (er) { toast("Gagal: " + er.message); e2.target.disabled = false; } } }, "💡 Simpan ke Bank Ide") : null)));
+    }
+    const isianEl = slot.map((label, i) => {
+      const n = el("input", { class:"field", placeholder:"Contoh: " + contohSlot(label) });
+      n.value = s.nilai[i] || "";
+      n.addEventListener("input", () => { s.nilai[i] = n.value; gambarHasil(); });
+      const nama = r.id === "H001" ? { X:"hal yang jangan dilakukan", Y:"kondisi penonton" }[label] : null;
+      return el("label", { class:"lbl" }, "[" + label + "]" + (nama ? " · " + nama : ""), n);
+    });
+    const topikIn = el("input", { class:"field", placeholder:"Contoh: soal deret angka TIU" });
+    topikIn.value = s.topik;
+    topikIn.addEventListener("input", () => { s.topik = topikIn.value; gambarHasil(); });
+    gambarHasil();
+    return el("section", { class:"panel pad stack isi-form", style:"gap:12px" },
+      el("h2", "2. Isi bagian kosongnya"),
+      el("div", { class:"note" }, el("b", "Rumus: "), r.rumus),
+      el("p", { class:"hint" }, "Contoh dari Spill: " + r.contoh),
+      ...isianEl,
+      el("label", { class:"lbl" }, el("span", "Topik konten (opsional, untuk arahan visual)"), topikIn),
+      el("div", { class:"lbl" }, "Untuk akun", pilihan(DAFTAR_AKUN, { get: () => st.akun, set: v => st.akun = v, onChange: gambarHasil })),
+      el("h2", { style:"margin-top:6px" }, "3. Hasilnya"),
+      hasilBox);
+  }
+  function draw() { box.replaceChildren(daftarRumus(), formIsi()); }
+  draw();
+  return box;
+}
+
 async function viewHook() {
   const me = S.me;
   const [data, peg] = await Promise.all([muatDataHook(), q(sb.from("akun_pegangan").select("akun").eq("member_id", me.id)).catch(() => [])]);
@@ -2274,7 +2437,7 @@ async function viewHook() {
     const profil = PROFIL_AKUN[st.akun] || PROFIL_AKUN.CEREBRUM;
     // Hanya rumus yang punya kalimat untuk jenis topik ini. Tanpa masalah, rumus yang butuh {m} disembunyikan supaya tidak ada kalimat tempelan.
     let daftar = acakDenganBenih(data.rumus, st.benih).map(r => ({ r, tpl: templateUntuk(r, st.jenis) })).filter(x => x.tpl && (masalah || !x.tpl.includes("{m}")));
-    daftar = [...daftar.filter(x => !x.r.butuh_data), ...daftar.filter(x => x.r.butuh_data)];
+    daftar = [...daftar.filter(x => !x.r.butuh_data && x.r.viral), ...daftar.filter(x => !x.r.butuh_data && !x.r.viral), ...daftar.filter(x => x.r.butuh_data)];
     if (masalah) daftar = [...daftar.filter(x => x.tpl.includes("{m}")), ...daftar.filter(x => !x.tpl.includes("{m}"))];
     if (st.kat) daftar = daftar.filter(x => x.r.kategori === st.kat);
     const tampil = st.semua ? daftar : daftar.slice(0, 8);
@@ -2312,6 +2475,7 @@ async function viewHook() {
           el("div", { class:"row", style:"gap:6px" },
             el("span", { class:"chip " + k.warna }, k.label),
             el("span", { class:"chip" }, r.asal === "tim" ? "Rumus tim" : "Rumus Spill"),
+            r.viral ? el("span", { class:"chip appr", title:"Paling kuat di " + r.viral.kuat_di }, "🔥 " + r.viral.pola) : null,
             r.butuh_data ? el("span", { class:"chip attn", title: r.catatan }, "⚠️ Butuh data nyata") : null),
           el("small", { class:"hook-label" }, "🗣️ Diucapkan"), tampilTeks, kotakEdit,
           el("small", { class:"hook-label" }, "📝 Teks layar (detik 0–3)"), layarBox, editLayar,
@@ -2340,8 +2504,13 @@ async function viewHook() {
   const jAwal = jenisTopik.find(x => x.id === st.jenis) || jenisTopik[0];
   const inKunci = input(st, "kunci", { placeholder:"Contoh: " + jAwal.contoh_k, draf:"hook" });
   const inMasalah = input(st, "masalah", { placeholder:"Contoh: " + jAwal.contoh_m, draf:"hook" });
+  st.mode = st.mode || "isi";
+  const kepala = el("div", el("h1", "Hook Generator"), el("p", { class:"hint", style:"margin-top:6px" }, "Dua cara: isi rumus sendiri (hasil pasti nyambung), atau cari inspirasi dari topik. Ada " + data.rumus.length + " rumus hook."));
+  const tukarMode = pilihan([{ v:"isi", label:"✍️ Isi rumus (disarankan)" }, { v:"cari", label:"🔍 Cari inspirasi dari topik" }], { get: () => st.mode, set: v => st.mode = v, onChange: () => route() });
+  if (st.mode === "isi") { box.append(kepala, tukarMode, modeIsiRumus(data, kategori, jenisTopik, st, me)); return box; }
   box.append(
-    el("div", el("h1", "Hook Generator"), el("p", { class:"hint", style:"margin-top:6px" }, "Pilih jenis topik, isi topik dan masalahnya. Spill menyusun pilihan hook dari " + data.rumus.length + " rumus. Setiap hook bisa diubah dulu sebelum disalin.")),
+    kepala, tukarMode,
+    el("div", { class:"note warn" }, "Mode ini menempelkan topikmu ke kalimat rumus secara otomatis, jadi hasilnya kadang perlu dirapikan. Untuk hasil yang pasti nyambung, pakai ✍️ Isi rumus."),
     el("section", { class:"panel pad stack", style:"gap:12px" },
       el("div", { class:"lbl" }, "Jenis topik *", pilihan(jenisTopik.map(j => ({ v:j.id, label:j.label })), { get: () => st.jenis, set: v => { st.jenis = v; st.kat = null; const j = jenisTopik.find(x => x.id === v); inKunci.placeholder = "Contoh: " + j.contoh_k; inMasalah.placeholder = "Contoh: " + j.contoh_m; }, onChange: () => { if (st.hasil) drawHasil(); } })),
       el("label", { class:"lbl" }, "Kata kunci / topik konten *", inKunci),

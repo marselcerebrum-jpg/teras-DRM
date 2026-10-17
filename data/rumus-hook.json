@@ -1,5 +1,5 @@
 {
- "versi": "2026-10-17d",
+ "versi": "2026-10-17e",
  "placeholder": {
   "{k}": "topik / kata kunci",
   "{m}": "masalah (frasa kerja, misalnya 'sering kehabisan waktu')",
@@ -195,7 +195,8 @@
     "materi": "JANGAN latihan {k} asal banyak kalau kamu masih {m}.",
     "tips": "JANGAN asal ikutin tips {k} kalau kamu masih {m}.",
     "info": "JANGAN daftar dulu sebelum cek {k} ini, apalagi kalau kamu masih {m}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H002",
@@ -214,6 +215,11 @@
    "varian": {
     "materi": "Berhenti ngerjain {k} tanpa batas waktu kalau kamu mau {h}.",
     "tips": "Berhenti nunda persiapan {k} kalau kamu mau {h}."
+   },
+   "viral": {
+    "no": 3,
+    "pola": "Membantah keyakinan umum",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -234,7 +240,8 @@
     "materi": "Kesalahan {a} waktu belajar {k} yang bikin nilainya jeblok (dan cara benerinnya).",
     "tips": "Kesalahan {a} soal {k} yang bikin peluangnya hilang (dan cara benerinnya).",
     "info": "Kesalahan {a} soal {k} yang bisa bikin gugur di awal (dan cara menghindarinya)."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H004",
@@ -254,6 +261,11 @@
     "materi": "Stop latihan {k} sampai kamu nonton video ini sampai habis.",
     "tips": "Stop cari tips {k} ke mana-mana sampai kamu nonton video ini.",
     "info": "Stop daftar dulu sampai kamu paham {k} di video ini."
+   },
+   "viral": {
+    "no": 3,
+    "pola": "Membantah keyakinan umum",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -275,7 +287,8 @@
     "tips": "Kamu masih {m}? Pantes persiapan {k} terasa berat.",
     "info": "Kamu masih {m}? Tenang, video ini bahas {k} dengan simpel.",
     "motivasi": "Lagi {m}? Wajar kok, {k} memang berat."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H006",
@@ -293,7 +306,8 @@
    "contoh": "Kesalahan nomor 3 di soal deret angka TIU ini paling sering terjadi, mungkin kamu juga.",
    "varian": {
     "materi": "Kesalahan nomor 3 di {k} ini paling sering terjadi, mungkin kamu juga."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H007",
@@ -312,7 +326,8 @@
    "varian": {
     "materi": "Kalau kamu masih {m}, siap-siap kehilangan banyak poin di {k}.",
     "tips": "Kalau kamu masih {m}, siap-siap {k} jadi bagian yang paling bikin deg-degan."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H008",
@@ -330,7 +345,8 @@
    "contoh": "Kebiasaan kecil ini diam-diam bikin kamu sering kehabisan waktu di soal deret angka TIU.",
    "varian": {
     "materi": "Kebiasaan kecil ini diam-diam bikin kamu {m} di {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H009",
@@ -349,7 +365,8 @@
    "varian": {
     "materi": "Jangan pernah ngerjain {k} kayak gini di hari tes.",
     "info": "Jangan pernah anggap remeh {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H010",
@@ -369,7 +386,8 @@
     "materi": "Sayang banget kalau kamu gagal {h} cuma gara-gara {k}.",
     "tips": "Sayang banget kalau kamu gagal {h} cuma karena salah persiapan {k}.",
     "info": "Sayang banget kalau kamu gagal {h} cuma gara-gara salah paham soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H011",
@@ -388,6 +406,11 @@
    "varian": {
     "materi": "Unpopular opinion: hafal rumus {k} itu bukan kunci buat {h}.",
     "tips": "Unpopular opinion: kebanyakan tips {k} di internet justru bikin bingung."
+   },
+   "viral": {
+    "no": 3,
+    "pola": "Membantah keyakinan umum",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -408,7 +431,8 @@
     "materi": "Aku nyesel baru nyadar kalau \"{k} itu susah\" ternyata bohong.",
     "tips": "Aku nyesel baru sadar kalau tips {k} yang paling populer ternyata nggak selalu benar.",
     "motivasi": "Aku nyesel baru sadar kalau {k} bukan akhir segalanya."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H013",
@@ -428,7 +452,8 @@
     "materi": "Tanda kamu belum siap {k}, padahal kamu pikir kamu udah paham.",
     "tips": "Tanda kamu belum benar-benar paham soal {k}, padahal kamu pikir udah.",
     "info": "Tanda kamu belum benar-benar paham {k}, padahal kamu pikir udah."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H014",
@@ -447,6 +472,11 @@
    "varian": {
     "materi": "Kenapa latihan {k} terlalu banyak justru bisa bikin skor kamu stagnan?",
     "tips": "Kenapa makin banyak baca tips {k} justru bikin makin bingung?"
+   },
+   "viral": {
+    "no": 9,
+    "pola": "Pertanyaan + klaim",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -465,7 +495,8 @@
    "contoh": "Ternyata soal deret angka TIU bisa dikerjain jauh lebih cepat tanpa rumus rumit.",
    "varian": {
     "materi": "Ternyata {k} bisa dikerjain jauh lebih cepat tanpa rumus rumit."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H016",
@@ -485,6 +516,11 @@
     "materi": "Mitos soal {k} yang masih dipercaya banyak {a}.",
     "tips": "Mitos soal {k} yang masih dipercaya banyak {a}.",
     "info": "Mitos soal {k} yang masih dipercaya banyak {a}."
+   },
+   "viral": {
+    "no": 10,
+    "pola": "Pembingkaian negatif",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -504,6 +540,11 @@
    "varian": {
     "materi": "Semua orang bilang {k} itu soal hafalan. Mereka salah.",
     "tips": "Semua orang bilang {k} itu soal bakat. Mereka salah."
+   },
+   "viral": {
+    "no": 3,
+    "pola": "Membantah keyakinan umum",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -522,7 +563,8 @@
    "contoh": "Kamu bukan nggak bisa soal deret angka TIU, kamu cuma belum tahu polanya.",
    "varian": {
     "materi": "Kamu bukan nggak bisa {k}, kamu cuma belum tahu polanya."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H019",
@@ -541,6 +583,11 @@
    "varian": {
     "materi": "Rahasia {k} yang jarang dibahas di grup belajar.",
     "tips": "Rahasia {k} yang jarang dibahas orang."
+   },
+   "viral": {
+    "no": 4,
+    "pola": "Penasaran + hal spesifik",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -559,7 +606,8 @@
    "contoh": "Gimana caranya aku paham soal deret angka TIU padahal cuma belajar 30 menit sehari?",
    "varian": {
     "materi": "Gimana caranya aku paham {k} padahal cuma belajar 30 menit sehari?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H021",
@@ -579,7 +627,8 @@
     "materi": "Ini alasan sebenarnya kenapa kamu {m} di {k}.",
     "tips": "Ini alasan sebenarnya kenapa kamu {m} soal {k}.",
     "info": "Ini alasan sebenarnya kenapa banyak {a} {m} soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H022",
@@ -598,6 +647,11 @@
    "varian": {
     "materi": "3 trik {k}, jangan di-skip, nomor 3 paling penting.",
     "tips": "3 tips {k}, jangan di-skip, nomor 3 paling penting."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -618,6 +672,11 @@
     "materi": "Satu hal soal {k} yang jarang orang mau kasih tahu.",
     "tips": "Satu hal soal {k} yang jarang orang mau kasih tahu.",
     "info": "Satu hal soal {k} yang sering kelewat."
+   },
+   "viral": {
+    "no": 4,
+    "pola": "Penasaran + hal spesifik",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -638,7 +697,8 @@
     "materi": "Di akhir video ini, kamu bakal bisa jawab soal {k} dalam hitungan detik.",
     "tips": "Di akhir video ini, kamu bakal tahu persis apa yang harus dilakukan soal {k}.",
     "info": "Di akhir video ini, kamu bakal paham {k} tanpa bingung lagi."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H025",
@@ -657,7 +717,8 @@
    "varian": {
     "materi": "Aku nemu cara ngerjain {k} yang bikin aku nggak {m} lagi.",
     "tips": "Aku nemu cara yang bikin aku nggak {m} lagi soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H026",
@@ -675,6 +736,11 @@
    "contoh": "Ada pola di soal deret angka TIU yang sering muncul. Udah sadar belum?",
    "varian": {
     "materi": "Ada pola di soal {k} yang sering muncul. Udah sadar belum?"
+   },
+   "viral": {
+    "no": 4,
+    "pola": "Penasaran + hal spesifik",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -696,7 +762,8 @@
     "tips": "Khusus buat {a} yang {m}, stop scroll.",
     "info": "Khusus buat {a} yang {m}, stop scroll.",
     "motivasi": "Khusus buat {a} yang {m}, stop scroll."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H028",
@@ -716,7 +783,8 @@
     "materi": "Kalau kamu {a}, kamu wajib tau trik {k} ini.",
     "tips": "Kalau kamu {a}, kamu wajib tau ini soal {k}.",
     "info": "Kalau kamu {a}, kamu wajib tau {k} ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H029",
@@ -734,7 +802,8 @@
    "contoh": "Kamu tim langsung jawab atau tim coret-coret dulu waktu ngerjain soal deret angka TIU?",
    "varian": {
     "materi": "Kamu tim langsung jawab atau tim coret-coret dulu waktu ngerjain {k}?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H030",
@@ -755,7 +824,8 @@
     "tips": "Video ini buat kamu yang masih bingung soal {k}.",
     "info": "Video ini buat kamu yang masih bingung soal {k}.",
     "motivasi": "Video ini buat kamu yang lagi ngerasain {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H031",
@@ -776,7 +846,8 @@
     "tips": "Tag teman kamu yang {m} soal {k}.",
     "info": "Tag teman kamu yang lagi siap-siap daftar dan perlu tahu {k}.",
     "motivasi": "Tag teman kamu yang lagi ngerasain {k}. Dia butuh ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H032",
@@ -795,7 +866,8 @@
    "varian": {
     "materi": "Kalau kamu baru mulai belajar {k}, mulai dari sini.",
     "tips": "Kalau kamu baru mulai siap-siap, mulai dari tips {k} ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H033",
@@ -816,7 +888,8 @@
     "tips": "Buat semua {a}: ini yang perlu kamu tahu soal {k}.",
     "info": "Buat semua {a}: ini yang perlu kamu tahu soal {k}.",
     "motivasi": "Buat semua {a} yang lagi ngerasain {k}: kamu nggak sendirian."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H034",
@@ -835,7 +908,8 @@
    "varian": {
     "materi": "Cara cepat paham {k} tanpa harus hafalan rumus panjang.",
     "tips": "Cara siapin {k} tanpa harus panik di menit terakhir."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H035",
@@ -854,7 +928,8 @@
    "varian": {
     "materi": "Satu kebiasaan kecil yang bikin {k} jadi jauh lebih gampang.",
     "tips": "Satu kebiasaan kecil yang bikin {k} jauh lebih lancar."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H036",
@@ -872,6 +947,11 @@
    "contoh": "Cara ngerjain soal deret angka TIU dalam 30 detik per soal.",
    "varian": {
     "materi": "Cara ngerjain {k} dalam 30 detik per soal."
+   },
+   "viral": {
+    "no": 1,
+    "pola": "Klaim dengan angka spesifik",
+    "kuat_di": "TikTok, YouTube Shorts"
    }
   },
   {
@@ -892,7 +972,8 @@
     "materi": "Kalau kamu {m} di {k}, coba trik ini.",
     "tips": "Kalau kamu {m} soal {k}, coba cara ini.",
     "info": "Kalau kamu {m} soal {k}, simak ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H038",
@@ -912,7 +993,8 @@
     "materi": "Langkah pertama buat {h}: kuasai {k} dengan cara ini.",
     "tips": "Langkah pertama buat {h}: beresin {k} dengan cara ini.",
     "info": "Langkah pertama buat {h}: pahami {k} dulu."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H039",
@@ -930,7 +1012,8 @@
    "contoh": "Rumus siap pakai buat soal deret angka TIU, tinggal tiru.",
    "varian": {
     "materi": "Rumus siap pakai buat {k}, tinggal tiru."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H040",
@@ -949,7 +1032,8 @@
    "varian": {
     "materi": "Trik {k} yang bisa langsung kamu pakai di latihan berikutnya.",
     "tips": "Tips {k} yang bisa langsung kamu praktikkan hari ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H041",
@@ -967,7 +1051,8 @@
    "contoh": "Ubah soal deret angka TIU dari bagian tersulit jadi bagian paling cepat kamu kerjain.",
    "varian": {
     "materi": "Ubah {k} dari bagian tersulit jadi bagian paling cepat kamu kerjain."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H042",
@@ -986,6 +1071,11 @@
    "varian": {
     "materi": "3 trik {k} yang bikin saingan tesmu panik.",
     "tips": "3 tips {k} yang bikin saingan kamu panik."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -1006,6 +1096,11 @@
     "materi": "5 hal soal {k} yang harusnya aku tahu dari dulu.",
     "tips": "5 hal soal {k} yang harusnya aku tahu dari dulu.",
     "info": "5 hal soal {k} yang harusnya kamu tahu dari awal."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -1025,6 +1120,11 @@
    "varian": {
     "materi": "3 tanda kamu sebenarnya udah siap ngerjain {k}.",
     "tips": "3 tanda kamu udah siap soal {k}."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -1045,6 +1145,11 @@
     "materi": "4 kesalahan paling umum di {k}. Nomor 2 paling bikin nyesek.",
     "tips": "4 kesalahan paling umum soal {k}. Nomor 2 paling sering kejadian.",
     "info": "4 kesalahan paling umum soal {k}. Nomor 2 sering bikin gugur."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -1063,6 +1168,11 @@
    "contoh": "Cuma butuh 5 menit buat paham dasar soal deret angka TIU.",
    "varian": {
     "materi": "Cuma butuh 5 menit buat paham dasar {k}."
+   },
+   "viral": {
+    "no": 1,
+    "pola": "Klaim dengan angka spesifik",
+    "kuat_di": "TikTok, YouTube Shorts"
    }
   },
   {
@@ -1081,7 +1191,8 @@
    "contoh": "9 dari 10 pejuang CPNS salah jawab soal deret angka TIU ini. Kamu?",
    "varian": {
     "materi": "9 dari 10 {a} salah jawab soal {k} ini. Kamu?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H048",
@@ -1100,6 +1211,11 @@
    "varian": {
     "materi": "3 langkah ngerjain {k} tanpa panik.",
     "tips": "3 langkah siapin {k} tanpa panik."
+   },
+   "viral": {
+    "no": 6,
+    "pola": "Pembuka daftar",
+    "kuat_di": "Semua platform"
    }
   },
   {
@@ -1118,7 +1234,8 @@
    "contoh": "Coba jawab soal deret angka TIU ini dalam 10 detik.",
    "varian": {
     "materi": "Coba jawab soal {k} ini dalam 10 detik."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H050",
@@ -1138,7 +1255,8 @@
     "materi": "Tebak, mana cara ngerjain {k} yang benar: A atau B?",
     "tips": "Tebak, mana yang benar soal {k}: A atau B?",
     "info": "Tebak, mana yang benar soal {k}: A atau B?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H051",
@@ -1156,7 +1274,8 @@
    "contoh": "Kalau kamu bisa jawab soal deret angka TIU ini, kamu siap lolos SKD.",
    "varian": {
     "materi": "Kalau kamu bisa jawab soal {k} ini, kamu siap {h}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H052",
@@ -1174,7 +1293,8 @@
    "contoh": "Pause videonya, jawab soal deret angka TIU ini, baru lanjut.",
    "varian": {
     "materi": "Pause videonya, jawab soal {k} ini, baru lanjut."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H053",
@@ -1194,7 +1314,8 @@
     "materi": "Komen jawabanmu dulu sebelum lihat pembahasan soal {k} ini.",
     "tips": "Komen dulu: menurutmu apa yang paling penting soal {k}?",
     "info": "Komen pertanyaanmu soal {k}, nanti kami jawab."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H054",
@@ -1212,7 +1333,8 @@
    "contoh": "Soal deret angka TIU dari level gampang sampai susah. Kamu kuat sampai level berapa?",
    "varian": {
     "materi": "Soal {k} dari level gampang sampai susah. Kamu kuat sampai level berapa?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H055",
@@ -1232,7 +1354,8 @@
     "materi": "Soal {k} ini kelihatan gampang, padahal ada jebakannya.",
     "tips": "Tips {k} ini kelihatan bener, padahal ada jebakannya.",
     "info": "Info soal {k} ini sering disalahpahami."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H056",
@@ -1252,6 +1375,11 @@
     "materi": "POV: kamu akhirnya sadar kalau latihan {k} 3 jam nggak seefektif 30 menit yang terarah.",
     "tips": "POV: kamu akhirnya sadar kalau persiapan {k} nggak segampang yang kamu kira.",
     "motivasi": "POV: kamu akhirnya sadar kalau {k} justru bikin kamu lebih kuat."
+   },
+   "viral": {
+    "no": 2,
+    "pola": "Skenario POV",
+    "kuat_di": "TikTok"
    }
   },
   {
@@ -1272,7 +1400,8 @@
     "materi": "Dulu aku paling takut {k}, sekarang jadi bagian favorit. Ini yang aku ubah.",
     "tips": "Dulu aku paling takut soal {k}, sekarang malah percaya diri. Ini yang aku ubah.",
     "motivasi": "Dulu aku {m}, sekarang aku {h}. Ini ceritanya."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H058",
@@ -1290,7 +1419,8 @@
    "contoh": "Aku coba latihan soal deret angka TIU 15 menit tiap hari selama seminggu. Hasilnya…",
    "varian": {
     "materi": "Aku coba latihan {k} 15 menit tiap hari selama seminggu. Hasilnya…"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H059",
@@ -1309,7 +1439,8 @@
    "varian": {
     "materi": "Reaksi {a} waktu tahu trik {k} ini.",
     "tips": "Reaksi {a} waktu tahu fakta soal {k} ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H060",
@@ -1327,7 +1458,8 @@
    "contoh": "Hari pertama vs hari ke-30 belajar soal deret angka TIU.",
    "varian": {
     "materi": "Hari pertama vs hari ke-30 belajar {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H061",
@@ -1346,7 +1478,8 @@
    "varian": {
     "materi": "Aku pernah gagal karena {k}. Ini pelajaran yang aku ambil.",
     "motivasi": "Aku pernah ngalamin {k}. Ini pelajaran yang aku ambil."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H062",
@@ -1365,7 +1498,8 @@
    "varian": {
     "materi": "Alumni kami dulu {m}, sampai akhirnya {h}. Ini caranya.",
     "motivasi": "Alumni kami dulu {m}, sampai akhirnya {h}. Ini caranya."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H063",
@@ -1384,7 +1518,8 @@
    "varian": {
     "materi": "Ini bedanya {a} yang lolos dan yang gagal waktu ngerjain {k}.",
     "tips": "Ini bedanya {a} yang lolos dan yang gagal soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H064",
@@ -1403,7 +1538,8 @@
    "varian": {
     "materi": "Cara lama vs cara cepat ngerjain {k}.",
     "tips": "Cara lama vs cara baru siapin {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H065",
@@ -1422,7 +1558,8 @@
    "varian": {
     "materi": "Ngerjain {k} kayak gini ❌, harusnya kayak gini ✅.",
     "tips": "Siapin {k} kayak gini ❌, harusnya kayak gini ✅."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H066",
@@ -1440,7 +1577,8 @@
    "contoh": "Sebelum dan sesudah aku paham trik soal deret angka TIU.",
    "varian": {
     "materi": "Sebelum dan sesudah aku paham trik {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H067",
@@ -1460,7 +1598,8 @@
     "materi": "Ekspektasi vs realita ngerjain {k} di hari tes.",
     "tips": "Ekspektasi vs realita soal {k}.",
     "info": "Ekspektasi vs realita soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H068",
@@ -1478,7 +1617,8 @@
    "contoh": "Belajar soal deret angka TIU: yang rajin vs yang cerdas. Kamu yang mana?",
    "varian": {
     "materi": "Belajar {k}: yang rajin vs yang cerdas. Kamu yang mana?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H069",
@@ -1498,7 +1638,8 @@
     "materi": "H-30 menuju hari tes: ini cara latihan {k} yang paling efektif.",
     "tips": "H-30 sebelum tes: ini yang harus kamu siapin soal {k}.",
     "info": "H-30 sebelum pendaftaran: ini yang harus kamu cek soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H070",
@@ -1518,7 +1659,8 @@
     "materi": "Simpan video ini sebelum kamu latihan {k} lagi.",
     "tips": "Simpan video ini sebelum kamu mulai siapin {k}.",
     "info": "Simpan dulu info {k} ini, nanti pasti kepake."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H071",
@@ -1538,7 +1680,8 @@
     "materi": "Bagian 1 dari 5: cara cepat {k} buat {a}.",
     "tips": "Bagian 1 dari 5: semua yang perlu kamu tahu soal {k}.",
     "info": "Bagian 1 dari 5: semua yang perlu kamu tahu soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H072",
@@ -1557,7 +1700,8 @@
    "varian": {
     "materi": "Masih ada waktu buat jago {k}, asal mulai hari ini.",
     "motivasi": "Masih ada waktu buat {h}, walaupun kamu {m}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H073",
@@ -1577,7 +1721,8 @@
     "materi": "Kuasai {k} sekarang, sebelum kamu panik di hari tes.",
     "tips": "Beresin {k} sekarang, sebelum kamu panik di hari tes.",
     "info": "Cek {k} sekarang, sebelum terlambat."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H074",
@@ -1595,7 +1740,8 @@
    "contoh": "Malam sebelum tes, cukup review soal deret angka TIU kayak gini.",
    "varian": {
     "materi": "Malam sebelum tes, cukup review {k} kayak gini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H075",
@@ -1613,7 +1759,8 @@
    "contoh": "1 menit sehari buat soal deret angka TIU. Mulai sekarang.",
    "varian": {
     "materi": "1 menit sehari buat {k}. Mulai sekarang."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H076",
@@ -1631,6 +1778,11 @@
    "contoh": "Dari ratusan soal deret angka TIU yang kami bahas, pola ini paling sering keluar.",
    "varian": {
     "materi": "Dari ratusan soal {k} yang kami bahas, pola ini paling sering keluar."
+   },
+   "viral": {
+    "no": 5,
+    "pola": "Meminjam otoritas pengalaman",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -1650,7 +1802,8 @@
    "varian": {
     "materi": "Sesuai aturan resmi, ini yang perlu kamu tahu soal {k}.",
     "info": "Sesuai aturan resmi, ini yang perlu kamu tahu soal {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H078",
@@ -1669,6 +1822,11 @@
    "varian": {
     "materi": "Kata tutor kami, ini cara paling cepat ngerjain {k}.",
     "tips": "Kata tutor kami, ini kunci soal {k}."
+   },
+   "viral": {
+    "no": 5,
+    "pola": "Meminjam otoritas pengalaman",
+    "kuat_di": "YouTube Shorts"
    }
   },
   {
@@ -1687,7 +1845,8 @@
    "contoh": "Hasil tryout menunjukkan banyak pejuang CPNS kehilangan poin di soal deret angka TIU.",
    "varian": {
     "materi": "Hasil tryout menunjukkan banyak {a} kehilangan poin di {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H080",
@@ -1705,7 +1864,8 @@
    "contoh": "Ribuan member sudah coba trik soal deret angka TIU ini.",
    "varian": {
     "materi": "Ribuan member sudah coba trik {k} ini."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H081",
@@ -1723,7 +1883,8 @@
    "contoh": "Aku waktu lihat soal deret angka TIU: 🙂 Aku 10 detik kemudian: 😵",
    "varian": {
     "materi": "Aku waktu lihat soal {k}: 🙂 Aku 10 detik kemudian: 😵"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H082",
@@ -1743,7 +1904,8 @@
     "materi": "Nggak ada yang ngomongin betapa capeknya {m} pas belajar {k}.",
     "tips": "Nggak ada yang ngomongin rasanya {m} tiap mikirin {k}.",
     "motivasi": "Nggak ada yang ngomongin betapa beratnya {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H083",
@@ -1763,7 +1925,8 @@
     "materi": "Kamu juga gitu nggak sih, udah belajar {k} tapi tetap {m}?",
     "tips": "Kamu juga gitu nggak sih, udah baca banyak tips {k} tapi tetap {m}?",
     "motivasi": "Kamu juga lagi {m} nggak sih, gara-gara {k}?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H084",
@@ -1782,7 +1945,8 @@
    "varian": {
     "materi": "Tipe-tipe {a} waktu ketemu soal {k}. Kamu yang mana?",
     "tips": "Tipe-tipe {a} soal {k}. Kamu yang mana?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H085",
@@ -1801,7 +1965,8 @@
    "varian": {
     "materi": "Relate banget kalau kamu juga {m} di {k}.",
     "motivasi": "Relate banget kalau kamu juga lagi ngerasain {k}."
-   }
+   },
+   "viral": null
   },
   {
    "id": "H086",
@@ -1819,7 +1984,8 @@
    "contoh": "Otak aku waktu ngerjain soal deret angka TIU jam 2 pagi:",
    "varian": {
     "materi": "Otak aku waktu ngerjain {k} jam 2 pagi:"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H087",
@@ -1833,14 +1999,15 @@
    "format": "Video pendek, Threads, Story",
    "pakai_masalah": true,
    "butuh_data": false,
-   "catatan": "",
+   "catatan": "Lebih kuat kalau pertanyaannya langsung disusul klaim atau jawaban singkat (lihat rumus H099).",
    "contoh": "Pernah nggak kamu sering kehabisan waktu pas ngerjain soal deret angka TIU?",
    "varian": {
     "materi": "Pernah nggak kamu {m} pas ngerjain {k}?",
     "tips": "Pernah nggak kamu {m} soal {k}?",
     "info": "Pernah nggak kamu {m} soal {k}?",
     "motivasi": "Pernah nggak kamu {m} karena {k}?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H088",
@@ -1854,14 +2021,15 @@
    "format": "Video pendek, Threads, Story",
    "pakai_masalah": false,
    "butuh_data": false,
-   "catatan": "",
+   "catatan": "Lebih kuat kalau pertanyaannya langsung disusul klaim atau jawaban singkat (lihat rumus H099).",
    "contoh": "Kenapa ya soal deret angka TIU selalu terasa susah padahal udah latihan?",
    "varian": {
     "materi": "Kenapa ya {k} selalu terasa susah padahal udah latihan?",
     "tips": "Kenapa ya {k} selalu bikin deg-degan?",
     "info": "Kenapa ya {k} selalu bikin bingung?",
     "motivasi": "Kenapa ya {k} rasanya berat banget?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H089",
@@ -1875,13 +2043,14 @@
    "format": "Video pendek, Threads, Story",
    "pakai_masalah": false,
    "butuh_data": false,
-   "catatan": "",
+   "catatan": "Lebih kuat kalau pertanyaannya langsung disusul klaim atau jawaban singkat (lihat rumus H099).",
    "contoh": "Tahu nggak, ada cara ngerjain soal deret angka TIU yang jauh lebih cepat?",
    "varian": {
     "materi": "Tahu nggak, ada cara ngerjain {k} yang jauh lebih cepat?",
     "tips": "Tahu nggak, ada cara siapin {k} yang jauh lebih santai?",
     "info": "Tahu nggak, ada hal soal {k} yang sering kelewat?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H090",
@@ -1895,12 +2064,13 @@
    "format": "Video pendek, Threads, Story",
    "pakai_masalah": false,
    "butuh_data": false,
-   "catatan": "",
+   "catatan": "Lebih kuat kalau pertanyaannya langsung disusul klaim atau jawaban singkat (lihat rumus H099).",
    "contoh": "Apa yang terjadi kalau kamu latihan soal deret angka TIU 10 menit setiap hari?",
    "varian": {
     "materi": "Apa yang terjadi kalau kamu latihan {k} 10 menit setiap hari?",
     "motivasi": "Apa yang terjadi kalau kamu tetap jalan, walaupun {k}?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H091",
@@ -1914,12 +2084,13 @@
    "format": "Video pendek, Threads, Story",
    "pakai_masalah": false,
    "butuh_data": false,
-   "catatan": "",
+   "catatan": "Lebih kuat kalau pertanyaannya langsung disusul klaim atau jawaban singkat (lihat rumus H099).",
    "contoh": "Mana yang lebih penting buat lolos SKD: cepat atau teliti di soal deret angka TIU?",
    "varian": {
     "materi": "Mana yang lebih penting buat {h}: cepat atau teliti di {k}?",
     "tips": "Mana yang lebih penting buat {h}: persiapan lama atau persiapan yang tepat soal {k}?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H092",
@@ -1940,6 +2111,11 @@
     "tips": "Ini mungkin bikin kamu kesel, tapi {k} bukan soal bakat.",
     "info": "Ini mungkin bikin kamu kaget, tapi {k} nggak seribet yang kamu kira.",
     "motivasi": "Ini mungkin bikin kamu kesel, tapi {k} bukan alasan buat berhenti."
+   },
+   "viral": {
+    "no": 8,
+    "pola": "Pembuka pengakuan",
+    "kuat_di": "TikTok"
    }
   },
   {
@@ -1959,6 +2135,11 @@
    "varian": {
     "materi": "Aku tahu bakal ada yang nggak setuju, tapi {k} itu bisa dipelajari siapa aja.",
     "motivasi": "Aku tahu nggak semua setuju, tapi {k} bisa jadi awal yang baru."
+   },
+   "viral": {
+    "no": 8,
+    "pola": "Pembuka pengakuan",
+    "kuat_di": "TikTok"
    }
   },
   {
@@ -1977,7 +2158,8 @@
    "contoh": "Belajar soal deret angka TIU sendiri lebih efektif daripada ikut kelas. Setuju atau nggak?",
    "varian": {
     "materi": "Belajar {k} sendiri lebih efektif daripada ikut kelas. Setuju atau nggak?"
-   }
+   },
+   "viral": null
   },
   {
    "id": "H095",
@@ -1997,6 +2179,181 @@
     "materi": "Hot take: kamu nggak perlu belajar {k} berjam-jam buat {h}.",
     "tips": "Hot take: kamu nggak perlu persiapan berbulan-bulan soal {k} buat {h}.",
     "motivasi": "Hot take: {k} bukan kegagalan, tapi pemanasan."
+   },
+   "viral": null
+  },
+  {
+   "id": "H096",
+   "kategori": "penasaran",
+   "asal": "spill",
+   "nama": "Ada satu hal spesifik",
+   "rumus": "Ada [hal spesifik] yang diam-diam [hasil mengejutkan]",
+   "template": "Ada satu trik {k} yang diam-diam bikin skor naik jauh.",
+   "teks_layar": "ADA 1 HAL INI 👀",
+   "visual": "Tutup sebagian layar atau jawaban, baru dibuka di akhir.",
+   "format": "Video pendek",
+   "pakai_masalah": false,
+   "butuh_data": false,
+   "catatan": "Sebut hal spesifiknya di isi video. Rasa penasaran generik tanpa hal spesifik terbukti kurang kuat.",
+   "contoh": "Ada satu trik soal deret angka TIU yang diam-diam bikin skor naik jauh.",
+   "varian": {
+    "materi": "Ada satu trik {k} yang diam-diam bikin skor naik jauh.",
+    "tips": "Ada satu kebiasaan kecil soal {k} yang diam-diam bikin peluang lolos naik.",
+    "info": "Ada satu poin di {k} yang diam-diam bikin banyak {a} gugur."
+   },
+   "viral": {
+    "no": 4,
+    "pola": "Penasaran + hal spesifik",
+    "kuat_di": "YouTube Shorts"
+   }
+  },
+  {
+   "id": "H097",
+   "kategori": "bukti",
+   "asal": "spill",
+   "nama": "Pelajaran dari pengalaman",
+   "rumus": "Ini yang [pengalaman] ajarkan soal [topik]",
+   "template": "Ini yang aku pelajari dari bahas ribuan soal {k}.",
+   "teks_layar": "PELAJARAN DARI PENGALAMAN",
+   "visual": "Tampilkan dokumen, grafik, atau tangkapan layar sebagai bukti.",
+   "format": "Video pendek, Carousel",
+   "pakai_masalah": false,
+   "butuh_data": true,
+   "catatan": "Angka pengalaman (ribuan soal, ratusan peserta) harus sesuai kenyataan.",
+   "contoh": "Ini yang aku pelajari dari bahas ribuan soal deret angka TIU.",
+   "varian": {
+    "materi": "Ini yang aku pelajari dari bahas ribuan soal {k}.",
+    "tips": "Ini yang aku pelajari dari dampingin ratusan {a} soal {k}.",
+    "info": "Ini yang aku pelajari dari ngikutin seleksi bertahun-tahun soal {k}."
+   },
+   "viral": {
+    "no": 5,
+    "pola": "Meminjam otoritas pengalaman",
+    "kuat_di": "YouTube Shorts"
+   }
+  },
+  {
+   "id": "H098",
+   "kategori": "debat",
+   "asal": "spill",
+   "nama": "Pengakuan berani",
+   "rumus": "Aku mau membela [hal yang dibenci banyak orang]",
+   "template": "Aku mau membela {k}, bagian yang paling dibenci {a}.",
+   "teks_layar": "AKU MAU JUJUR…",
+   "visual": "Wajah serius ke kamera, teks opini tebal.",
+   "format": "Threads, Video pendek",
+   "pakai_masalah": false,
+   "butuh_data": false,
+   "catatan": "",
+   "contoh": "Aku mau membela soal deret angka TIU, bagian yang paling dibenci pejuang CPNS.",
+   "varian": {
+    "materi": "Aku mau membela {k}, bagian yang paling dibenci {a}.",
+    "tips": "Aku mau membela satu kebiasaan soal {k} yang sering diledek orang.",
+    "motivasi": "Aku mau jujur soal {k}, walaupun nggak enak didengar."
+   },
+   "viral": {
+    "no": 8,
+    "pola": "Pembuka pengakuan",
+    "kuat_di": "TikTok"
+   }
+  },
+  {
+   "id": "H099",
+   "kategori": "tanya",
+   "asal": "spill",
+   "nama": "Pertanyaan + jawaban kilat",
+   "rumus": "[Pertanyaan]? [Klaim jawaban singkat]",
+   "template": "Kenapa {k} selalu makan waktu? Karena kamu ngerjainnya dari arah yang salah.",
+   "teks_layar": "KENAPA? 👉 KARENA…",
+   "visual": "Teks pertanyaan besar di tengah layar.",
+   "format": "Video pendek, Threads, Story",
+   "pakai_masalah": false,
+   "butuh_data": false,
+   "catatan": "",
+   "contoh": "Kenapa soal deret angka TIU selalu makan waktu? Karena kamu ngerjainnya dari arah yang salah.",
+   "varian": {
+    "materi": "Kenapa {k} selalu makan waktu? Karena kamu ngerjainnya dari arah yang salah.",
+    "tips": "Kenapa {k} bikin deg-degan? Karena kamu nyiapinnya kebalik.",
+    "info": "Kenapa banyak yang gugur karena {k}? Karena satu hal ini sering kelewat.",
+    "motivasi": "Kenapa {k} rasanya berat banget? Karena kamu lagi bertumbuh."
+   },
+   "viral": {
+    "no": 9,
+    "pola": "Pertanyaan + klaim",
+    "kuat_di": "YouTube Shorts"
+   }
+  },
+  {
+   "id": "H100",
+   "kategori": "angka",
+   "asal": "spill",
+   "nama": "Hasil spesifik dengan satu cara",
+   "rumus": "[Hasil dengan angka spesifik] pakai [satu cara]",
+   "template": "Naik 40 poin di {k} cuma pakai satu cara ini.",
+   "teks_layar": "+40 POIN 📈",
+   "visual": "Teks angka besar (3, 5, 9/10) memenuhi layar.",
+   "format": "Carousel, Video pendek",
+   "pakai_masalah": false,
+   "butuh_data": true,
+   "catatan": "Angka hasil wajib nyata, misalnya dari data tryout atau kisah alumni.",
+   "contoh": "Naik 40 poin di soal deret angka TIU cuma pakai satu cara ini.",
+   "varian": {
+    "materi": "Naik 40 poin di {k} cuma pakai satu cara ini.",
+    "tips": "Dari gugup jadi percaya diri dalam 7 hari soal {k}, pakai satu latihan ini."
+   },
+   "viral": {
+    "no": 1,
+    "pola": "Klaim dengan angka spesifik",
+    "kuat_di": "TikTok, YouTube Shorts"
+   }
+  },
+  {
+   "id": "H101",
+   "kategori": "solusi",
+   "asal": "spill",
+   "nama": "Lihat hasil dulu",
+   "rumus": "Lihat dulu [hasilnya], baru aku kasih tahu [caranya]",
+   "template": "Lihat dulu jawabannya, baru aku kasih tahu cara cepat {k}.",
+   "teks_layar": "LIHAT HASILNYA DULU 👀",
+   "visual": "Langsung tampilkan hasil akhirnya, lalu mundur ke caranya.",
+   "format": "Video pendek, Carousel",
+   "pakai_masalah": false,
+   "butuh_data": false,
+   "catatan": "Tampilkan hasil atau jawaban di detik pertama, tanpa intro.",
+   "contoh": "Lihat dulu jawabannya, baru aku kasih tahu cara cepat soal deret angka TIU.",
+   "varian": {
+    "materi": "Lihat dulu jawabannya, baru aku kasih tahu cara cepat {k}.",
+    "tips": "Lihat dulu hasilnya, baru aku kasih tahu cara siapin {k}."
+   },
+   "viral": {
+    "no": 11,
+    "pola": "Langsung demonstrasi",
+    "kuat_di": "Instagram Reels"
+   }
+  },
+  {
+   "id": "H102",
+   "kategori": "balik",
+   "asal": "spill",
+   "nama": "Kebanyakan info salah",
+   "rumus": "Kebanyakan [info/cara] soal [topik] yang beredar itu salah",
+   "template": "Kebanyakan cara ngerjain {k} yang beredar itu salah.",
+   "teks_layar": "KEBANYAKAN SALAH ❌",
+   "visual": "Geleng kepala atau gestur 'stop' di detik pertama.",
+   "format": "Video pendek, Threads",
+   "pakai_masalah": false,
+   "butuh_data": false,
+   "catatan": "Isi video wajib menunjukkan versi yang benar.",
+   "contoh": "Kebanyakan cara ngerjain soal deret angka TIU yang beredar itu salah.",
+   "varian": {
+    "materi": "Kebanyakan cara ngerjain {k} yang beredar itu salah.",
+    "tips": "Kebanyakan tips {k} yang beredar itu salah.",
+    "info": "Kebanyakan info soal {k} yang beredar itu kurang tepat."
+   },
+   "viral": {
+    "no": 10,
+    "pola": "Pembingkaian negatif",
+    "kuat_di": "YouTube Shorts"
    }
   }
  ],
@@ -2081,5 +2438,6 @@
    "contoh_m": "hampir menyerah",
    "objek": "foto atau catatan tentang {k}"
   }
- ]
+ ],
+ "sumber_viral": "Pola hook dari analisis 500 video pendek 1 juta+ views (TikTok, Reels, Shorts), Jan–Sep 2026, kreator di bawah 1 juta pengikut. FluxNote, 4 Okt 2026: fluxnote.io/blog/short-form-hook-library-500-viral-videos"
 }
