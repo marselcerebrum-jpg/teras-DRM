@@ -242,7 +242,7 @@ function weekBars(vals) {
 }
 
 /* ================= STATE ================= */
-const S = { session:null, me:null, members:[], items:[], route:"", timDate:null, rekapBulan:null, juaraPeriode:null, absenSiapa:null, absenBulan:null, risetAkun:null, raporMode:null, raporMinggu:null, laporanTgl:null };
+const S = { session:null, me:null, members:[], items:[], route:"", timDate:null, rekapBulan:null, juaraPeriode:null, absenSiapa:null, absenBulan:null, risetAkun:null, raporMode:null, raporMinggu:null, laporanTgl:null, hook:null };
 const memberById = id => S.members.find(m => m.id === id);
 const namaOf = id => memberById(id)?.nama ?? "?";
 const team = () => S.members.filter(m => m.peran !== "leader" && m.aktif);
@@ -420,6 +420,7 @@ function tabs() {
   t.push({ k:"rapor", label:"Rapor mingguan", g:"Harian" });
   t.push({ k:"masukan", label:"Kritik & saran", g: me.is_admin ? "Tim" : "Harian" });
   if (me.is_admin) t.push({ k:"catatan", label:"Catatan 1:1", g:"Tim" });
+  if (me.peran === "sms" || me.is_admin) t.push({ k:"hook", label:"Hook Generator", g:"Kreasi konten" });
   t.push({ k:"juara", label:"Si Paling", g:"Juara & ide" }, { k:"ide", label:"Bank Ide", g:"Juara & ide" });
   if (me.peran === "sms" || me.is_admin) t.push({ k:"eksperimen", label:"Eksperimen", g:"Belajar bareng" }, { k:"riset", label:"Riset kompetitor", g:"Belajar bareng" });
   t.push({ k:"modul", label:"Modul belajar", g:"Belajar bareng" });
@@ -2213,6 +2214,105 @@ async function viewLaporan() {
     } }, "Salin ketiganya sekaligus")));
 }
 
+
+/* ================= HOOK GENERATOR ================= */
+// Rumus hook disimpan sebagai data di /data/rumus-hook.json (bisa ditambah tanpa mengubah kode).
+// Placeholder: {k} topik, {m} masalah, {a} sebutan audiens akun, {h} tujuan audiens akun.
+const PROFIL_AKUN = {
+  CEREBRUM:{ aud:"pejuang tes", hasil:"lolos tes impianmu" }, JADIASN:{ aud:"pejuang CPNS", hasil:"lolos SKD" },
+  JADIBUMN:{ aud:"pelamar BUMN", hasil:"lolos rekrutmen BUMN" }, JADIPCPM:{ aud:"pejuang PCPM BI", hasil:"lolos PCPM" },
+  JADIPOLISI:{ aud:"calon polisi", hasil:"lolos seleksi Polri" }, JADIPPPK:{ aud:"pejuang PPPK", hasil:"lolos PPPK" },
+  JADISEKDIN:{ aud:"pejuang sekolah kedinasan", hasil:"lolos sekolah kedinasan" }, JADIPRAJURIT:{ aud:"calon prajurit TNI", hasil:"lolos seleksi TNI" },
+  "PSIKOTES KERJA":{ aud:"pencari kerja", hasil:"lolos psikotes kerja" }, JADIBEASISWA:{ aud:"pejuang beasiswa", hasil:"lolos beasiswa" },
+  JADIPPG:{ aud:"calon peserta PPG", hasil:"lolos PPG" }, JADIOJK:{ aud:"pejuang OJK", hasil:"lolos rekrutmen OJK" },
+  "TOEFL ACADEMY":{ aud:"pejuang TOEFL", hasil:"dapat skor TOEFL aman" }, JAGOTPA:{ aud:"pejuang TPA", hasil:"skor TPA tinggi" },
+};
+const WARNA_KATEGORI = ["attn", "brand", "appr", "calm"];
+let DATA_HOOK = null;
+async function muatDataHook() {
+  if (DATA_HOOK) return DATA_HOOK;
+  const r = await fetch("/data/rumus-hook.json", { cache:"no-cache" });
+  if (!r.ok) throw new Error("Data rumus hook belum tersedia di server.");
+  DATA_HOOK = await r.json();
+  return DATA_HOOK;
+}
+function acakDenganBenih(xs, benih) {
+  const a = [...xs]; let s = benih || 1;
+  for (let i = a.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; const j = Math.floor(s / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+  return a;
+}
+function susunHook(r, kunci, masalah, profil) {
+  let t = r.template.replaceAll("{k}", kunci).replaceAll("{m}", masalah || "masih bingung mulai dari mana").replaceAll("{a}", profil.aud).replaceAll("{h}", profil.hasil);
+  t = t.replace(/\b(\w+)\s+\1\b/gi, "$1");   // "soal soal" → "soal"
+  return t.charAt(0).toUpperCase() + t.slice(1);
+}
+async function viewHook() {
+  const me = S.me;
+  const [data, peg] = await Promise.all([muatDataHook(), q(sb.from("akun_pegangan").select("akun").eq("member_id", me.id)).catch(() => [])]);
+  const kategori = Object.fromEntries(data.kategori.map((k, i) => [k.id, { ...k, warna: WARNA_KATEGORI[i % WARNA_KATEGORI.length] }]));
+  const st = S.hook || (S.hook = { kunci:"", masalah:"", akun: peg[0]?.akun || "JADIASN", kat:null, benih:1, hasil:false, semua:false });
+  const box = el("div", { class:"stack" });
+  const hasilBox = el("div", { class:"stack", style:"gap:14px" });
+  function drawHasil() {
+    if (!st.hasil) { hasilBox.replaceChildren(); return; }
+    const kunci = st.kunci.trim(), masalah = st.masalah.trim().replace(/\.$/, "");
+    const profil = PROFIL_AKUN[st.akun] || PROFIL_AKUN.CEREBRUM;
+    // Rumus yang butuh data nyata ditaruh di belakang; kalau masalah diisi, rumus yang memakai masalah didahulukan
+    let daftar = acakDenganBenih(data.rumus, st.benih);
+    daftar = [...daftar.filter(r => !r.butuh_data), ...daftar.filter(r => r.butuh_data)];
+    if (masalah) daftar = [...daftar.filter(r => r.pakai_masalah), ...daftar.filter(r => !r.pakai_masalah)];
+    if (st.kat) daftar = daftar.filter(r => r.kategori === st.kat);
+    const tampil = st.semua ? daftar : daftar.slice(0, 8);
+    hasilBox.replaceChildren(
+      el("div", { class:"row between" },
+        el("h2", "Rekomendasi hook untuk “" + kunci + "”"),
+        el("button", { class:"btn ghost sm", onclick: () => { st.benih++; drawHasil(); } }, "🔄 Acak lagi")),
+      pilihan([{ v:null, label:"Semua jenis" }, ...data.kategori.map(k => ({ v:k.id, label:k.label }))], { get: () => st.kat, set: v => st.kat = v, onChange: drawHasil }),
+      st.kat ? el("p", { class:"hint" }, kategori[st.kat].penjelasan) : null,
+      el("div", { class:"hook-grid" }, tampil.map(r => {
+        const teks = susunHook(r, kunci, masalah, profil), k = kategori[r.kategori];
+        return el("article", { class:"hook-kartu" },
+          el("div", { class:"row", style:"gap:6px" },
+            el("span", { class:"chip " + k.warna }, k.label),
+            el("span", { class:"chip" }, r.asal === "tim" ? "Rumus tim" : "Rumus Spill"),
+            r.butuh_data ? el("span", { class:"chip attn", title: r.catatan }, "⚠️ Butuh data nyata") : null),
+          el("p", { class:"hook-teks" }, "“" + teks + "”"),
+          el("div", { class:"hook-detail" },
+            el("div", el("b", "Teks layar: "), r.teks_layar),
+            el("div", el("b", "Visual 3 detik pertama: "), r.visual),
+            el("div", el("b", "Cocok untuk: "), r.format),
+            r.catatan ? el("div", { class:"err", style:"font-size:.84rem" }, "Catatan: " + r.catatan) : null,
+            el("div", { class:"hint" }, r.id + " · Rumus: " + r.rumus)),
+          el("div", { class:"row", style:"gap:6px" },
+            el("button", { class:"btn sm", onclick: async () => toast(await salinTeks(teks) ? "Hook tersalin 📋" : "Gagal menyalin") }, "📋 Salin"),
+            me.peran !== "leader" ? el("button", { class:"btn ghost sm", onclick: async e2 => {
+              e2.target.disabled = true;
+              try { await q(sb.from("ide").insert({ member_id: me.id, judul: teks.slice(0, 200), isi: "Hook untuk konten " + st.akun + " tentang " + kunci + (masalah ? " (masalah: " + masalah + ")" : "") + ". Teks layar: " + r.teks_layar + ". Visual: " + r.visual + ". Rumus " + r.id + ": " + r.rumus, kategori:"Konten", status:"baru" })); toast("Masuk Bank Ide 💡"); }
+              catch (er) { toast("Gagal: " + er.message); e2.target.disabled = false; } } }, "💡 Simpan ke Bank Ide") : null));
+      })),
+      !st.semua && daftar.length > 8 ? el("div", el("button", { class:"btn ghost", onclick: () => { st.semua = true; drawHasil(); } }, "Lihat semua (" + daftar.length + " hook)")) : null,
+      el("details", { class:"panel pad" },
+        el("summary", { style:"cursor:pointer;font-weight:800" }, "🎬 " + data.hook_visual.length + " ide hook visual (tanpa kata) untuk detik pertama"),
+        el("div", { class:"stack", style:"gap:8px;margin-top:12px" }, data.hook_visual.map(v => el("div", el("b", v.nama + ": "), v.cara)))),
+      el("div", { class:"note" }, el("b", "Ingat: "), "janji di hook harus dibayar di isi video. Simpan poin terbaik di akhir supaya penonton bertahan sampai habis."));
+  }
+  const msg = el("p", { class:"hint" });
+  box.append(
+    el("div", el("h1", "Hook Generator"), el("p", { class:"hint", style:"margin-top:6px" }, "Masukkan topik dan masalah yang mau diangkat. Spill menyusun pilihan hook dari " + data.rumus.length + " rumus dalam " + data.kategori.length + " jenis, plus " + data.hook_visual.length + " ide hook visual.")),
+    el("section", { class:"panel pad stack", style:"gap:12px" },
+      el("label", { class:"lbl" }, "Kata kunci / topik konten *", input(st, "kunci", { placeholder:"Contoh: soal deret angka TIU", draf:"hook" })),
+      el("label", { class:"lbl" }, "Masalah yang diangkat (opsional)", input(st, "masalah", { placeholder:"Contoh: sering kehabisan waktu", draf:"hook" })),
+      el("div", { class:"lbl" }, "Untuk akun", pilihan(DAFTAR_AKUN, { get: () => st.akun, set: v => st.akun = v })),
+      el("div", { class:"row" }, el("button", { class:"btn", onclick: () => {
+        if (st.kunci.trim().length < 3) { msg.className = "err"; msg.textContent = "Isi kata kunci dulu, minimal 3 huruf."; return; }
+        msg.textContent = ""; st.hasil = true; st.semua = false; st.benih = Math.floor(Math.random() * 1000) + 1; drawHasil();
+        setTimeout(() => hasilBox.scrollIntoView({ behavior:"smooth", block:"start" }), 50);
+      } }, "✨ Buat rekomendasi hook")), msg),
+    hasilBox);
+  drawHasil();
+  return box;
+}
+
 /* ================= AKUN ================= */
 async function viewAkun() {
   const me = S.me;
@@ -2499,6 +2599,6 @@ setInterval(cekVersi, 5 * 60 * 1000);
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cekVersi(); });
 
 /* ================= MULAI ================= */
-const VIEWS = { laporan: viewLaporan, rapor: viewRapor, catatan: viewCatatan, absensi: viewAbsensi, juara: viewJuara, ide: viewIde, modul: viewModul, link: viewTautan, struktur: viewStruktur, lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, masukan: viewMasukan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
+const VIEWS = { hook: viewHook, laporan: viewLaporan, rapor: viewRapor, catatan: viewCatatan, absensi: viewAbsensi, juara: viewJuara, ide: viewIde, modul: viewModul, link: viewTautan, struktur: viewStruktur, lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, masukan: viewMasukan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
 sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_OUT") { S.me = null; } });
 boot();
