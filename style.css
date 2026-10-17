@@ -294,6 +294,10 @@ td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
 .hook-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;align-items:start}
 .hook-kartu{background:#fff;border:2px solid var(--ink);border-radius:18px;box-shadow:var(--sh);padding:14px 16px;display:flex;flex-direction:column;gap:10px}
 .hook-teks{font-family:var(--disp);font-weight:800;font-size:1.15rem;line-height:1.25;letter-spacing:-.02em}
+.hook-label{font-size:.72rem;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:-6px}
+.hook-layar{background:var(--ink);color:#fff;border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;text-align:center}
+.hook-layar b{font-family:var(--disp);font-size:1.15rem;letter-spacing:-.01em;color:var(--lime)}
+.hook-layar span{font-weight:700;font-size:.92rem}
 .hook-detail{display:flex;flex-direction:column;gap:4px;font-size:.86rem;background:var(--bg);border-radius:12px;padding:8px 10px}
 
 /* ---------- motivasi harian ---------- */

@@ -2241,6 +2241,17 @@ function acakDenganBenih(xs, benih) {
   for (let i = a.length - 1; i > 0; i--) { s = (s * 9301 + 49297) % 233280; const j = Math.floor(s / 233280 * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
   return a;
 }
+// Teks layar: baris 1 = kalimat penekan dari rumus, baris 2 = ringkasan hook (maks. 10 kata) supaya relevan dengan topik
+function ringkasLayar(hook) {
+  let s = hook.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+  const akhir = s.search(/[.?!:](\s|$)/);
+  if (akhir > 0) s = s.slice(0, akhir + (s[akhir] === "?" ? 1 : 0));
+  let kata = s.split(/\s+/);
+  if (kata.length > 10 && s.includes(",")) { s = s.split(",")[0]; kata = s.split(/\s+/); }
+  if (kata.length > 10) s = kata.slice(0, 10).join(" ") + "…";
+  return s.replace(/[.,]$/, "");
+}
+function rapikan(t) { return t.replace(/\b(\w+)\s+\1\b/gi, "$1"); }
 // Ambil kalimat rumus sesuai jenis topik; rumus tanpa varian untuk jenis itu dianggap tidak cocok
 function templateUntuk(r, jenis) { return (r.varian && r.varian[jenis]) || (jenis === "materi" ? r.template : null); }
 function susunHook(tpl, kunci, masalah, profil, tujuan) {
@@ -2278,29 +2289,45 @@ async function viewHook() {
         const kunciEdit = r.id + st.jenis + st.benih;
         let teks = edit[kunciEdit] ?? susunHook(tpl, kunci, masalah, profil, tujuan);
         const k = kategori[r.kategori];
+        const jt = jenisTopik.find(x => x.id === st.jenis) || jenisTopik[0];
+        const objek = rapikan((jt.objek || "{k}").replaceAll("{k}", kunci));
+        // Baris 2 teks layar: kalimat pendek berisi topik/masalah sesuai jenis hook; kalimat hook dipakai langsung kalau sudah pendek
+        const tplLayar = (k.layar_tpl || [])[masalah ? 0 : 1];
+        const kataHook = teks.split(/\s+/).length;
+        let layar1 = r.teks_layar;
+        let layar2 = kataHook <= 9 ? teks.replace(/[.]$/, "") : tplLayar ? rapikan(tplLayar.replaceAll("{K}", kunci.toUpperCase()).replaceAll("{k}", kunci).replaceAll("{m}", masalah).replaceAll("{a}", profil.aud)) : ringkasLayar(teks);
+        layar2 = layar2.charAt(0).toUpperCase() + layar2.slice(1);
+        const visual = rapikan((k.visual_tpl || r.visual).replaceAll("{o}", objek).replaceAll("{k}", kunci).replaceAll("{a}", profil.aud));
         const tampilTeks = el("p", { class:"hook-teks" }, "“" + teks + "”");
         const kotakEdit = el("textarea", { class:"field", rows:"3", hidden:true });
         kotakEdit.value = teks;
+        const layarBox = el("div", { class:"hook-layar" }, el("b", layar1), el("span", layar2));
+        const editLayar = el("input", { class:"field", hidden:true });
+        editLayar.value = layar2;
+        editLayar.addEventListener("input", () => { layar2 = editLayar.value; layarBox.lastChild.textContent = layar2; });
         kotakEdit.addEventListener("input", () => { teks = kotakEdit.value; edit[kunciEdit] = teks; tampilTeks.textContent = "“" + teks + "”"; });
-        const tombolEdit = el("button", { class:"btn ghost sm", onclick: () => { const buka = kotakEdit.hidden; kotakEdit.hidden = !buka; tampilTeks.hidden = buka; tombolEdit.textContent = buka ? "✅ Selesai" : "✏️ Ubah"; if (buka) kotakEdit.focus(); } }, "✏️ Ubah");
+        const tombolEdit = el("button", { class:"btn ghost sm", onclick: () => { const buka = kotakEdit.hidden; kotakEdit.hidden = !buka; editLayar.hidden = !buka; tampilTeks.hidden = buka; tombolEdit.textContent = buka ? "✅ Selesai" : "✏️ Ubah"; if (buka) kotakEdit.focus(); } }, "✏️ Ubah");
+        const paket = () => "🗣️ Diucapkan:\n" + teks + "\n\n📝 Teks layar:\n" + layar1 + "\n" + layar2 + "\n\n🎬 Visual 0–3 detik:\n" + visual;
         return el("article", { class:"hook-kartu" },
           el("div", { class:"row", style:"gap:6px" },
             el("span", { class:"chip " + k.warna }, k.label),
             el("span", { class:"chip" }, r.asal === "tim" ? "Rumus tim" : "Rumus Spill"),
             r.butuh_data ? el("span", { class:"chip attn", title: r.catatan }, "⚠️ Butuh data nyata") : null),
-          tampilTeks, kotakEdit,
+          el("small", { class:"hook-label" }, "🗣️ Diucapkan"), tampilTeks, kotakEdit,
+          el("small", { class:"hook-label" }, "📝 Teks layar (detik 0–3)"), layarBox, editLayar,
+          el("small", { class:"hook-label" }, "🎬 Visual pembuka"),
           el("div", { class:"hook-detail" },
-            el("div", el("b", "Teks layar: "), r.teks_layar),
-            el("div", el("b", "Visual 3 detik pertama: "), r.visual),
+            el("div", visual),
             el("div", el("b", "Cocok untuk: "), r.format),
             r.catatan ? el("div", { class:"err", style:"font-size:.84rem" }, "Catatan: " + r.catatan) : null,
             el("div", { class:"hint" }, r.id + " · Rumus: " + r.rumus)),
           el("div", { class:"row", style:"gap:6px" },
-            el("button", { class:"btn sm", onclick: async () => toast(await salinTeks(teks) ? "Hook tersalin 📋" : "Gagal menyalin") }, "📋 Salin"),
+            el("button", { class:"btn sm", onclick: async () => toast(await salinTeks(paket()) ? "Hook lengkap tersalin 📋 (ucapan, teks layar, visual)" : "Gagal menyalin") }, "📋 Salin lengkap"),
+            el("button", { class:"btn ghost sm", onclick: async () => toast(await salinTeks(teks) ? "Kalimat hook tersalin" : "Gagal menyalin") }, "Salin ucapan"),
             tombolEdit,
             me.peran !== "leader" ? el("button", { class:"btn ghost sm", onclick: async e2 => {
               e2.target.disabled = true;
-              try { await q(sb.from("ide").insert({ member_id: me.id, judul: teks.slice(0, 200), isi: "Hook untuk konten " + st.akun + " tentang " + kunci + (masalah ? " (masalah: " + masalah + ")" : "") + ". Teks layar: " + r.teks_layar + ". Visual: " + r.visual + ". Rumus " + r.id + ": " + r.rumus, kategori:"Konten", status:"baru" })); toast("Masuk Bank Ide 💡"); }
+              try { await q(sb.from("ide").insert({ member_id: me.id, judul: teks.slice(0, 200), isi: "Hook untuk konten " + st.akun + " tentang " + kunci + (masalah ? " (masalah: " + masalah + ")" : "") + ".\n\n" + paket() + "\n\nRumus " + r.id + ": " + r.rumus, kategori:"Konten", status:"baru" })); toast("Masuk Bank Ide 💡"); }
               catch (er) { toast("Gagal: " + er.message); e2.target.disabled = false; } } }, "💡 Simpan ke Bank Ide") : null));
       })),
       !st.semua && daftar.length > 8 ? el("div", el("button", { class:"btn ghost", onclick: () => { st.semua = true; drawHasil(); } }, "Lihat semua (" + daftar.length + " hook)")) : null,

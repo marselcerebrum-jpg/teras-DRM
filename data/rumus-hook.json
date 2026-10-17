@@ -1,5 +1,5 @@
 {
- "versi": "2026-10-17b",
+ "versi": "2026-10-17d",
  "placeholder": {
   "{k}": "topik / kata kunci",
   "{m}": "masalah (frasa kerja, misalnya 'sering kehabisan waktu')",
@@ -12,98 +12,168 @@
    "label": "Takut salah & rugi",
    "penjelasan": "Memicu rasa takut melakukan kesalahan atau kehilangan kesempatan.",
    "visual": "Mulai dengan tanda ❌ besar atau ekspresi kaget ke kamera.",
-   "format": "Video pendek, Carousel"
+   "format": "Video pendek, Carousel",
+   "visual_tpl": "Detik 0–1: {o} dicoret tanda ❌ merah besar. Detik 1–3: wajah kaget menatap kamera.",
+   "layar_tpl": [
+    "Masih {m}? Stop dulu ❌",
+    "{K}: jangan sampai salah ❌"
+   ]
   },
   {
    "id": "balik",
    "label": "Membalik keyakinan",
    "penjelasan": "Membantah anggapan umum supaya penonton merasa perlu tahu kebenarannya.",
    "visual": "Geleng kepala atau gestur 'stop' di detik pertama.",
-   "format": "Video pendek, Threads"
+   "format": "Video pendek, Threads",
+   "visual_tpl": "Detik 0–1: tulisan anggapan umum soal {k} muncul di layar, lalu kamu geleng kepala dan mencoretnya.",
+   "layar_tpl": [
+    "{K} ternyata nggak kayak gini",
+    "{K} ≠ yang kamu kira"
+   ]
   },
   {
    "id": "penasaran",
    "label": "Rasa penasaran & rahasia",
    "penjelasan": "Membuka 'celah informasi' yang baru terjawab di akhir video.",
    "visual": "Tutup sebagian layar atau jawaban, baru dibuka di akhir.",
-   "format": "Video pendek"
+   "format": "Video pendek",
+   "visual_tpl": "Detik 0–1: tampilkan {o}, tapi bagian pentingnya ditutup stiker 🤫. Baru dibuka di akhir video.",
+   "layar_tpl": [
+    "Biar nggak {m} lagi di {k} 👀",
+    "{K}: jawabannya di akhir 👀"
+   ]
   },
   {
    "id": "panggil",
    "label": "Memanggil audiens",
    "penjelasan": "Menyebut audiens secara spesifik supaya mereka merasa 'ini aku banget'.",
    "visual": "Tunjuk ke kamera sambil teks nama audiens muncul besar.",
-   "format": "Video pendek, Story"
+   "format": "Video pendek, Story",
+   "visual_tpl": "Detik 0–1: tunjuk kamera, teks “{a}” muncul besar di atas kepala.",
+   "layar_tpl": [
+    "Buat {a} yang {m}",
+    "Buat semua {a}"
+   ]
   },
   {
    "id": "solusi",
    "label": "Solusi praktis & cara",
    "penjelasan": "Menjanjikan cara konkret yang bisa langsung dipraktikkan.",
    "visual": "Langsung tampilkan hasil akhirnya, lalu mundur ke caranya.",
-   "format": "Video pendek, Carousel"
+   "format": "Video pendek, Carousel",
+   "visual_tpl": "Detik 0–1: tampilkan hasil akhirnya dulu ({o} yang sudah beres), lalu potong ke langkah pertama.",
+   "layar_tpl": [
+    "{K} tanpa {m}",
+    "Cara gampang {k}"
+   ]
   },
   {
    "id": "angka",
    "label": "Angka & daftar",
    "penjelasan": "Angka membuat isi terasa jelas, terukur, dan mudah diikuti.",
    "visual": "Teks angka besar (3, 5, 9/10) memenuhi layar.",
-   "format": "Carousel, Video pendek"
+   "format": "Carousel, Video pendek",
+   "visual_tpl": "Detik 0–1: angka besar memenuhi layar, di belakangnya terlihat {o}.",
+   "layar_tpl": [
+    "{K}: biar nggak {m}",
+    "{K}"
+   ]
   },
   {
    "id": "kuis",
    "label": "Tantangan & kuis",
    "penjelasan": "Mengajak penonton ikut berpikir atau menjawab sejak detik pertama.",
    "visual": "Tampilkan soal + timer hitung mundur di layar.",
-   "format": "Video pendek, Story (polling)"
+   "format": "Video pendek, Story (polling)",
+   "visual_tpl": "Detik 0–1: {o} memenuhi layar, timer hitung mundur berjalan di pojok.",
+   "layar_tpl": [
+    "{K}: bisa jawab?",
+    "{K}: bisa jawab?"
+   ]
   },
   {
    "id": "cerita",
    "label": "Cerita & pengakuan",
    "penjelasan": "Pengalaman pribadi membuat penonton ingin tahu kelanjutannya.",
    "visual": "Bicara langsung ke kamera dengan ekspresi jujur, seperti curhat.",
-   "format": "Video pendek"
+   "format": "Video pendek",
+   "visual_tpl": "Detik 0–1: bicara langsung ke kamera dengan ekspresi jujur, di belakangmu terlihat {o}.",
+   "layar_tpl": [
+    "Dari {m} sampai bisa 💪",
+    "{K}: cerita nyata"
+   ]
   },
   {
    "id": "banding",
    "label": "Perbandingan & sebelum-sesudah",
    "penjelasan": "Kontras dua hal membuat penonton menilai dirinya sendiri.",
    "visual": "Split screen: kiri 'yang salah', kanan 'yang benar'.",
-   "format": "Video pendek, Carousel"
+   "format": "Video pendek, Carousel",
+   "visual_tpl": "Detik 0–1: split screen. Kiri: cara salah soal {k} (❌). Kanan: cara benar (✅).",
+   "layar_tpl": [
+    "{K}: salah ❌ vs benar ✅",
+    "{K}: salah ❌ vs benar ✅"
+   ]
   },
   {
    "id": "waktu",
    "label": "Waktu & urgensi",
    "penjelasan": "Menghubungkan isi dengan momen atau tenggat yang sedang dekat.",
    "visual": "Teks hitung mundur (H-30) atau kalender yang dilingkari.",
-   "format": "Video pendek, Story"
+   "format": "Video pendek, Story",
+   "visual_tpl": "Detik 0–1: kalender atau hitung mundur dilingkari merah, lalu potong ke {o}.",
+   "layar_tpl": [
+    "{K} sebelum hari H",
+    "{K} sebelum hari H"
+   ]
   },
   {
    "id": "bukti",
    "label": "Bukti & otoritas",
    "penjelasan": "Menyandarkan isi pada data, aturan resmi, atau pengalaman nyata.",
    "visual": "Tampilkan dokumen, grafik, atau tangkapan layar sebagai bukti.",
-   "format": "Video pendek, Carousel"
+   "format": "Video pendek, Carousel",
+   "visual_tpl": "Detik 0–1: zoom ke tangkapan layar data atau dokumen tentang {k}.",
+   "layar_tpl": [
+    "{K}: berdasarkan data",
+    "{K}: berdasarkan data"
+   ]
   },
   {
    "id": "relate",
    "label": "Relatable & humor",
    "penjelasan": "Situasi yang akrab atau lucu membuat penonton merasa dekat.",
    "visual": "Ekspresi lebay atau meme-style dengan teks layar pendek.",
-   "format": "Video pendek, Story"
+   "format": "Video pendek, Story",
+   "visual_tpl": "Detik 0–1: ekspresi lebay ala meme saat melihat {o}.",
+   "layar_tpl": [
+    "{m}? Sama 🙋",
+    "{K} be like… 😵"
+   ]
   },
   {
    "id": "tanya",
    "label": "Pertanyaan langsung",
    "penjelasan": "Pertanyaan membuat otak penonton otomatis mencari jawabannya.",
    "visual": "Teks pertanyaan besar di tengah layar.",
-   "format": "Video pendek, Threads, Story"
+   "format": "Video pendek, Threads, Story",
+   "visual_tpl": "Detik 0–1: pertanyaan muncul besar di tengah layar, kamu menatap kamera seolah menunggu jawaban.",
+   "layar_tpl": [
+    "Pernah {m} pas {k}?",
+    "{K}, kenapa ya?"
+   ]
   },
   {
    "id": "debat",
    "label": "Debat & opini",
    "penjelasan": "Opini yang memancing setuju/tidak setuju mendorong komentar.",
    "visual": "Wajah serius ke kamera, teks opini tebal.",
-   "format": "Threads, Video pendek"
+   "format": "Threads, Video pendek",
+   "visual_tpl": "Detik 0–1: wajah serius ke kamera, opini tertulis tebal di layar.",
+   "layar_tpl": [
+    "{K}: setuju atau nggak?",
+    "{K}: setuju atau nggak?"
+   ]
   }
  ],
  "rumus": [
@@ -1987,25 +2057,29 @@
    "id": "materi",
    "label": "Soal & materi tes",
    "contoh_k": "soal deret angka TIU",
-   "contoh_m": "sering kehabisan waktu"
+   "contoh_m": "sering kehabisan waktu",
+   "objek": "soal {k}"
   },
   {
    "id": "tips",
    "label": "Tips & strategi persiapan",
    "contoh_k": "wawancara PPPK",
-   "contoh_m": "gugup"
+   "contoh_m": "gugup",
+   "objek": "adegan {k}"
   },
   {
    "id": "info",
    "label": "Info seleksi & pendaftaran",
    "contoh_k": "syarat daftar CPNS",
-   "contoh_m": "bingung baca pengumuman"
+   "contoh_m": "bingung baca pengumuman",
+   "objek": "potongan pengumuman soal {k}"
   },
   {
    "id": "motivasi",
    "label": "Motivasi & cerita",
    "contoh_k": "gagal SKD tahun lalu",
-   "contoh_m": "hampir menyerah"
+   "contoh_m": "hampir menyerah",
+   "objek": "foto atau catatan tentang {k}"
   }
  ]
 }
