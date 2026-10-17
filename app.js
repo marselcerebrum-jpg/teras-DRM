@@ -1274,13 +1274,14 @@ async function viewStruktur() {
 
 /* ================= JUARA & LENCANA ================= */
 const KATEGORI_JUARA = [
-  { k:"jangkau", emoji:"🏆", nama:"Si Paling Jangkau", desc:"Pencapaian target jangkauan akun yang dipegang. Adil untuk akun besar maupun kecil.", sms:true },
-  { k:"naik", emoji:"📈", nama:"Si Paling Naik", desc:"Kenaikan pencapaian target jangkauan dibanding periode sebelumnya.", sms:true },
   { k:"rajin", emoji:"🔥", nama:"Si Paling Rajin", desc:"Rata-rata checklist harian dan check-in tanpa bolong." },
   { k:"ide", emoji:"💡", nama:"Si Paling Ide", desc:"Ide terbanyak yang dikirim ke Bank Ide." },
   { k:"strategis", emoji:"🧠", nama:"Si Paling Strategis", desc:"Eksperimen yang selesai dengan hasil jelas, ditambah ide yang dipakai tim." },
   { k:"detektif", emoji:"🕵️", nama:"Detektif Kompetitor", desc:"Riset kompetitor terbanyak.", sms:true },
   { k:"ilmu", emoji:"📚", nama:"Si Paling Haus Ilmu", desc:"Modul belajar yang diselesaikan." },
+  { k:"tertib", emoji:"📊", nama:"Si Paling Tertib Data", desc:"Persentase hari (sampai H-3) yang angka jangkauan akunnya sudah lengkap di spreadsheet.", sms:true },
+  { k:"suportif", emoji:"🤝", nama:"Si Paling Suportif", desc:"Dukungan 🔥 terbanyak untuk ide rekan di Bank Ide." },
+  { k:"berani", emoji:"🧪", nama:"Si Paling Berani Coba", desc:"Eksperimen baru yang dimulai, apa pun hasilnya nanti." },
 ];
 const LENCANA = {
   langkah_pertama: { emoji:"🌱", nama:"Langkah Pertama", syarat:"Check-in pertama kali" },
@@ -1294,6 +1295,10 @@ const LENCANA = {
   viral_hunter: { emoji:"🚀", nama:"Viral Hunter", syarat:"Lencana lama (fitur sudah tidak dipakai)", lama:true },
   lulus_modul_wajib: { emoji:"🎓", nama:"Lulus Modul Wajib", syarat:"Semua modul wajib selesai" },
   penyemangat: { emoji:"🤝", nama:"Penyemangat Tim", syarat:"50 dukungan 🔥 untuk ide rekan" },
+  data_lengkap: { emoji:"📊", nama:"Data Lengkap Sebulan", syarat:"Angka jangkauan akun terisi tanpa bolong selama satu bulan penuh" },
+  detektif_konsisten: { emoji:"🕵️", nama:"Detektif Konsisten", syarat:"Target riset 2× seminggu tercapai 4 minggu berturut-turut" },
+  ide_didukung: { emoji:"💡", nama:"Ide Paling Didukung", syarat:"Satu ide mendapat minimal 5 dukungan 🔥 dari rekan (bisa berkali-kali)" },
+  belajar_kemarin: { emoji:"📝", nama:"Rajin Belajar dari Kemarin", syarat:"Mengisi “Satu pelajaran dari hari kemarin?” 20 kali" },
   pilihan_leader: { emoji:"⭐", nama:"Pilihan Leader", syarat:"Diberikan langsung oleh leader" },
 };
 function infoLencana(kode) {
@@ -1324,8 +1329,8 @@ async function viewJuara() {
     const medali = ["🥇", "🥈", "🥉"];
     const kartuKat = kat => {
       const xs = skor.filter(s => s.kategori === kat.k && Number(s.nilai) > 0).sort((a, b) => b.nilai - a.nilai).slice(0, 3);
-      const kosong = kat.k === "jangkau" || kat.k === "naik"
-        ? (pegangan.length ? "Belum cukup data jangkauan di periode ini (minimal 3 hari per minggu)." : "Akun yang dipegang belum dipetakan. Atur di Struktur tim.")
+      const kosong = kat.k === "tertib"
+        ? (pegangan.length ? "Belum cukup data (minimal 3 hari sampai H-3 di periode ini)." : "Akun yang dipegang belum dipetakan. Atur di Struktur tim.")
         : "Belum ada yang masuk. Kesempatan emas nih.";
       return el("section", { class:"panel juara" },
         el("div", { class:"juara-head" }, el("span", { class:"juara-emoji" }, kat.emoji), el("div", el("h2", kat.nama), el("p", { class:"hint" }, kat.desc))),
@@ -1337,10 +1342,10 @@ async function viewJuara() {
     const orang = team();
     box.replaceChildren(
       el("div", { class:"page-head" },
-        el("div", el("h1", "Si Paling"), el("p", { class:"hint" }, "Banyak cara buat jadi juara: rajin, kreatif, strategis, haus ilmu, atau angkanya naik. Yang ditampilkan hanya 3 teratas di tiap kategori.")),
+        el("div", el("h1", "Si Paling"), el("p", { class:"hint" }, "Banyak cara buat jadi juara: rajin, kreatif, strategis, rajin riset, haus ilmu, tertib data, suportif, atau berani mencoba. Yang ditampilkan hanya 3 teratas di tiap kategori.")),
         el("span", { class:"sticker" }, p.label)),
       pilihan([{ v:"minggu", label:"Minggu ini" }, { v:"mingguLalu", label:"Minggu lalu" }, { v:"bulan", label:"Bulan ini" }, { v:"bulanLalu", label:"Bulan lalu" }], { get: () => jenis, set: v => { jenis = v; S.juaraPeriode = v; }, onChange: draw }),
-      el("p", { class:"hint" }, "Data jangkauan dari spreadsheet DRM MARKETING" + (kpiAkhir[0] ? ", terakhir terisi " + fmt(kpiAkhir[0].tanggal) + "." : ", belum tersinkron.") + " Juara 1 resmi dapat lencana 👑 setelah datanya matang (Kamis untuk mingguan, tanggal 4 untuk bulanan)."),
+      el("p", { class:"hint" }, "Juara 1 resmi dapat lencana 👑 setelah datanya matang: hari Kamis untuk mingguan, tanggal 4 untuk bulanan."),
       el("div", { class:"juara-grid" }, KATEGORI_JUARA.map(kartuKat)),
       el("section", { class:"panel pad stack", style:"gap:12px" },
         el("div", { class:"row between" }, el("h2", "Lencanaku"), el("span", { class:"sticker", style:"background:var(--lime);color:var(--ink)" }, milikku.length + " lencana")),
@@ -1795,46 +1800,80 @@ async function dorongKe(memberId, judul, isi) {
 
 /* ================= KARTU AKUNKU: TARGET VS AKTUAL ================= */
 const ringkasAngka = n => n >= 1e6 ? (n / 1e6).toLocaleString("id-ID", { maximumFractionDigits:1 }) + " jt" : n >= 1e3 ? Math.round(n / 1e3).toLocaleString("id-ID") + " rb" : Math.round(n).toLocaleString("id-ID");
+// Kartu Akunku: target vs realisasi bulan ini, bisa dipilih metriknya (data dari tab DRM MARKETING)
+const METRIK_AKUN = [
+  { v:"jangkauan", label:"Jangkauan" }, { v:"views", label:"Views" },
+  { v:"followers", label:"Followers" }, { v:"downloader", label:"Downloader" },
+];
 async function kartuAkunku(akunku) {
   if (!akunku.length) return null;
   const t = today(), awal = t.slice(0, 8) + "01";
   const [y, mo] = t.split("-").map(Number);
   const nHari = new Date(y, mo, 0).getDate(), akhir = keyOf(new Date(y, mo, 0));
-  const rows = await q(sb.from("kpi_harian").select("akun,tanggal,target,real").eq("metrik", "jangkauan").in("akun", akunku).gte("tanggal", awal).lte("tanggal", akhir));
-  const ada = rows.filter(r => r.real > 0);
-  const targetBulan = akunku.reduce((s, a) => { const tg = rows.filter(r => r.akun === a); const sum = tg.reduce((x, r) => x + Number(r.target), 0); return s + (tg.length >= nHari ? sum : (tg.length ? sum / tg.length * nHari : 0)); }, 0);
+  const semua = await q(sb.from("kpi_harian").select("akun,tanggal,metrik,target,real").in("akun", akunku).gte("tanggal", awal).lte("tanggal", akhir));
   const sec = el("section", { class:"panel akunku" });
-  if (!ada.length || !targetBulan) {
-    sec.append(el("div", { class:"akunku-head" }, el("h2", "Akunku: " + akunku.join(" + ")), el("span", { class:"chip" }, "Belum ada data")),
-      el("p", { class:"hint", style:"padding:0 18px 16px" }, "Data jangkauan bulan ini belum masuk dari spreadsheet DRM MARKETING. Isi jangkauan harian akunmu di sana ya."));
-    return sec;
+  function draw() {
+    const metrik = S.akunkuMetrik || "jangkauan";
+    const nama = METRIK_AKUN.find(x => x.v === metrik).label;
+    const kecil = nama.toLowerCase();
+    const pilih = pilihan(METRIK_AKUN, { get: () => metrik, set: v => { S.akunkuMetrik = v; }, onChange: draw });
+    const rows = semua.filter(r => r.metrik === metrik);
+    const ada = rows.filter(r => r.real > 0);
+    const targetBulan = akunku.reduce((s, a) => { const tg = rows.filter(r => r.akun === a); const sum = tg.reduce((x, r) => x + Number(r.target), 0); return s + (tg.length >= nHari ? sum : (tg.length ? sum / tg.length * nHari : 0)); }, 0);
+    const kepala = (judulKanan, sub) => el("div", { class:"akunku-head" },
+      el("div", el("h2", "Akunku: " + akunku.join(" + ")), el("p", { class:"hint" }, sub)), judulKanan);
+    if (!ada.length || !targetBulan) {
+      sec.replaceChildren(kepala(el("span", { class:"chip" }, "Belum ada data"), nama + " bulan ini"),
+        el("div", { class:"akunku-metrik" }, pilih),
+        el("p", { class:"hint", style:"padding:4px 18px 16px" }, "Data " + kecil + " bulan ini belum masuk dari spreadsheet DRM MARKETING."));
+      return;
+    }
+    const realMTD = ada.reduce((s, r) => s + Number(r.real), 0), targetMTD = ada.reduce((s, r) => s + Number(r.target), 0);
+    const pct = Math.round(realMTD / targetMTD * 100);
+    const terakhir = ada.map(r => r.tanggal).sort().pop();
+    const hariData = new Set(ada.map(r => r.tanggal)).size;
+    const sisa = Math.max(0, nHari - Number(terakhir.slice(8)));
+    const proyeksiPct = Math.round((realMTD + realMTD / hariData * sisa) / targetBulan * 100);
+    const butuh = sisa ? Math.max(0, (targetBulan - realMTD) / sisa) : 0;
+    const perHari = {}; ada.forEach(r => { perHari[r.tanggal] = perHari[r.tanggal] || { r:0, t:0 }; perHari[r.tanggal].r += Number(r.real); perHari[r.tanggal].t += Number(r.target); });
+    const terbaik = Object.entries(perHari).sort((a, b) => b[1].r / b[1].t - a[1].r / a[1].t)[0];
+    const batasIsi = addDays(t, -3), kosong = [];
+    for (let k = awal; k <= batasIsi; k = addDays(k, 1)) akunku.forEach(a => { if (!ada.some(r => r.akun === a && r.tanggal === k)) kosong.push({ a, k }); });
+    const status = pct >= 100 ? ["Melaju 🚀", "calm"] : pct >= 85 ? ["Hampir 💪", "appr"] : ["Butuh dorongan 🔥", "attn"];
+    const hari14 = Array.from({ length: 14 }, (_, i) => addDays(terakhir, i - 13));
+    const tglPendek = k => fmt(k, { day:"numeric", month:"short" });
+    sec.replaceChildren(
+      kepala(el("span", { class:"chip " + status[1] }, status[0]), "Target " + kecil + " bulan ini, data sampai " + tglPendek(terakhir)),
+      el("div", { class:"akunku-metrik" }, pilih),
+      el("div", { class:"akunku-isi" },
+        el("div", { class:"akunku-angka" }, el("b", pct + "%"), el("small", "dari target " + kecil + " sampai " + tglPendek(terakhir) + " (" + ringkasAngka(realMTD) + " dari " + ringkasAngka(targetMTD) + ")")),
+        el("div", { class:"akunku-angka" }, el("b", proyeksiPct + "%"), el("small", "proyeksi akhir bulan kalau ritmenya sama")),
+        el("div", { class:"akunku-angka" }, el("b", sisa ? ringkasAngka(butuh) : "–"), el("small", sisa ? kecil + " per hari di " + sisa + " hari tersisa supaya tembus 100%" : "bulan ini sudah selesai"))),
+      // Grafik harian: angka % di atas batang, tanggal di bawah, garis target 100%, keterangan warna
+      el("div", { class:"grafik" },
+        el("div", { class:"grafik-judul" }, el("b", "Pencapaian " + kecil + " harian"), el("small", "14 hari terakhir, % dari target " + kecil + " per hari")),
+        el("div", { class:"grafik-area" },
+          hari14.map(k => { const d = perHari[k]; const p = d ? d.r / d.t * 100 : 0;
+            const tinggi = d ? Math.max(8, Math.min(100, p / 1.5)) : 4;
+            return el("div", { class:"grafik-kol", title: fmt(k, { weekday:"long", day:"numeric", month:"short" }) + (d ? ": " + ringkasAngka(d.r) + " dari target " + ringkasAngka(d.t) + " (" + Math.round(p) + "%)" : ": belum diisi di spreadsheet") },
+              el("div", { class:"grafik-wrap" },
+                el("small", { class:"grafik-nilai", style:"bottom:calc(" + tinggi + "% + 2px)" }, d ? String(Math.round(p)) : "–"),
+                el("i", { style:"height:" + tinggi + "%;background:" + (!d ? "var(--line)" : p >= 100 ? "var(--lime)" : p >= 85 ? "var(--yellow)" : "var(--pink)") })),
+              el("span", { class:"grafik-tgl" }, String(Number(k.slice(8))))); })),
+        el("div", { class:"grafik-legenda" },
+          el("span", el("i", { style:"background:var(--lime)" }), "≥100%"),
+          el("span", el("i", { style:"background:var(--yellow)" }), "85–99%"),
+          el("span", el("i", { style:"background:var(--pink)" }), "<85%"),
+          el("span", el("i", { style:"background:var(--line)" }), "belum diisi"),
+          el("span", el("b", { class:"leg-garis" }), "target " + kecil + " 100%"),
+          el("small", "Angka di atas batang = % dari target " + kecil + " hari itu. Angka di bawah = tanggal. Ketuk/arahkan ke batang untuk detail."))),
+      el("div", { class:"akunku-kaki" },
+        terbaik ? el("span", "🏅 Hari terbaik: " + tglPendek(terbaik[0]) + " (" + Math.round(terbaik[1].r / terbaik[1].t * 100) + "%)") : null,
+        kosong.length ? el("span", { class:"err" }, "⚠️ " + nama + " belum diisi di spreadsheet: " + kosong.slice(0, 6).map(x => (akunku.length > 1 ? x.a + " " : "") + tglPendek(x.k)).join(", ") + (kosong.length > 6 ? ", …" : "")) : null,
+        metrik === "downloader" ? el("span", { class:"hint" }, "ℹ️ Downloader juga dipengaruhi produk, harga, dan momen pendaftaran, bukan hanya konten.") : null,
+        pct < 85 ? el("a", { class:"btn sm", href:"#/eksperimen" }, "Coba strategi baru → buat eksperimen") : null));
   }
-  const realMTD = ada.reduce((s, r) => s + Number(r.real), 0), targetMTD = ada.reduce((s, r) => s + Number(r.target), 0);
-  const pct = Math.round(realMTD / targetMTD * 100);
-  const terakhir = ada.map(r => r.tanggal).sort().pop();
-  const hariData = new Set(ada.map(r => r.tanggal)).size;
-  const sisa = Math.max(0, nHari - Number(terakhir.slice(8)));
-  const rataHarian = realMTD / hariData;
-  const proyeksiPct = Math.round((realMTD + rataHarian * sisa) / targetBulan * 100);
-  const butuh = sisa ? Math.max(0, (targetBulan - realMTD) / sisa) : 0;
-  const perHari = {}; ada.forEach(r => { perHari[r.tanggal] = perHari[r.tanggal] || { r:0, t:0 }; perHari[r.tanggal].r += Number(r.real); perHari[r.tanggal].t += Number(r.target); });
-  const terbaik = Object.entries(perHari).sort((a, b) => b[1].r / b[1].t - a[1].r / a[1].t)[0];
-  const batasIsi = addDays(t, -3), kosong = [];
-  for (let k = awal; k <= batasIsi; k = addDays(k, 1)) akunku.forEach(a => { if (!ada.some(r => r.akun === a && r.tanggal === k)) kosong.push({ a, k }); });
-  const status = pct >= 100 ? ["Melaju 🚀", "calm"] : pct >= 85 ? ["Hampir 💪", "appr"] : ["Butuh dorongan 🔥", "attn"];
-  const hari14 = Array.from({ length: 14 }, (_, i) => addDays(terakhir, i - 13));
-  sec.append(
-    el("div", { class:"akunku-head" }, el("div", el("h2", "Akunku: " + akunku.join(" + ")), el("p", { class:"hint" }, "Jangkauan bulan ini, data sampai " + fmt(terakhir, { day:"numeric", month:"short" }))), el("span", { class:"chip " + status[1] }, status[0])),
-    el("div", { class:"akunku-isi" },
-      el("div", { class:"akunku-angka" }, el("b", pct + "%"), el("small", "dari target sampai " + fmt(terakhir, { day:"numeric", month:"short" }))),
-      el("div", { class:"akunku-angka" }, el("b", proyeksiPct + "%"), el("small", "proyeksi akhir bulan kalau ritmenya sama")),
-      el("div", { class:"akunku-angka" }, el("b", sisa ? ringkasAngka(butuh) : "–"), el("small", sisa ? "jangkauan per hari di " + sisa + " hari tersisa supaya tembus 100%" : "bulan ini sudah selesai"))),
-    el("div", { class:"spark", title:"Pencapaian harian 14 hari terakhir" }, hari14.map(k => { const d = perHari[k]; const p = d ? d.r / d.t * 100 : 0;
-      return el("i", { style:"height:" + (d ? Math.max(6, Math.min(100, p * 0.6)) : 3) + "%;background:" + (!d ? "var(--line)" : p >= 100 ? "var(--lime)" : p >= 85 ? "var(--yellow)" : "var(--pink)"), title: fmt(k, { day:"numeric", month:"short" }) + (d ? ": " + Math.round(p) + "%" : ": belum ada data") }); })),
-    el("div", { class:"akunku-kaki" },
-      terbaik ? el("span", "🏅 Hari terbaik: " + fmt(terbaik[0], { day:"numeric", month:"short" }) + " (" + Math.round(terbaik[1].r / terbaik[1].t * 100) + "%)") : null,
-      kosong.length ? el("span", { class:"err" }, "⚠️ Belum diisi di spreadsheet: " + kosong.slice(0, 6).map(x => (akunku.length > 1 ? x.a + " " : "") + fmt(x.k, { day:"numeric", month:"short" })).join(", ") + (kosong.length > 6 ? ", …" : "")) : null,
-      pct < 85 ? el("a", { class:"btn sm", href:"#/eksperimen" }, "Coba strategi baru → buat eksperimen") : null));
+  draw();
   return sec;
 }
 

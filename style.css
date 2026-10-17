@@ -267,6 +267,7 @@ td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
 .akunku{overflow:hidden}
 .akunku-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:14px 18px;border-bottom:2px solid var(--ink);background:var(--sky)}
 .akunku-head .hint{color:var(--ink);opacity:.75;margin-top:2px}
+.akunku-metrik{padding:12px 18px 0}
 .akunku-isi{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:14px 18px 6px}
 .akunku-angka{border:2px solid var(--ink);border-radius:14px;padding:10px 12px;background:#fff}
 .akunku-angka:first-child{background:var(--lime)}
@@ -274,6 +275,23 @@ td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
 .akunku-angka small{display:block;font-size:.76rem;color:var(--muted);font-weight:600;line-height:1.3;margin-top:2px}
 .spark{display:flex;align-items:flex-end;gap:4px;height:56px;margin:8px 18px 0;padding:4px 0;border-bottom:2px dashed var(--line)}
 .spark i{flex:1;border:1.5px solid var(--ink);border-radius:4px 4px 2px 2px;min-height:3px}
+.grafik{margin:10px 18px 0;border:2px solid var(--ink);border-radius:14px;padding:10px 12px 8px;background:#fff}
+.grafik-judul{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;margin-bottom:6px}
+.grafik-judul small{color:var(--muted);font-size:.74rem;font-weight:600}
+/* Skala: 150% target = tinggi penuh, jadi garis 100% berada di 2/3 tinggi area */
+.grafik-area{display:flex;align-items:flex-end;gap:4px}
+.grafik-kol{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.grafik-nilai{position:absolute;left:50%;transform:translateX(-50%);font-size:.62rem;font-weight:800;line-height:1;white-space:nowrap;background:#fff;border-radius:3px;padding:0 1px;z-index:2}
+/* Skala: tinggi penuh = 150% target, garis putus-putus = 100% target */
+.grafik-wrap{position:relative;width:100%;height:96px;margin-top:12px;display:flex;align-items:flex-end}
+.grafik-wrap::after{content:"";position:absolute;left:-3px;right:-3px;bottom:66.67%;border-top:2px dashed var(--ink);pointer-events:none;z-index:1}
+.grafik-wrap i{width:100%;border:1.5px solid var(--ink);border-radius:4px 4px 2px 2px}
+.grafik-tgl{font-size:.62rem;color:var(--muted);font-weight:700;line-height:1}
+.leg-garis{display:inline-block;width:16px;border-top:2px dashed var(--ink)}
+.grafik-legenda{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:.72rem;font-weight:700;align-items:center}
+.grafik-legenda span{display:inline-flex;align-items:center;gap:4px}
+.grafik-legenda i{width:12px;height:12px;border:1.5px solid var(--ink);border-radius:3px;display:inline-block}
+.grafik-legenda small{flex-basis:100%;color:var(--muted);font-weight:600}
 .akunku-kaki{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 18px 16px;font-size:.86rem;font-weight:600}
 .akunku-kaki .err{font-size:.84rem}
 @media (max-width:620px){.akunku-isi{grid-template-columns:1fr}}
