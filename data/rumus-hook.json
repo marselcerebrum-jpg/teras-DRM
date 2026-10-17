@@ -1,5 +1,5 @@
 {
- "versi": "2026-10-17",
+ "versi": "2026-10-17b",
  "placeholder": {
   "{k}": "topik / kata kunci",
   "{m}": "masalah (frasa kerja, misalnya 'sering kehabisan waktu')",
@@ -120,7 +120,12 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "JANGAN latihan soal deret angka TIU asal banyak kalau kamu masih sering kehabisan waktu."
+   "contoh": "JANGAN latihan soal deret angka TIU asal banyak kalau kamu masih sering kehabisan waktu.",
+   "varian": {
+    "materi": "JANGAN latihan {k} asal banyak kalau kamu masih {m}.",
+    "tips": "JANGAN asal ikutin tips {k} kalau kamu masih {m}.",
+    "info": "JANGAN daftar dulu sebelum cek {k} ini, apalagi kalau kamu masih {m}."
+   }
   },
   {
    "id": "H002",
@@ -135,7 +140,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Berhenti ngerjain soal deret angka TIU tanpa batas waktu kalau kamu mau lolos SKD."
+   "contoh": "Berhenti ngerjain soal deret angka TIU tanpa batas waktu kalau kamu mau lolos SKD.",
+   "varian": {
+    "materi": "Berhenti ngerjain {k} tanpa batas waktu kalau kamu mau {h}.",
+    "tips": "Berhenti nunda persiapan {k} kalau kamu mau {h}."
+   }
   },
   {
    "id": "H003",
@@ -150,7 +159,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Wajib bayar janji 'cara benerinnya' di isi video.",
-   "contoh": "Kesalahan pejuang CPNS waktu belajar soal deret angka TIU yang bikin nilainya jeblok (dan cara benerinnya)."
+   "contoh": "Kesalahan pejuang CPNS waktu belajar soal deret angka TIU yang bikin nilainya jeblok (dan cara benerinnya).",
+   "varian": {
+    "materi": "Kesalahan {a} waktu belajar {k} yang bikin nilainya jeblok (dan cara benerinnya).",
+    "tips": "Kesalahan {a} soal {k} yang bikin peluangnya hilang (dan cara benerinnya).",
+    "info": "Kesalahan {a} soal {k} yang bisa bikin gugur di awal (dan cara menghindarinya)."
+   }
   },
   {
    "id": "H004",
@@ -165,7 +179,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Stop latihan soal deret angka TIU sampai kamu nonton video ini sampai habis."
+   "contoh": "Stop latihan soal deret angka TIU sampai kamu nonton video ini sampai habis.",
+   "varian": {
+    "materi": "Stop latihan {k} sampai kamu nonton video ini sampai habis.",
+    "tips": "Stop cari tips {k} ke mana-mana sampai kamu nonton video ini.",
+    "info": "Stop daftar dulu sampai kamu paham {k} di video ini."
+   }
   },
   {
    "id": "H005",
@@ -180,7 +199,13 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kamu masih sering kehabisan waktu? Pantes soal deret angka TIU terasa susah."
+   "contoh": "Kamu masih sering kehabisan waktu? Pantes soal deret angka TIU terasa susah.",
+   "varian": {
+    "materi": "Kamu masih {m}? Pantes {k} terasa susah.",
+    "tips": "Kamu masih {m}? Pantes persiapan {k} terasa berat.",
+    "info": "Kamu masih {m}? Tenang, video ini bahas {k} dengan simpel.",
+    "motivasi": "Lagi {m}? Wajar kok, {k} memang berat."
+   }
   },
   {
    "id": "H006",
@@ -195,7 +220,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kesalahan nomor 3 di soal deret angka TIU ini paling sering terjadi, mungkin kamu juga."
+   "contoh": "Kesalahan nomor 3 di soal deret angka TIU ini paling sering terjadi, mungkin kamu juga.",
+   "varian": {
+    "materi": "Kesalahan nomor 3 di {k} ini paling sering terjadi, mungkin kamu juga."
+   }
   },
   {
    "id": "H007",
@@ -210,7 +238,11 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kalau kamu masih sering kehabisan waktu, siap-siap kehilangan banyak poin di soal deret angka TIU."
+   "contoh": "Kalau kamu masih sering kehabisan waktu, siap-siap kehilangan banyak poin di soal deret angka TIU.",
+   "varian": {
+    "materi": "Kalau kamu masih {m}, siap-siap kehilangan banyak poin di {k}.",
+    "tips": "Kalau kamu masih {m}, siap-siap {k} jadi bagian yang paling bikin deg-degan."
+   }
   },
   {
    "id": "H008",
@@ -225,7 +257,10 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kebiasaan kecil ini diam-diam bikin kamu sering kehabisan waktu di soal deret angka TIU."
+   "contoh": "Kebiasaan kecil ini diam-diam bikin kamu sering kehabisan waktu di soal deret angka TIU.",
+   "varian": {
+    "materi": "Kebiasaan kecil ini diam-diam bikin kamu {m} di {k}."
+   }
   },
   {
    "id": "H009",
@@ -240,7 +275,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Jangan pernah ngerjain soal deret angka TIU kayak gini di hari tes."
+   "contoh": "Jangan pernah ngerjain soal deret angka TIU kayak gini di hari tes.",
+   "varian": {
+    "materi": "Jangan pernah ngerjain {k} kayak gini di hari tes.",
+    "info": "Jangan pernah anggap remeh {k}."
+   }
   },
   {
    "id": "H010",
@@ -255,7 +294,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Sayang banget kalau kamu gagal lolos SKD cuma gara-gara soal deret angka TIU."
+   "contoh": "Sayang banget kalau kamu gagal lolos SKD cuma gara-gara soal deret angka TIU.",
+   "varian": {
+    "materi": "Sayang banget kalau kamu gagal {h} cuma gara-gara {k}.",
+    "tips": "Sayang banget kalau kamu gagal {h} cuma karena salah persiapan {k}.",
+    "info": "Sayang banget kalau kamu gagal {h} cuma gara-gara salah paham soal {k}."
+   }
   },
   {
    "id": "H011",
@@ -270,7 +314,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Unpopular opinion: hafal rumus soal deret angka TIU itu bukan kunci buat lolos SKD."
+   "contoh": "Unpopular opinion: hafal rumus soal deret angka TIU itu bukan kunci buat lolos SKD.",
+   "varian": {
+    "materi": "Unpopular opinion: hafal rumus {k} itu bukan kunci buat {h}.",
+    "tips": "Unpopular opinion: kebanyakan tips {k} di internet justru bikin bingung."
+   }
   },
   {
    "id": "H012",
@@ -285,7 +333,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Aku nyesel baru nyadar kalau \"soal deret angka TIU itu susah\" ternyata bohong."
+   "contoh": "Aku nyesel baru nyadar kalau \"soal deret angka TIU itu susah\" ternyata bohong.",
+   "varian": {
+    "materi": "Aku nyesel baru nyadar kalau \"{k} itu susah\" ternyata bohong.",
+    "tips": "Aku nyesel baru sadar kalau tips {k} yang paling populer ternyata nggak selalu benar.",
+    "motivasi": "Aku nyesel baru sadar kalau {k} bukan akhir segalanya."
+   }
   },
   {
    "id": "H013",
@@ -300,7 +353,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Tanda kamu belum siap soal deret angka TIU, padahal kamu pikir kamu udah paham."
+   "contoh": "Tanda kamu belum siap soal deret angka TIU, padahal kamu pikir kamu udah paham.",
+   "varian": {
+    "materi": "Tanda kamu belum siap {k}, padahal kamu pikir kamu udah paham.",
+    "tips": "Tanda kamu belum benar-benar paham soal {k}, padahal kamu pikir udah.",
+    "info": "Tanda kamu belum benar-benar paham {k}, padahal kamu pikir udah."
+   }
   },
   {
    "id": "H014",
@@ -315,7 +373,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kenapa latihan soal deret angka TIU terlalu banyak justru bisa bikin skor kamu stagnan?"
+   "contoh": "Kenapa latihan soal deret angka TIU terlalu banyak justru bisa bikin skor kamu stagnan?",
+   "varian": {
+    "materi": "Kenapa latihan {k} terlalu banyak justru bisa bikin skor kamu stagnan?",
+    "tips": "Kenapa makin banyak baca tips {k} justru bikin makin bingung?"
+   }
   },
   {
    "id": "H015",
@@ -330,7 +392,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ternyata soal deret angka TIU bisa dikerjain jauh lebih cepat tanpa rumus rumit."
+   "contoh": "Ternyata soal deret angka TIU bisa dikerjain jauh lebih cepat tanpa rumus rumit.",
+   "varian": {
+    "materi": "Ternyata {k} bisa dikerjain jauh lebih cepat tanpa rumus rumit."
+   }
   },
   {
    "id": "H016",
@@ -345,7 +410,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Mitos soal deret angka TIU yang masih dipercaya banyak pejuang CPNS."
+   "contoh": "Mitos soal deret angka TIU yang masih dipercaya banyak pejuang CPNS.",
+   "varian": {
+    "materi": "Mitos soal {k} yang masih dipercaya banyak {a}.",
+    "tips": "Mitos soal {k} yang masih dipercaya banyak {a}.",
+    "info": "Mitos soal {k} yang masih dipercaya banyak {a}."
+   }
   },
   {
    "id": "H017",
@@ -360,7 +430,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Semua orang bilang soal deret angka TIU itu soal hafalan. Mereka salah."
+   "contoh": "Semua orang bilang soal deret angka TIU itu soal hafalan. Mereka salah.",
+   "varian": {
+    "materi": "Semua orang bilang {k} itu soal hafalan. Mereka salah.",
+    "tips": "Semua orang bilang {k} itu soal bakat. Mereka salah."
+   }
   },
   {
    "id": "H018",
@@ -375,7 +449,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kamu bukan nggak bisa soal deret angka TIU, kamu cuma belum tahu polanya."
+   "contoh": "Kamu bukan nggak bisa soal deret angka TIU, kamu cuma belum tahu polanya.",
+   "varian": {
+    "materi": "Kamu bukan nggak bisa {k}, kamu cuma belum tahu polanya."
+   }
   },
   {
    "id": "H019",
@@ -390,7 +467,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Rahasia soal deret angka TIU yang jarang dibahas di grup belajar."
+   "contoh": "Rahasia soal deret angka TIU yang jarang dibahas di grup belajar.",
+   "varian": {
+    "materi": "Rahasia {k} yang jarang dibahas di grup belajar.",
+    "tips": "Rahasia {k} yang jarang dibahas orang."
+   }
   },
   {
    "id": "H020",
@@ -405,7 +486,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pakai hanya kalau benar dialami pembuat konten atau ada kisah nyata.",
-   "contoh": "Gimana caranya aku paham soal deret angka TIU padahal cuma belajar 30 menit sehari?"
+   "contoh": "Gimana caranya aku paham soal deret angka TIU padahal cuma belajar 30 menit sehari?",
+   "varian": {
+    "materi": "Gimana caranya aku paham {k} padahal cuma belajar 30 menit sehari?"
+   }
   },
   {
    "id": "H021",
@@ -420,7 +504,12 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ini alasan sebenarnya kenapa kamu sering kehabisan waktu di soal deret angka TIU."
+   "contoh": "Ini alasan sebenarnya kenapa kamu sering kehabisan waktu di soal deret angka TIU.",
+   "varian": {
+    "materi": "Ini alasan sebenarnya kenapa kamu {m} di {k}.",
+    "tips": "Ini alasan sebenarnya kenapa kamu {m} soal {k}.",
+    "info": "Ini alasan sebenarnya kenapa banyak {a} {m} soal {k}."
+   }
   },
   {
    "id": "H022",
@@ -435,7 +524,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Taruh trik terbaik benar-benar di akhir.",
-   "contoh": "3 trik soal deret angka TIU, jangan di-skip, nomor 3 paling penting."
+   "contoh": "3 trik soal deret angka TIU, jangan di-skip, nomor 3 paling penting.",
+   "varian": {
+    "materi": "3 trik {k}, jangan di-skip, nomor 3 paling penting.",
+    "tips": "3 tips {k}, jangan di-skip, nomor 3 paling penting."
+   }
   },
   {
    "id": "H023",
@@ -450,7 +543,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Satu hal soal deret angka TIU yang jarang orang mau kasih tahu."
+   "contoh": "Satu hal soal deret angka TIU yang jarang orang mau kasih tahu.",
+   "varian": {
+    "materi": "Satu hal soal {k} yang jarang orang mau kasih tahu.",
+    "tips": "Satu hal soal {k} yang jarang orang mau kasih tahu.",
+    "info": "Satu hal soal {k} yang sering kelewat."
+   }
   },
   {
    "id": "H024",
@@ -465,7 +563,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Di akhir video ini, kamu bakal bisa jawab soal deret angka TIU dalam hitungan detik."
+   "contoh": "Di akhir video ini, kamu bakal bisa jawab soal deret angka TIU dalam hitungan detik.",
+   "varian": {
+    "materi": "Di akhir video ini, kamu bakal bisa jawab soal {k} dalam hitungan detik.",
+    "tips": "Di akhir video ini, kamu bakal tahu persis apa yang harus dilakukan soal {k}.",
+    "info": "Di akhir video ini, kamu bakal paham {k} tanpa bingung lagi."
+   }
   },
   {
    "id": "H025",
@@ -480,7 +583,11 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Aku nemu cara ngerjain soal deret angka TIU yang bikin aku nggak sering kehabisan waktu lagi."
+   "contoh": "Aku nemu cara ngerjain soal deret angka TIU yang bikin aku nggak sering kehabisan waktu lagi.",
+   "varian": {
+    "materi": "Aku nemu cara ngerjain {k} yang bikin aku nggak {m} lagi.",
+    "tips": "Aku nemu cara yang bikin aku nggak {m} lagi soal {k}."
+   }
   },
   {
    "id": "H026",
@@ -495,7 +602,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ada pola di soal deret angka TIU yang sering muncul. Udah sadar belum?"
+   "contoh": "Ada pola di soal deret angka TIU yang sering muncul. Udah sadar belum?",
+   "varian": {
+    "materi": "Ada pola di soal {k} yang sering muncul. Udah sadar belum?"
+   }
   },
   {
    "id": "H027",
@@ -510,7 +620,13 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Khusus buat pejuang CPNS yang sering kehabisan waktu, stop scroll."
+   "contoh": "Khusus buat pejuang CPNS yang sering kehabisan waktu, stop scroll.",
+   "varian": {
+    "materi": "Khusus buat {a} yang {m}, stop scroll.",
+    "tips": "Khusus buat {a} yang {m}, stop scroll.",
+    "info": "Khusus buat {a} yang {m}, stop scroll.",
+    "motivasi": "Khusus buat {a} yang {m}, stop scroll."
+   }
   },
   {
    "id": "H028",
@@ -525,7 +641,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kalau kamu pejuang CPNS, kamu wajib tau trik soal deret angka TIU ini."
+   "contoh": "Kalau kamu pejuang CPNS, kamu wajib tau trik soal deret angka TIU ini.",
+   "varian": {
+    "materi": "Kalau kamu {a}, kamu wajib tau trik {k} ini.",
+    "tips": "Kalau kamu {a}, kamu wajib tau ini soal {k}.",
+    "info": "Kalau kamu {a}, kamu wajib tau {k} ini."
+   }
   },
   {
    "id": "H029",
@@ -540,7 +661,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Bagus untuk memancing komentar.",
-   "contoh": "Kamu tim langsung jawab atau tim coret-coret dulu waktu ngerjain soal deret angka TIU?"
+   "contoh": "Kamu tim langsung jawab atau tim coret-coret dulu waktu ngerjain soal deret angka TIU?",
+   "varian": {
+    "materi": "Kamu tim langsung jawab atau tim coret-coret dulu waktu ngerjain {k}?"
+   }
   },
   {
    "id": "H030",
@@ -555,7 +679,13 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Video ini buat kamu yang masih lemah di soal deret angka TIU. Jangan disimpan doang, praktikkan."
+   "contoh": "Video ini buat kamu yang masih lemah di soal deret angka TIU. Jangan disimpan doang, praktikkan.",
+   "varian": {
+    "materi": "Video ini buat kamu yang masih lemah di {k}. Jangan disimpan doang, praktikkan.",
+    "tips": "Video ini buat kamu yang masih bingung soal {k}.",
+    "info": "Video ini buat kamu yang masih bingung soal {k}.",
+    "motivasi": "Video ini buat kamu yang lagi ngerasain {k}."
+   }
   },
   {
    "id": "H031",
@@ -570,7 +700,13 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "Bagus untuk memancing share dan komentar.",
-   "contoh": "Tag teman kamu yang sering kehabisan waktu pas belajar soal deret angka TIU."
+   "contoh": "Tag teman kamu yang sering kehabisan waktu pas belajar soal deret angka TIU.",
+   "varian": {
+    "materi": "Tag teman kamu yang {m} pas belajar {k}.",
+    "tips": "Tag teman kamu yang {m} soal {k}.",
+    "info": "Tag teman kamu yang lagi siap-siap daftar dan perlu tahu {k}.",
+    "motivasi": "Tag teman kamu yang lagi ngerasain {k}. Dia butuh ini."
+   }
   },
   {
    "id": "H032",
@@ -585,7 +721,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kalau kamu baru mulai belajar soal deret angka TIU, mulai dari sini."
+   "contoh": "Kalau kamu baru mulai belajar soal deret angka TIU, mulai dari sini.",
+   "varian": {
+    "materi": "Kalau kamu baru mulai belajar {k}, mulai dari sini.",
+    "tips": "Kalau kamu baru mulai siap-siap, mulai dari tips {k} ini."
+   }
   },
   {
    "id": "H033",
@@ -600,7 +740,13 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Buat semua pejuang CPNS: ini yang perlu kamu tahu soal deret angka TIU."
+   "contoh": "Buat semua pejuang CPNS: ini yang perlu kamu tahu soal deret angka TIU.",
+   "varian": {
+    "materi": "Buat semua {a}: ini yang perlu kamu tahu soal {k}.",
+    "tips": "Buat semua {a}: ini yang perlu kamu tahu soal {k}.",
+    "info": "Buat semua {a}: ini yang perlu kamu tahu soal {k}.",
+    "motivasi": "Buat semua {a} yang lagi ngerasain {k}: kamu nggak sendirian."
+   }
   },
   {
    "id": "H034",
@@ -615,7 +761,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Cara cepat paham soal deret angka TIU tanpa harus hafalan rumus panjang."
+   "contoh": "Cara cepat paham soal deret angka TIU tanpa harus hafalan rumus panjang.",
+   "varian": {
+    "materi": "Cara cepat paham {k} tanpa harus hafalan rumus panjang.",
+    "tips": "Cara siapin {k} tanpa harus panik di menit terakhir."
+   }
   },
   {
    "id": "H035",
@@ -630,7 +780,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Satu kebiasaan kecil yang bikin soal deret angka TIU jadi jauh lebih gampang."
+   "contoh": "Satu kebiasaan kecil yang bikin soal deret angka TIU jadi jauh lebih gampang.",
+   "varian": {
+    "materi": "Satu kebiasaan kecil yang bikin {k} jadi jauh lebih gampang.",
+    "tips": "Satu kebiasaan kecil yang bikin {k} jauh lebih lancar."
+   }
   },
   {
    "id": "H036",
@@ -645,7 +799,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Cara ngerjain soal deret angka TIU dalam 30 detik per soal."
+   "contoh": "Cara ngerjain soal deret angka TIU dalam 30 detik per soal.",
+   "varian": {
+    "materi": "Cara ngerjain {k} dalam 30 detik per soal."
+   }
   },
   {
    "id": "H037",
@@ -660,7 +817,12 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kalau kamu sering kehabisan waktu di soal deret angka TIU, coba trik ini."
+   "contoh": "Kalau kamu sering kehabisan waktu di soal deret angka TIU, coba trik ini.",
+   "varian": {
+    "materi": "Kalau kamu {m} di {k}, coba trik ini.",
+    "tips": "Kalau kamu {m} soal {k}, coba cara ini.",
+    "info": "Kalau kamu {m} soal {k}, simak ini."
+   }
   },
   {
    "id": "H038",
@@ -675,7 +837,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Langkah pertama buat lolos SKD: kuasai soal deret angka TIU dengan cara ini."
+   "contoh": "Langkah pertama buat lolos SKD: kuasai soal deret angka TIU dengan cara ini.",
+   "varian": {
+    "materi": "Langkah pertama buat {h}: kuasai {k} dengan cara ini.",
+    "tips": "Langkah pertama buat {h}: beresin {k} dengan cara ini.",
+    "info": "Langkah pertama buat {h}: pahami {k} dulu."
+   }
   },
   {
    "id": "H039",
@@ -690,7 +857,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Rumus siap pakai buat soal deret angka TIU, tinggal tiru."
+   "contoh": "Rumus siap pakai buat soal deret angka TIU, tinggal tiru.",
+   "varian": {
+    "materi": "Rumus siap pakai buat {k}, tinggal tiru."
+   }
   },
   {
    "id": "H040",
@@ -705,7 +875,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Trik soal deret angka TIU yang bisa langsung kamu pakai di latihan berikutnya."
+   "contoh": "Trik soal deret angka TIU yang bisa langsung kamu pakai di latihan berikutnya.",
+   "varian": {
+    "materi": "Trik {k} yang bisa langsung kamu pakai di latihan berikutnya.",
+    "tips": "Tips {k} yang bisa langsung kamu praktikkan hari ini."
+   }
   },
   {
    "id": "H041",
@@ -720,7 +894,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ubah soal deret angka TIU dari bagian tersulit jadi bagian paling cepat kamu kerjain."
+   "contoh": "Ubah soal deret angka TIU dari bagian tersulit jadi bagian paling cepat kamu kerjain.",
+   "varian": {
+    "materi": "Ubah {k} dari bagian tersulit jadi bagian paling cepat kamu kerjain."
+   }
   },
   {
    "id": "H042",
@@ -735,7 +912,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "3 trik soal deret angka TIU yang bikin saingan tesmu panik."
+   "contoh": "3 trik soal deret angka TIU yang bikin saingan tesmu panik.",
+   "varian": {
+    "materi": "3 trik {k} yang bikin saingan tesmu panik.",
+    "tips": "3 tips {k} yang bikin saingan kamu panik."
+   }
   },
   {
    "id": "H043",
@@ -750,7 +931,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "5 hal soal deret angka TIU yang harusnya aku tahu dari dulu."
+   "contoh": "5 hal soal deret angka TIU yang harusnya aku tahu dari dulu.",
+   "varian": {
+    "materi": "5 hal soal {k} yang harusnya aku tahu dari dulu.",
+    "tips": "5 hal soal {k} yang harusnya aku tahu dari dulu.",
+    "info": "5 hal soal {k} yang harusnya kamu tahu dari awal."
+   }
   },
   {
    "id": "H044",
@@ -765,7 +951,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "3 tanda kamu sebenarnya udah siap ngerjain soal deret angka TIU."
+   "contoh": "3 tanda kamu sebenarnya udah siap ngerjain soal deret angka TIU.",
+   "varian": {
+    "materi": "3 tanda kamu sebenarnya udah siap ngerjain {k}.",
+    "tips": "3 tanda kamu udah siap soal {k}."
+   }
   },
   {
    "id": "H045",
@@ -780,7 +970,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "4 kesalahan paling umum di soal deret angka TIU. Nomor 2 paling bikin nyesek."
+   "contoh": "4 kesalahan paling umum di soal deret angka TIU. Nomor 2 paling bikin nyesek.",
+   "varian": {
+    "materi": "4 kesalahan paling umum di {k}. Nomor 2 paling bikin nyesek.",
+    "tips": "4 kesalahan paling umum soal {k}. Nomor 2 paling sering kejadian.",
+    "info": "4 kesalahan paling umum soal {k}. Nomor 2 sering bikin gugur."
+   }
   },
   {
    "id": "H046",
@@ -795,7 +990,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Cuma butuh 5 menit buat paham dasar soal deret angka TIU."
+   "contoh": "Cuma butuh 5 menit buat paham dasar soal deret angka TIU.",
+   "varian": {
+    "materi": "Cuma butuh 5 menit buat paham dasar {k}."
+   }
   },
   {
    "id": "H047",
@@ -810,7 +1008,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Hanya pakai kalau angkanya berasal dari data nyata, misalnya hasil tryout.",
-   "contoh": "9 dari 10 pejuang CPNS salah jawab soal deret angka TIU ini. Kamu?"
+   "contoh": "9 dari 10 pejuang CPNS salah jawab soal deret angka TIU ini. Kamu?",
+   "varian": {
+    "materi": "9 dari 10 {a} salah jawab soal {k} ini. Kamu?"
+   }
   },
   {
    "id": "H048",
@@ -825,7 +1026,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "3 langkah ngerjain soal deret angka TIU tanpa panik."
+   "contoh": "3 langkah ngerjain soal deret angka TIU tanpa panik.",
+   "varian": {
+    "materi": "3 langkah ngerjain {k} tanpa panik.",
+    "tips": "3 langkah siapin {k} tanpa panik."
+   }
   },
   {
    "id": "H049",
@@ -840,7 +1045,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Coba jawab soal deret angka TIU ini dalam 10 detik."
+   "contoh": "Coba jawab soal deret angka TIU ini dalam 10 detik.",
+   "varian": {
+    "materi": "Coba jawab soal {k} ini dalam 10 detik."
+   }
   },
   {
    "id": "H050",
@@ -855,7 +1063,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Tebak, mana cara ngerjain soal deret angka TIU yang benar: A atau B?"
+   "contoh": "Tebak, mana cara ngerjain soal deret angka TIU yang benar: A atau B?",
+   "varian": {
+    "materi": "Tebak, mana cara ngerjain {k} yang benar: A atau B?",
+    "tips": "Tebak, mana yang benar soal {k}: A atau B?",
+    "info": "Tebak, mana yang benar soal {k}: A atau B?"
+   }
   },
   {
    "id": "H051",
@@ -870,7 +1083,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kalau kamu bisa jawab soal deret angka TIU ini, kamu siap lolos SKD."
+   "contoh": "Kalau kamu bisa jawab soal deret angka TIU ini, kamu siap lolos SKD.",
+   "varian": {
+    "materi": "Kalau kamu bisa jawab soal {k} ini, kamu siap {h}."
+   }
   },
   {
    "id": "H052",
@@ -885,7 +1101,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Pause videonya, jawab soal deret angka TIU ini, baru lanjut."
+   "contoh": "Pause videonya, jawab soal deret angka TIU ini, baru lanjut.",
+   "varian": {
+    "materi": "Pause videonya, jawab soal {k} ini, baru lanjut."
+   }
   },
   {
    "id": "H053",
@@ -900,7 +1119,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Bagus untuk memancing komentar.",
-   "contoh": "Komen jawabanmu dulu sebelum lihat pembahasan soal deret angka TIU ini."
+   "contoh": "Komen jawabanmu dulu sebelum lihat pembahasan soal deret angka TIU ini.",
+   "varian": {
+    "materi": "Komen jawabanmu dulu sebelum lihat pembahasan soal {k} ini.",
+    "tips": "Komen dulu: menurutmu apa yang paling penting soal {k}?",
+    "info": "Komen pertanyaanmu soal {k}, nanti kami jawab."
+   }
   },
   {
    "id": "H054",
@@ -915,7 +1139,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Soal deret angka TIU dari level gampang sampai susah. Kamu kuat sampai level berapa?"
+   "contoh": "Soal deret angka TIU dari level gampang sampai susah. Kamu kuat sampai level berapa?",
+   "varian": {
+    "materi": "Soal {k} dari level gampang sampai susah. Kamu kuat sampai level berapa?"
+   }
   },
   {
    "id": "H055",
@@ -930,7 +1157,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Soal deret angka TIU ini kelihatan gampang, padahal ada jebakannya."
+   "contoh": "Soal deret angka TIU ini kelihatan gampang, padahal ada jebakannya.",
+   "varian": {
+    "materi": "Soal {k} ini kelihatan gampang, padahal ada jebakannya.",
+    "tips": "Tips {k} ini kelihatan bener, padahal ada jebakannya.",
+    "info": "Info soal {k} ini sering disalahpahami."
+   }
   },
   {
    "id": "H056",
@@ -945,7 +1177,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "POV: kamu akhirnya sadar kalau latihan soal deret angka TIU 3 jam nggak seefektif 30 menit yang terarah."
+   "contoh": "POV: kamu akhirnya sadar kalau latihan soal deret angka TIU 3 jam nggak seefektif 30 menit yang terarah.",
+   "varian": {
+    "materi": "POV: kamu akhirnya sadar kalau latihan {k} 3 jam nggak seefektif 30 menit yang terarah.",
+    "tips": "POV: kamu akhirnya sadar kalau persiapan {k} nggak segampang yang kamu kira.",
+    "motivasi": "POV: kamu akhirnya sadar kalau {k} justru bikin kamu lebih kuat."
+   }
   },
   {
    "id": "H057",
@@ -960,7 +1197,12 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pakai hanya kalau benar dialami pembuat konten atau ada kisah nyata.",
-   "contoh": "Dulu aku paling takut soal deret angka TIU, sekarang jadi bagian favorit. Ini yang aku ubah."
+   "contoh": "Dulu aku paling takut soal deret angka TIU, sekarang jadi bagian favorit. Ini yang aku ubah.",
+   "varian": {
+    "materi": "Dulu aku paling takut {k}, sekarang jadi bagian favorit. Ini yang aku ubah.",
+    "tips": "Dulu aku paling takut soal {k}, sekarang malah percaya diri. Ini yang aku ubah.",
+    "motivasi": "Dulu aku {m}, sekarang aku {h}. Ini ceritanya."
+   }
   },
   {
    "id": "H058",
@@ -975,7 +1217,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pakai hanya kalau benar-benar dicoba. Cocok jadi eksperimen di Spill.",
-   "contoh": "Aku coba latihan soal deret angka TIU 15 menit tiap hari selama seminggu. Hasilnya…"
+   "contoh": "Aku coba latihan soal deret angka TIU 15 menit tiap hari selama seminggu. Hasilnya…",
+   "varian": {
+    "materi": "Aku coba latihan {k} 15 menit tiap hari selama seminggu. Hasilnya…"
+   }
   },
   {
    "id": "H059",
@@ -990,7 +1235,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Reaksi pejuang CPNS waktu tahu trik soal deret angka TIU ini."
+   "contoh": "Reaksi pejuang CPNS waktu tahu trik soal deret angka TIU ini.",
+   "varian": {
+    "materi": "Reaksi {a} waktu tahu trik {k} ini.",
+    "tips": "Reaksi {a} waktu tahu fakta soal {k} ini."
+   }
   },
   {
    "id": "H060",
@@ -1005,7 +1254,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pakai hanya kalau ada dokumentasi nyata.",
-   "contoh": "Hari pertama vs hari ke-30 belajar soal deret angka TIU."
+   "contoh": "Hari pertama vs hari ke-30 belajar soal deret angka TIU.",
+   "varian": {
+    "materi": "Hari pertama vs hari ke-30 belajar {k}."
+   }
   },
   {
    "id": "H061",
@@ -1020,7 +1272,11 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pakai hanya kalau benar dialami pembuat konten atau narasumber.",
-   "contoh": "Aku pernah gagal karena soal deret angka TIU. Ini pelajaran yang aku ambil."
+   "contoh": "Aku pernah gagal karena soal deret angka TIU. Ini pelajaran yang aku ambil.",
+   "varian": {
+    "materi": "Aku pernah gagal karena {k}. Ini pelajaran yang aku ambil.",
+    "motivasi": "Aku pernah ngalamin {k}. Ini pelajaran yang aku ambil."
+   }
   },
   {
    "id": "H062",
@@ -1035,7 +1291,11 @@
    "pakai_masalah": true,
    "butuh_data": true,
    "catatan": "Wajib kisah nyata dan seizin alumninya.",
-   "contoh": "Alumni kami dulu sering kehabisan waktu, sampai akhirnya lolos SKD. Ini caranya."
+   "contoh": "Alumni kami dulu sering kehabisan waktu, sampai akhirnya lolos SKD. Ini caranya.",
+   "varian": {
+    "materi": "Alumni kami dulu {m}, sampai akhirnya {h}. Ini caranya.",
+    "motivasi": "Alumni kami dulu {m}, sampai akhirnya {h}. Ini caranya."
+   }
   },
   {
    "id": "H063",
@@ -1050,7 +1310,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ini bedanya pejuang CPNS yang lolos dan yang gagal waktu ngerjain soal deret angka TIU."
+   "contoh": "Ini bedanya pejuang CPNS yang lolos dan yang gagal waktu ngerjain soal deret angka TIU.",
+   "varian": {
+    "materi": "Ini bedanya {a} yang lolos dan yang gagal waktu ngerjain {k}.",
+    "tips": "Ini bedanya {a} yang lolos dan yang gagal soal {k}."
+   }
   },
   {
    "id": "H064",
@@ -1065,7 +1329,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Cara lama vs cara cepat ngerjain soal deret angka TIU."
+   "contoh": "Cara lama vs cara cepat ngerjain soal deret angka TIU.",
+   "varian": {
+    "materi": "Cara lama vs cara cepat ngerjain {k}.",
+    "tips": "Cara lama vs cara baru siapin {k}."
+   }
   },
   {
    "id": "H065",
@@ -1080,7 +1348,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ngerjain soal deret angka TIU kayak gini ❌, harusnya kayak gini ✅."
+   "contoh": "Ngerjain soal deret angka TIU kayak gini ❌, harusnya kayak gini ✅.",
+   "varian": {
+    "materi": "Ngerjain {k} kayak gini ❌, harusnya kayak gini ✅.",
+    "tips": "Siapin {k} kayak gini ❌, harusnya kayak gini ✅."
+   }
   },
   {
    "id": "H066",
@@ -1095,7 +1367,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Sebelum dan sesudah aku paham trik soal deret angka TIU."
+   "contoh": "Sebelum dan sesudah aku paham trik soal deret angka TIU.",
+   "varian": {
+    "materi": "Sebelum dan sesudah aku paham trik {k}."
+   }
   },
   {
    "id": "H067",
@@ -1110,7 +1385,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ekspektasi vs realita ngerjain soal deret angka TIU di hari tes."
+   "contoh": "Ekspektasi vs realita ngerjain soal deret angka TIU di hari tes.",
+   "varian": {
+    "materi": "Ekspektasi vs realita ngerjain {k} di hari tes.",
+    "tips": "Ekspektasi vs realita soal {k}.",
+    "info": "Ekspektasi vs realita soal {k}."
+   }
   },
   {
    "id": "H068",
@@ -1125,7 +1405,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Belajar soal deret angka TIU: yang rajin vs yang cerdas. Kamu yang mana?"
+   "contoh": "Belajar soal deret angka TIU: yang rajin vs yang cerdas. Kamu yang mana?",
+   "varian": {
+    "materi": "Belajar {k}: yang rajin vs yang cerdas. Kamu yang mana?"
+   }
   },
   {
    "id": "H069",
@@ -1140,7 +1423,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Sesuaikan angka H- dengan jadwal tes yang sebenarnya.",
-   "contoh": "H-30 menuju hari tes: ini cara latihan soal deret angka TIU yang paling efektif."
+   "contoh": "H-30 menuju hari tes: ini cara latihan soal deret angka TIU yang paling efektif.",
+   "varian": {
+    "materi": "H-30 menuju hari tes: ini cara latihan {k} yang paling efektif.",
+    "tips": "H-30 sebelum tes: ini yang harus kamu siapin soal {k}.",
+    "info": "H-30 sebelum pendaftaran: ini yang harus kamu cek soal {k}."
+   }
   },
   {
    "id": "H070",
@@ -1155,7 +1443,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Bagus untuk menaikkan jumlah save.",
-   "contoh": "Simpan video ini sebelum kamu latihan soal deret angka TIU lagi."
+   "contoh": "Simpan video ini sebelum kamu latihan soal deret angka TIU lagi.",
+   "varian": {
+    "materi": "Simpan video ini sebelum kamu latihan {k} lagi.",
+    "tips": "Simpan video ini sebelum kamu mulai siapin {k}.",
+    "info": "Simpan dulu info {k} ini, nanti pasti kepake."
+   }
   },
   {
    "id": "H071",
@@ -1170,7 +1463,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Pastikan seri benar-benar dilanjutkan.",
-   "contoh": "Bagian 1 dari 5: cara cepat soal deret angka TIU buat pejuang CPNS."
+   "contoh": "Bagian 1 dari 5: cara cepat soal deret angka TIU buat pejuang CPNS.",
+   "varian": {
+    "materi": "Bagian 1 dari 5: cara cepat {k} buat {a}.",
+    "tips": "Bagian 1 dari 5: semua yang perlu kamu tahu soal {k}.",
+    "info": "Bagian 1 dari 5: semua yang perlu kamu tahu soal {k}."
+   }
   },
   {
    "id": "H072",
@@ -1185,7 +1483,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Masih ada waktu buat jago soal deret angka TIU, asal mulai hari ini."
+   "contoh": "Masih ada waktu buat jago soal deret angka TIU, asal mulai hari ini.",
+   "varian": {
+    "materi": "Masih ada waktu buat jago {k}, asal mulai hari ini.",
+    "motivasi": "Masih ada waktu buat {h}, walaupun kamu {m}."
+   }
   },
   {
    "id": "H073",
@@ -1200,7 +1502,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kuasai soal deret angka TIU sekarang, sebelum kamu panik di hari tes."
+   "contoh": "Kuasai soal deret angka TIU sekarang, sebelum kamu panik di hari tes.",
+   "varian": {
+    "materi": "Kuasai {k} sekarang, sebelum kamu panik di hari tes.",
+    "tips": "Beresin {k} sekarang, sebelum kamu panik di hari tes.",
+    "info": "Cek {k} sekarang, sebelum terlambat."
+   }
   },
   {
    "id": "H074",
@@ -1215,7 +1522,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Malam sebelum tes, cukup review soal deret angka TIU kayak gini."
+   "contoh": "Malam sebelum tes, cukup review soal deret angka TIU kayak gini.",
+   "varian": {
+    "materi": "Malam sebelum tes, cukup review {k} kayak gini."
+   }
   },
   {
    "id": "H075",
@@ -1230,7 +1540,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "1 menit sehari buat soal deret angka TIU. Mulai sekarang."
+   "contoh": "1 menit sehari buat soal deret angka TIU. Mulai sekarang.",
+   "varian": {
+    "materi": "1 menit sehari buat {k}. Mulai sekarang."
+   }
   },
   {
    "id": "H076",
@@ -1245,7 +1558,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pastikan klaimnya didukung data bank soal sendiri.",
-   "contoh": "Dari ratusan soal deret angka TIU yang kami bahas, pola ini paling sering keluar."
+   "contoh": "Dari ratusan soal deret angka TIU yang kami bahas, pola ini paling sering keluar.",
+   "varian": {
+    "materi": "Dari ratusan soal {k} yang kami bahas, pola ini paling sering keluar."
+   }
   },
   {
    "id": "H077",
@@ -1260,7 +1576,11 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Wajib cek ke sumber resmi (misalnya BKN) sebelum tayang.",
-   "contoh": "Sesuai aturan resmi, ini yang perlu kamu tahu soal deret angka TIU."
+   "contoh": "Sesuai aturan resmi, ini yang perlu kamu tahu soal deret angka TIU.",
+   "varian": {
+    "materi": "Sesuai aturan resmi, ini yang perlu kamu tahu soal {k}.",
+    "info": "Sesuai aturan resmi, ini yang perlu kamu tahu soal {k}."
+   }
   },
   {
    "id": "H078",
@@ -1275,7 +1595,11 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Pastikan tutornya benar menyampaikan hal itu.",
-   "contoh": "Kata tutor kami, ini cara paling cepat ngerjain soal deret angka TIU."
+   "contoh": "Kata tutor kami, ini cara paling cepat ngerjain soal deret angka TIU.",
+   "varian": {
+    "materi": "Kata tutor kami, ini cara paling cepat ngerjain {k}.",
+    "tips": "Kata tutor kami, ini kunci soal {k}."
+   }
   },
   {
    "id": "H079",
@@ -1290,7 +1614,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Hanya pakai kalau ada data tryout nyata.",
-   "contoh": "Hasil tryout menunjukkan banyak pejuang CPNS kehilangan poin di soal deret angka TIU."
+   "contoh": "Hasil tryout menunjukkan banyak pejuang CPNS kehilangan poin di soal deret angka TIU.",
+   "varian": {
+    "materi": "Hasil tryout menunjukkan banyak {a} kehilangan poin di {k}."
+   }
   },
   {
    "id": "H080",
@@ -1305,7 +1632,10 @@
    "pakai_masalah": false,
    "butuh_data": true,
    "catatan": "Hanya pakai kalau jumlahnya sesuai data.",
-   "contoh": "Ribuan member sudah coba trik soal deret angka TIU ini."
+   "contoh": "Ribuan member sudah coba trik soal deret angka TIU ini.",
+   "varian": {
+    "materi": "Ribuan member sudah coba trik {k} ini."
+   }
   },
   {
    "id": "H081",
@@ -1320,7 +1650,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Aku waktu lihat soal deret angka TIU: 🙂 Aku 10 detik kemudian: 😵"
+   "contoh": "Aku waktu lihat soal deret angka TIU: 🙂 Aku 10 detik kemudian: 😵",
+   "varian": {
+    "materi": "Aku waktu lihat soal {k}: 🙂 Aku 10 detik kemudian: 😵"
+   }
   },
   {
    "id": "H082",
@@ -1335,7 +1668,12 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Nggak ada yang ngomongin betapa capeknya sering kehabisan waktu pas belajar soal deret angka TIU."
+   "contoh": "Nggak ada yang ngomongin betapa capeknya sering kehabisan waktu pas belajar soal deret angka TIU.",
+   "varian": {
+    "materi": "Nggak ada yang ngomongin betapa capeknya {m} pas belajar {k}.",
+    "tips": "Nggak ada yang ngomongin rasanya {m} tiap mikirin {k}.",
+    "motivasi": "Nggak ada yang ngomongin betapa beratnya {k}."
+   }
   },
   {
    "id": "H083",
@@ -1350,7 +1688,12 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kamu juga gitu nggak sih, udah belajar soal deret angka TIU tapi tetap sering kehabisan waktu?"
+   "contoh": "Kamu juga gitu nggak sih, udah belajar soal deret angka TIU tapi tetap sering kehabisan waktu?",
+   "varian": {
+    "materi": "Kamu juga gitu nggak sih, udah belajar {k} tapi tetap {m}?",
+    "tips": "Kamu juga gitu nggak sih, udah baca banyak tips {k} tapi tetap {m}?",
+    "motivasi": "Kamu juga lagi {m} nggak sih, gara-gara {k}?"
+   }
   },
   {
    "id": "H084",
@@ -1365,7 +1708,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Bagus untuk memancing komentar dan tag.",
-   "contoh": "Tipe-tipe pejuang CPNS waktu ketemu soal deret angka TIU. Kamu yang mana?"
+   "contoh": "Tipe-tipe pejuang CPNS waktu ketemu soal deret angka TIU. Kamu yang mana?",
+   "varian": {
+    "materi": "Tipe-tipe {a} waktu ketemu soal {k}. Kamu yang mana?",
+    "tips": "Tipe-tipe {a} soal {k}. Kamu yang mana?"
+   }
   },
   {
    "id": "H085",
@@ -1380,7 +1727,11 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Relate banget kalau kamu juga sering kehabisan waktu di soal deret angka TIU."
+   "contoh": "Relate banget kalau kamu juga sering kehabisan waktu di soal deret angka TIU.",
+   "varian": {
+    "materi": "Relate banget kalau kamu juga {m} di {k}.",
+    "motivasi": "Relate banget kalau kamu juga lagi ngerasain {k}."
+   }
   },
   {
    "id": "H086",
@@ -1395,7 +1746,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Otak aku waktu ngerjain soal deret angka TIU jam 2 pagi:"
+   "contoh": "Otak aku waktu ngerjain soal deret angka TIU jam 2 pagi:",
+   "varian": {
+    "materi": "Otak aku waktu ngerjain {k} jam 2 pagi:"
+   }
   },
   {
    "id": "H087",
@@ -1410,7 +1764,13 @@
    "pakai_masalah": true,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Pernah nggak kamu sering kehabisan waktu pas ngerjain soal deret angka TIU?"
+   "contoh": "Pernah nggak kamu sering kehabisan waktu pas ngerjain soal deret angka TIU?",
+   "varian": {
+    "materi": "Pernah nggak kamu {m} pas ngerjain {k}?",
+    "tips": "Pernah nggak kamu {m} soal {k}?",
+    "info": "Pernah nggak kamu {m} soal {k}?",
+    "motivasi": "Pernah nggak kamu {m} karena {k}?"
+   }
   },
   {
    "id": "H088",
@@ -1425,7 +1785,13 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Kenapa ya soal deret angka TIU selalu terasa susah padahal udah latihan?"
+   "contoh": "Kenapa ya soal deret angka TIU selalu terasa susah padahal udah latihan?",
+   "varian": {
+    "materi": "Kenapa ya {k} selalu terasa susah padahal udah latihan?",
+    "tips": "Kenapa ya {k} selalu bikin deg-degan?",
+    "info": "Kenapa ya {k} selalu bikin bingung?",
+    "motivasi": "Kenapa ya {k} rasanya berat banget?"
+   }
   },
   {
    "id": "H089",
@@ -1440,7 +1806,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Tahu nggak, ada cara ngerjain soal deret angka TIU yang jauh lebih cepat?"
+   "contoh": "Tahu nggak, ada cara ngerjain soal deret angka TIU yang jauh lebih cepat?",
+   "varian": {
+    "materi": "Tahu nggak, ada cara ngerjain {k} yang jauh lebih cepat?",
+    "tips": "Tahu nggak, ada cara siapin {k} yang jauh lebih santai?",
+    "info": "Tahu nggak, ada hal soal {k} yang sering kelewat?"
+   }
   },
   {
    "id": "H090",
@@ -1455,7 +1826,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Apa yang terjadi kalau kamu latihan soal deret angka TIU 10 menit setiap hari?"
+   "contoh": "Apa yang terjadi kalau kamu latihan soal deret angka TIU 10 menit setiap hari?",
+   "varian": {
+    "materi": "Apa yang terjadi kalau kamu latihan {k} 10 menit setiap hari?",
+    "motivasi": "Apa yang terjadi kalau kamu tetap jalan, walaupun {k}?"
+   }
   },
   {
    "id": "H091",
@@ -1470,7 +1845,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Mana yang lebih penting buat lolos SKD: cepat atau teliti di soal deret angka TIU?"
+   "contoh": "Mana yang lebih penting buat lolos SKD: cepat atau teliti di soal deret angka TIU?",
+   "varian": {
+    "materi": "Mana yang lebih penting buat {h}: cepat atau teliti di {k}?",
+    "tips": "Mana yang lebih penting buat {h}: persiapan lama atau persiapan yang tepat soal {k}?"
+   }
   },
   {
    "id": "H092",
@@ -1485,7 +1864,13 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Ini mungkin bikin kamu kesel, tapi soal deret angka TIU bukan soal pintar atau nggak."
+   "contoh": "Ini mungkin bikin kamu kesel, tapi soal deret angka TIU bukan soal pintar atau nggak.",
+   "varian": {
+    "materi": "Ini mungkin bikin kamu kesel, tapi {k} bukan soal pintar atau nggak.",
+    "tips": "Ini mungkin bikin kamu kesel, tapi {k} bukan soal bakat.",
+    "info": "Ini mungkin bikin kamu kaget, tapi {k} nggak seribet yang kamu kira.",
+    "motivasi": "Ini mungkin bikin kamu kesel, tapi {k} bukan alasan buat berhenti."
+   }
   },
   {
    "id": "H093",
@@ -1500,7 +1885,11 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Aku tahu bakal ada yang nggak setuju, tapi soal deret angka TIU itu bisa dipelajari siapa aja."
+   "contoh": "Aku tahu bakal ada yang nggak setuju, tapi soal deret angka TIU itu bisa dipelajari siapa aja.",
+   "varian": {
+    "materi": "Aku tahu bakal ada yang nggak setuju, tapi {k} itu bisa dipelajari siapa aja.",
+    "motivasi": "Aku tahu nggak semua setuju, tapi {k} bisa jadi awal yang baru."
+   }
   },
   {
    "id": "H094",
@@ -1515,7 +1904,10 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "Opini harus tetap sejalan dengan brand. Jangan menjatuhkan produk sendiri.",
-   "contoh": "Belajar soal deret angka TIU sendiri lebih efektif daripada ikut kelas. Setuju atau nggak?"
+   "contoh": "Belajar soal deret angka TIU sendiri lebih efektif daripada ikut kelas. Setuju atau nggak?",
+   "varian": {
+    "materi": "Belajar {k} sendiri lebih efektif daripada ikut kelas. Setuju atau nggak?"
+   }
   },
   {
    "id": "H095",
@@ -1530,7 +1922,12 @@
    "pakai_masalah": false,
    "butuh_data": false,
    "catatan": "",
-   "contoh": "Hot take: kamu nggak perlu belajar soal deret angka TIU berjam-jam buat lolos SKD."
+   "contoh": "Hot take: kamu nggak perlu belajar soal deret angka TIU berjam-jam buat lolos SKD.",
+   "varian": {
+    "materi": "Hot take: kamu nggak perlu belajar {k} berjam-jam buat {h}.",
+    "tips": "Hot take: kamu nggak perlu persiapan berbulan-bulan soal {k} buat {h}.",
+    "motivasi": "Hot take: {k} bukan kegagalan, tapi pemanasan."
+   }
   }
  ],
  "hook_visual": [
@@ -1583,6 +1980,32 @@
    "id": "V10",
    "nama": "Lanjutan video sebelumnya",
    "cara": "Stiker 'Part 2' dan adegan langsung melanjutkan video sebelumnya."
+  }
+ ],
+ "jenis_topik": [
+  {
+   "id": "materi",
+   "label": "Soal & materi tes",
+   "contoh_k": "soal deret angka TIU",
+   "contoh_m": "sering kehabisan waktu"
+  },
+  {
+   "id": "tips",
+   "label": "Tips & strategi persiapan",
+   "contoh_k": "wawancara PPPK",
+   "contoh_m": "gugup"
+  },
+  {
+   "id": "info",
+   "label": "Info seleksi & pendaftaran",
+   "contoh_k": "syarat daftar CPNS",
+   "contoh_m": "bingung baca pengumuman"
+  },
+  {
+   "id": "motivasi",
+   "label": "Motivasi & cerita",
+   "contoh_k": "gagal SKD tahun lalu",
+   "contoh_m": "hampir menyerah"
   }
  ]
 }
