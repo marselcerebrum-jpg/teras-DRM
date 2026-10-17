@@ -16,6 +16,9 @@ Aplikasi DRM (Daily Review Meeting) async untuk tim social media specialist, mar
 | `fonts/` | Font Bricolage Grotesque & Plus Jakarta Sans, dipasang langsung tanpa Google Fonts |
 | `api/ping.js` | Dipanggil cron harian supaya Supabase gratis tidak dijeda |
 | `favicon.svg`, `spill-icon.png`, `logo/` | Logo Spill (ikon tab browser, ikon layar HP, dan file logo untuk keperluan lain) |
-| `vercel.json` | Jadwal cron, region server Singapura, dan header keamanan |
+| `vercel.json` | Jadwal pengingat (pagi & sore), region server Singapura, dan header keamanan |
+| `api/pengingat.js`, `api/dorong.js`, `api/_kirim.js` | Server notifikasi HP (Web Push) |
+| `sw.js`, `manifest.json` | Pemasangan ke layar utama HP dan penerima notifikasi |
+| `package.json` | Daftar pustaka server (web-push) |
 
 Tidak ada proses build. Cukup upload file ke GitHub, Vercel akan menyajikannya apa adanya.

@@ -1,0 +1,16 @@
+{
+  "name": "Spill · Tim Social Media",
+  "short_name": "Spill",
+  "description": "Check-in harian, checklist, dan papan juara tim social media",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#efeaff",
+  "theme_color": "#efeaff",
+  "lang": "id",
+  "icons": [
+    { "src": "/spill-icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/spill-icon.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/spill-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

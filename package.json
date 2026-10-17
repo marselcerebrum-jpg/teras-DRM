@@ -1,0 +1,8 @@
+{
+  "name": "spill",
+  "private": true,
+  "description": "Spill: check-in harian tim social media",
+  "dependencies": {
+    "web-push": "3.6.7"
+  }
+}
