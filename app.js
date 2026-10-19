@@ -659,7 +659,7 @@ function checklistCard(dc, t, wk, risetList = [], akunku = []) {
       else if (cur === "selesai" && risetRow) row.append(el("div", { class:"subform" },
         el("div", { class:"row" }, risetRow.akun ? el("span", { class:"chip appr" }, risetRow.akun) : null, risetRow.kompetitor.map(k => el("span", { class:"chip brand" }, k)), (risetRow.platform || []).map(p => el("span", { class:"chip" }, p))),
         el("p", { style:"font-size:14px" }, risetRow.temuan),
-        risetRow.ide ? el("p", { class:"hint" }, "Ide: " + risetRow.ide) : null,
+        risetRow.ide ? el("p", { class:"hint" }, "Ide: " + ideItems(risetRow.ide).map(x => x.judul).join("; ")) : null,
         el("div", el("button", { type:"button", class:"btn ghost sm", onclick: () => { risetOpen = true; draw(); } }, "Ubah hasil riset"))));
     }
     return row;
@@ -863,6 +863,32 @@ async function viewKerja() {
   return box;
 }
 
+/* ================= TEKS RAPI ================= */
+// Memecah teks panjang jadi poin: per baris, pola " - " sebelum huruf kapital, atau penomoran 1. 2. 3.
+function pecahPoin(teks) {
+  const s = (teks || "").trim();
+  if (!s) return [];
+  let xs = s.split(/\n+/).map(x => x.trim()).filter(Boolean);
+  if (xs.length === 1) xs = s.split(/\s+-\s+(?=[A-Z0-9"“])/);
+  if (xs.length === 1) xs = s.split(/\s+(?=\d{1,2}[.)]\s)/);
+  return xs.map(x => x.replace(/^([-•*]|\d{1,2}[.)])\s*/, "").trim()).filter(Boolean);
+}
+// Menampilkan teks sebagai daftar poin bila berisi beberapa ide, dan melipat teks yang panjang
+function teksRapi(teks, judul) {
+  const poin = pecahPoin(teks);
+  const isi = poin.length >= 2 ? el("ul", { class:"poin" }, poin.map(p => el("li", p))) : el("p", { style:"white-space:pre-wrap" }, (teks || "").trim());
+  const panjang = (teks || "").length > 320 || poin.length > 4;
+  const wadah = el("div", { class:"rapi" + (panjang ? " lipat" : "") }, judul ? el("b", judul) : null, isi);
+  if (!panjang) return wadah;
+  const tombol = el("button", { type:"button", class:"btn ghost sm", onclick: () => { const t = wadah.classList.toggle("lipat"); tombol.textContent = t ? "Lihat selengkapnya" : "Tutup"; } }, "Lihat selengkapnya");
+  return el("div", { class:"stack", style:"gap:6px" }, wadah, el("div", tombol));
+}
+// Ide dari riset disimpan per baris: "- judul — detail"
+function ideItems(teks) {
+  return pecahPoin(teks).map(x => { const i = x.indexOf(" — "); return i > 0 ? { judul: x.slice(0, i).trim(), detail: x.slice(i + 3).trim() } : { judul: x, detail:"" }; });
+}
+const ideKeTeks = list => list.filter(x => x.judul.trim()).map(x => "- " + x.judul.trim() + (x.detail.trim() ? " — " + x.detail.trim().replace(/\s*\n\s*/g, " ") : "")).join("\n");
+
 /* ================= RISET KOMPETITOR ================= */
 async function viewRiset() {
   const me = S.me;
@@ -900,8 +926,8 @@ async function viewRiset() {
     list.replaceChildren(...(xs.length ? xs.map(r => el("article", { class:"panel pad stack", style:"gap:8px" },
       el("div", { class:"row between" }, el("div", { class:"row", style:"gap:6px" }, el("b", namaOf(r.member_id)), el("span", { class:"chip appr" }, r.akun || "Tanpa aplikasi")), el("span", { class:"hint" }, fmt(r.tanggal))),
       el("div", { class:"row", style:"gap:6px" }, r.kompetitor.map(k => el("span", { class:"chip brand" }, k)), r.platform.map(p => el("span", { class:"chip" }, p))),
-      el("p", { style:"white-space:pre-wrap" }, r.temuan),
-      r.ide ? el("div", { class:"note" }, el("b", "Ide untuk kita: "), r.ide) : null)) : [el("p", { class:"empty" }, rows.length ? "Tidak ada riset yang cocok." : "Belum ada riset. Hasil riset dari checklist harian akan muncul di sini.")]));
+      teksRapi(r.temuan, "Temuan"),
+      r.ide ? el("div", { class:"note" }, teksRapi(r.ide.split("\n").map(x => x.replace(" — ", ": ")).join("\n"), "Ide untuk kita (" + ideItems(r.ide).length + ")")) : null)) : [el("p", { class:"empty" }, rows.length ? "Tidak ada riset yang cocok." : "Belum ada riset. Hasil riset dari checklist harian akan muncul di sini.")]));
   }
   const cariIn = el("input", { class:"field", placeholder:"Cari kompetitor atau isi temuan…", style:"max-width:320px" });
   cariIn.addEventListener("input", () => { cari = cariIn.value; drawPanel(); drawList(); });
@@ -1430,12 +1456,16 @@ async function viewIde() {
         el("span", { class:"hint" }, namaOf(x.member_id) + " · " + fmt(keyOf(new Date(x.created_at)), { day:"numeric", month:"short" }))),
       el("h3", { style:"font-size:1.15rem" }, x.judul),
       x.sumber === "riset" ? el("a", { class:"chip brand", href:"#/riset", style:"text-decoration:none" }, "🕵️ Dari riset kompetitor") : null,
-      x.isi ? el("p", { style:"white-space:pre-wrap" }, x.isi) : null,
+      x.isi ? teksRapi(x.isi) : null,
       x.tanggapan ? el("div", { class:"note" }, el("b", "Tanggapan leader: "), x.tanggapan) : null,
       el("div", { class:"row" },
         el("button", { class:"btn sm" + (aku ? "" : " ghost"), disabled: x.member_id === me.id, title: x.member_id === me.id ? "Ide sendiri tidak bisa didukung" : "", onclick: async () => {
           try { if (aku) await q(sb.from("ide_dukungan").delete().eq("ide_id", x.id).eq("member_id", me.id)); else await q(sb.from("ide_dukungan").insert({ ide_id: x.id, member_id: me.id })); route(); }
           catch (e) { toast("Gagal: " + e.message); } } }, "🔥 " + n + (aku ? " · didukung" : " · dukung")),
+        me.peran === "sms" || me.is_admin ? el("button", { class:"btn ghost sm", onclick: async e => {
+          e.target.disabled = true;
+          try { await q(sb.from("experiments").insert({ member_id: me.id, judul: x.judul.slice(0, 200), hipotesis: (x.isi || "").split("\n\n")[0].slice(0, 500), status:"ide" })); toast("Masuk Papan eksperimen 🧪"); location.hash = "#/eksperimen"; }
+          catch (er) { toast("Gagal: " + er.message); e.target.disabled = false; } } }, "🧪 Jadikan eksperimen") : null,
         (x.member_id === me.id || me.is_admin) && x.status === "baru" ? el("button", { class:"btn danger sm", onclick: async () => { if (!confirm("Hapus ide ini?")) return; await q(sb.from("ide").delete().eq("id", x.id)); route(); } }, "Hapus") : null));
     if (me.is_admin) {
       const f = { t: x.tanggapan };
@@ -2108,9 +2138,9 @@ function kartuRisetMingguan(akunku, risetMinggu) {
   const me = S.me, t = today();
   const sec = el("section", { class:"panel pad stack", style:"gap:10px" });
   let buka = false;
-  const rs = { akun: akunku[0] || "", kompetitor:"", platform:[], temuan:"", ide:"", keBank:true, err:"" };
+  const rs = { akun: akunku[0] || "", kompetitor:"", platform:[], temuan:"", ideList:[{ judul:"", detail:"" }], keBank:true, err:"" };
   const punyaHariIni = () => risetMinggu.find(r => r.tanggal === t && r.akun === rs.akun);
-  const isiDari = r => { rs.kompetitor = (r?.kompetitor || []).join(", "); rs.platform = [...(r?.platform || [])]; rs.temuan = r?.temuan || ""; rs.ide = r?.ide || ""; };
+  const isiDari = r => { rs.kompetitor = (r?.kompetitor || []).join(", "); rs.platform = [...(r?.platform || [])]; rs.temuan = r?.temuan || ""; const xs = ideItems(r?.ide); rs.ideList = xs.length ? xs : [{ judul:"", detail:"" }]; };
   isiDari(punyaHariIni());
   async function simpan(btn) {
     const komp = rs.kompetitor.split(/[,\n]/).map(x => x.trim()).filter(Boolean);
@@ -2120,16 +2150,38 @@ function kartuRisetMingguan(akunku, risetMinggu) {
     if (!rs.temuan.trim()) { rs.err = "Isi temuan singkatnya dulu."; return draw(); }
     btn.disabled = true;
     try {
-      const baris = await q(sb.from("riset_kompetitor").upsert({ member_id: me.id, tanggal: t, akun: rs.akun, kompetitor: komp, platform: rs.platform, temuan: rs.temuan.trim(), ide: rs.ide.trim() }, { onConflict:"member_id,tanggal,akun" }).select().single());
-      let keIde = false;
-      if (rs.ide.trim().length >= 3 && rs.keBank) {
-        await simpanIdeDariSumber("riset", baris.id, rs.ide.trim().slice(0, 200), "Dari riset kompetitor " + rs.akun + " (" + komp.join(", ") + "). Temuan: " + rs.temuan.trim());
-        keIde = true;
+      const ideValid = rs.ideList.filter(x => x.judul.trim().length >= 3);
+      const baris = await q(sb.from("riset_kompetitor").upsert({ member_id: me.id, tanggal: t, akun: rs.akun, kompetitor: komp, platform: rs.platform, temuan: rs.temuan.trim(), ide: ideKeTeks(ideValid) }, { onConflict:"member_id,tanggal,akun" }).select().single());
+      // Setiap ide masuk Bank Ide sebagai kartu sendiri (ref: idRiset-urutan); ide yang dihapus dan belum ditanggapi ikut dibuang
+      let keIde = 0;
+      if (rs.keBank) {
+        for (let n = 0; n < ideValid.length; n++) {
+          const x = ideValid[n];
+          await simpanIdeDariSumber("riset", baris.id + "-" + n, x.judul.trim().slice(0, 200), (x.detail.trim() ? x.detail.trim() + "\n\n" : "") + "Dari riset kompetitor " + rs.akun + " (" + komp.join(", ") + "). Temuan: " + rs.temuan.trim());
+          keIde++;
+        }
+        const lama = await q(sb.from("ide").select("id,sumber_ref,status").eq("member_id", me.id).eq("sumber", "riset")).catch(() => []);
+        const buang = lama.filter(x => x.status === "baru" && (x.sumber_ref === String(baris.id) || (x.sumber_ref.startsWith(baris.id + "-") && Number(x.sumber_ref.split("-")[1]) >= ideValid.length)));
+        for (const x of buang) await sb.from("ide").delete().eq("id", x.id);
       }
       hapusDraf("riset-" + t);
-      toast(keIde ? "Riset tersimpan, idenya masuk Bank Ide 💡" : "Riset tersimpan di Bank Riset");
+      toast(keIde ? "Riset tersimpan, " + keIde + " ide masuk Bank Ide 💡" : "Riset tersimpan di Bank Riset");
       route();
     } catch (e) { rs.err = "Gagal menyimpan: " + e.message; btn.disabled = false; draw(); }
+  }
+  function daftarIde() {
+    const wadah = el("div", { class:"stack", style:"gap:8px" });
+    function gambar() {
+      wadah.replaceChildren(
+        el("div", { class:"lbl" }, el("span", "Ide untuk kita (opsional)"), el("small", { class:"hint", style:"font-weight:500" }, "Satu ide = satu kotak. Setiap ide masuk Bank Ide sebagai kartu sendiri, jadi bisa didukung dan dipakai satu per satu.")),
+        ...rs.ideList.map((x, n) => el("div", { class:"ide-item" },
+          el("div", { class:"row between" }, el("b", "Ide " + (n + 1)), rs.ideList.length > 1 ? el("button", { type:"button", class:"btn danger sm", onclick: () => { rs.ideList.splice(n, 1); gambar(); } }, "Hapus") : null),
+          input(x, "judul", { placeholder:"Judul singkat, satu kalimat. Contoh: Tambah poster promo di slide terakhir carousel" }),
+          input(x, "detail", { multiline:true, rows:"2", placeholder:"Detail (opsional): alasan, contoh dari kompetitor, atau cara menjalankannya" }))),
+        el("div", el("button", { type:"button", class:"btn ghost sm", onclick: () => { rs.ideList.push({ judul:"", detail:"" }); gambar(); setTimeout(() => wadah.querySelectorAll(".ide-item input")[rs.ideList.length - 1]?.focus(), 30); } }, "+ Tambah ide")));
+    }
+    gambar();
+    return wadah;
   }
   function form() {
     const btn = el("button", { type:"button", class:"btn sm" }, "Simpan riset");
@@ -2141,7 +2193,7 @@ function kartuRisetMingguan(akunku, risetMinggu) {
       el("label", { class:"lbl" }, "Kompetitor yang dicek (1–" + MAKS_KOMPETITOR + ", pisahkan dengan koma) *", input(rs, "kompetitor", { placeholder:"Contoh: Alfaiz, Sobat CPNS", draf:"riset-" + t })),
       el("div", { class:"lbl" }, "Platform", pilihan(PLATFORM, { get: () => rs.platform, multi:true })),
       el("label", { class:"lbl" }, "Temuan singkat *", input(rs, "temuan", { multiline:true, rows:"3", placeholder:"1–3 kalimat: apa yang mereka lakukan dan kenapa menarik?", draf:"riset-" + t })),
-      el("label", { class:"lbl" }, "Ide untuk kita (opsional)", input(rs, "ide", { multiline:true, rows:"2", placeholder:"Apa yang bisa kita tiru, adaptasi, atau hindari?", draf:"riset-" + t })),
+      daftarIde(),
       el("label", { class:"row", style:"font-size:.88rem;font-weight:600" },
         el("input", { type:"checkbox", style:"width:18px;height:18px;accent-color:var(--ink)", ...(rs.keBank ? { checked:true } : {}), onchange: e => { rs.keBank = e.target.checked; } }),
         "Kirim ide ini ke Bank Ide supaya bisa didukung tim"),
@@ -2212,7 +2264,8 @@ async function susunLaporan(me, k) {
   const p = [];
   const pelajaranHariIni = evaluasi?.isi || ci?.pelajaran;
   if (pelajaranHariIni) p.push(kalimat(titik(pelajaranHariIni)));
-  riset.forEach(r => p.push("Dari riset kompetitor, saya mempelajari bahwa " + kecilAwal(titik(r.temuan)) + (r.ide ? " Hal ini bisa kami terapkan dengan " + kecilAwal(titik(r.ide)) : "")));
+  riset.forEach(r => { const ide = ideItems(r.ide).map(x => kecilAwal(x.judul.replace(/[.]$/, "")));
+    p.push("Dari riset kompetitor, saya mempelajari bahwa " + kecilAwal(titik(r.temuan)) + (ide.length ? " Ide yang bisa kami terapkan: " + ide.join("; ") + "." : "")); });
   eks.filter(x => x.status === "selesai" && x.pelajaran).forEach(x => p.push("Dari eksperimen \"" + x.judul + "\", saya belajar bahwa " + kecilAwal(titik(x.pelajaran))));
 
   // ---------- Kendala ----------
