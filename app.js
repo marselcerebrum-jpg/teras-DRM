@@ -2629,9 +2629,12 @@ async function viewTim() {
     return el("div", { class:"stack" },
       el("div", { class:"page-head" }, el("div", el("h1", "Ringkasan tim"), el("p", { class:"hint" }, "Akhir pekan: tidak ada check-in, hanya Story.")), tglSel),
       el("section", { class:"panel pad table-wrap" }, el("table",
-        el("thead", el("tr", el("th", "Nama"), el("th", "Story IG & TikTok"))),
-        el("tbody", orang.filter(m => m.peran === "sms").map(m => { const s = dcOf(m.id, d)?.items?.story?.status;
-          return el("tr", el("td", m.nama), el("td", s === "selesai" ? el("span", { class:"chip calm" }, "Selesai") : s === "tidak_ada" ? el("span", { class:"chip" }, "Tidak ada") : el("span", { class:"chip attn" }, "Belum"))); })))));
+        el("thead", el("tr", el("th", "Nama"), el("th", "Status akhir pekan"))),
+        el("tbody", [...orang].sort((a, b) => (a.peran === "sms" ? 0 : 1) - (b.peran === "sms" ? 0 : 1) || a.nama.localeCompare(b.nama)).map(m => {
+          // Akhir pekan tidak ada check-in. Social media specialist hanya Story; peran lain libur.
+          if (m.peran !== "sms") return el("tr", el("td", m.nama), el("td", el("span", { class:"chip calm" }, "Libur 🌴")));
+          const s = dcOf(m.id, d)?.items?.story?.status;
+          return el("tr", el("td", m.nama), el("td", s === "selesai" ? el("span", { class:"chip calm" }, "Story selesai ✅") : s === "tidak_ada" ? el("span", { class:"chip" }, "Tidak ada Story") : el("span", { class:"chip attn" }, "Story belum dicentang"))); })))));
   }
 
   const data = orang.map(m => {
