@@ -13,6 +13,9 @@ function logo() {
 }
 const sb = window.supabase.createClient(SB_URL, SB_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
+// Data lama menyimpan "Tidak ada hambatan"; data baru "Tidak ada kendala". Keduanya berarti tidak ada kendala.
+const tanpaKendala = v => !v || v === "Tidak ada hambatan" || v === "Tidak ada kendala";
+const tampilKendala = v => v === "Tidak ada hambatan" ? "Tidak ada kendala" : v;
 const HAMBATAN = ["Tidak ada hambatan","Tidak tahu caranya","Menunggu orang lain","Tidak yakin prioritas","Waktu habis untuk hal lain","Energi sedang turun"];
 const PANDUAN = {
   "Tidak tahu caranya":"Cek eksperimen tim yang hasilnya jelas atau Bank Riset Kompetitor. Polanya bisa jadi titik awal. Kalau masih buntu, isi kolom bantuan di bawah.",
@@ -521,7 +524,8 @@ async function viewHari() {
 function checkinCard(ci, t, evaluasi) {
   const me = S.me;
   const box = el("section", { class:"panel pad stack" });
-  const blank = () => ({ energi:null, pelajaran:"", fokus:"", hambatan:null, butuh:"", dari:"", sebelum:"" });
+  // Kendala: pilih "Tidak ada kendala" atau "Ada kendala" lalu ceritakan bebas
+  const blank = () => ({ energi:null, pelajaran:"", fokus:"", status:null, kendala:"" });
   let catatan = evaluasi?.isi || "";
   let f = blank(), editing = !ci, err = "";
   function q2(no, judul, sub, ...body) {
@@ -531,17 +535,17 @@ function checkinCard(ci, t, evaluasi) {
     const kurang = [];
     if (!f.energi) kurang.push("mood");
     if (!f.fokus.trim()) kurang.push("goals hari ini");
-    if (!f.hambatan) kurang.push("kendala");
+    if (!f.status) kurang.push("kendala");
+    else if (f.status === "ada" && !f.kendala.trim()) kurang.push("cerita kendalanya");
     if (kurang.length) { err = "Belum diisi: " + kurang.join(", ") + "."; return draw(); }
-    const bantuan = (f.hambatan !== "Tidak ada hambatan" && f.butuh.trim())
-      ? titik(`Saya butuh ${f.butuh.trim()}${f.dari.trim() ? " dari " + f.dari.trim() : ""}${f.sebelum.trim() ? " sebelum " + f.sebelum.trim() : ""}`) : (f.bantuanLama || "");
+    const hambatan = f.status === "ada" ? f.kendala.trim().replace(/\s+/g, " ") : "Tidak ada kendala";
     const fokus = f.fokus.trim();
     const p = [f.energi <= 2 ? `Mood rendah (${f.energi}/5).` : `Mood ${f.energi}/5.`];
-    if (f.hambatan !== "Tidak ada hambatan") p.push(`Kendala: ${f.hambatan.toLowerCase()}.`);
+    if (f.status === "ada") p.push("Kendala: " + titik(hambatan));
     p.push("Goals: " + titik(fokus));
     // Catatan evaluasi disimpan terpisah dan hanya bisa dibaca pemiliknya; check-in yang dibaca leader tidak memuat isinya
     const data = { member_id: me.id, tanggal: t, energi: f.energi, pelajaran: "", fokus, langkah: "",
-      hambatan: f.hambatan, bantuan, ringkasan: p.join(" "), updated_at: new Date().toISOString() };
+      hambatan, bantuan: "", ringkasan: p.join(" "), updated_at: new Date().toISOString() };
     btn.disabled = true;
     try {
       await q(sb.from("checkins").upsert(data));
@@ -559,19 +563,16 @@ function checkinCard(ci, t, evaluasi) {
         el("div", { class:"row between" }, el("h2", "Check-in pagi"), el("span", { class:"chip calm" }, "Terkirim")),
         el("div", { class:"note" }, ci.ringkasan),
         el("div", { class:"mini" }, baris("Mood", ci.energi + "/5 · " + ENERGI[ci.energi-1]), baris("Goals", ci.fokus),
-          baris("Kendala", ci.hambatan), baris("Bantuan", ci.bantuan), baris("🔒 Catatan evaluasi", catatan)),
+          baris("Kendala", tampilKendala(ci.hambatan)), baris("🔒 Catatan evaluasi", catatan)),
         el("div", el("button", { class:"btn ghost sm", onclick: () => {
-          f = { ...blank(), energi: ci.energi, pelajaran: catatan, fokus: ci.fokus, hambatan: ci.hambatan, bantuanLama: ci.bantuan };
+          const adaKendala = !tanpaKendala(ci.hambatan);
+          f = { ...blank(), energi: ci.energi, pelajaran: catatan, fokus: ci.fokus, status: ci.hambatan ? (adaKendala ? "ada" : "tidak") : null,
+                kendala: adaKendala ? [ci.hambatan, ci.bantuan].filter(Boolean).join(". ") : "" };
           editing = true; draw(); } }, "Ubah jawaban")));
       return;
     }
-    const panduan = el("div", { class:"note", hidden: !PANDUAN[f.hambatan] }, PANDUAN[f.hambatan] || "");
-    const bantuan = el("div", { class:"stack", style:"gap:8px", hidden: !f.hambatan || f.hambatan === "Tidak ada hambatan" },
-      el("p", { class:"hint" }, f.bantuanLama ? "Permintaan sebelumnya: " + f.bantuanLama + " Isi lagi kalau ingin mengganti." : "Butuh bantuan? Isi kalau perlu, boleh dikosongkan."),
-      el("div", { class:"help-row" },
-        el("label", { class:"lbl" }, "Saya butuh", input(f, "butuh", { placeholder:"contoh: aset ilustrasi", draf:"checkin-" + t })),
-        el("label", { class:"lbl" }, "dari", input(f, "dari", { placeholder:"contoh: tim desain", draf:"checkin-" + t })),
-        el("label", { class:"lbl" }, "sebelum", input(f, "sebelum", { placeholder:"contoh: Kamis siang", draf:"checkin-" + t }))));
+    const kotakKendala = input(f, "kendala", { multiline:true, rows:"3", placeholder:"Ceritakan singkat: apa yang menghambat, dan bantuan apa yang kamu perlukan (kalau ada). Contoh: masih nunggu aset foto dari tim CS, butuh paling lambat Selasa siang.", draf:"checkin-" + t });
+    const bungkusKendala = el("div", { class:"stack", style:"gap:6px", hidden: f.status !== "ada" }, kotakKendala);
     const btn = el("button", { type:"submit", class:"btn" }, ci ? "Simpan perubahan" : "Kirim check-in");
     box.replaceChildren(el("form", { class:"stack", onsubmit: e => { e.preventDefault(); kirim(btn); } },
       el("div", el("h2", "Check-in pagi"), el("p", { class:"hint" }, "Sekitar 2 menit. Leader membaca ringkasannya untuk tahu siapa yang perlu dibantu, bukan untuk menilai.")),
@@ -580,8 +581,9 @@ function checkinCard(ci, t, evaluasi) {
         input(f, "fokus", { multiline:true, rows:"2", placeholder:"Contoh: edit ulang video deret, buat 2 carousel ringkasan TWK", draf:"checkin-" + t })),
       q2(3, "Satu pelajaran dari hari kemarin? (opsional)", "🔒 Catatan pribadi: hanya kamu yang bisa membaca, leader tidak. Dipakai untuk Laporan harian dan Rapor mingguanmu. Untuk Si Paling Evaluasi, yang dihitung hanya jumlah catatannya, bukan isinya.",
         input(f, "pelajaran", { multiline:true, rows:"2", placeholder:"Contoh: hook saya terlalu panjang, hari ini saya potong jadi 2 detik", draf:"checkin-" + t })),
-      q2(4, "Ada kendala & butuh bantuan gak nih? *", null, pilihan(HAMBATAN, { get: () => f.hambatan, set: v => f.hambatan = v, onChange: () => {
-        panduan.textContent = PANDUAN[f.hambatan] || ""; panduan.hidden = !PANDUAN[f.hambatan]; bantuan.hidden = f.hambatan === "Tidak ada hambatan"; } }), panduan, bantuan),
+      q2(4, "Ada kendala & butuh bantuan gak nih? *", null,
+        pilihan([{ v:"tidak", label:"Tidak ada kendala" }, { v:"ada", label:"Ada kendala" }], { get: () => f.status, set: v => f.status = v, onChange: () => { bungkusKendala.hidden = f.status !== "ada"; if (f.status === "ada") kotakKendala.focus(); } }),
+        bungkusKendala),
       el("div", { class:"row" }, btn, ci ? el("button", { type:"button", class:"btn ghost", onclick: () => { editing = false; err = ""; draw(); } }, "Batal") : null),
       err ? el("p", { class:"err", role:"alert" }, err) : null));
   }
@@ -1127,13 +1129,15 @@ async function viewModul() {
 }
 
 /* ================= LINK KERJA ================= */
-const KATEGORI_LINK = ["Kalender konten", "Aset & Drive", "Template", "Dashboard & data", "SOP & panduan", "Akun & tools", "Lainnya"];
+// "SOP" hanya bisa ditambah/diubah leader & admin (juga dikunci di database)
+const KATEGORI_LINK = ["SOP", "Kalender konten", "Aset & Drive", "Template", "Dashboard & data", "Akun & tools", "Lainnya"];
 async function viewTautan() {
   const me = S.me;
   let rows = await q(sb.from("tautan").select("*").order("disematkan", { ascending:false }).order("kategori").order("judul"));
   let cari = "", kat = null, edit = null;
   const box = el("div", { class:"stack" });
-  const bisaUbah = x => x.dibuat_oleh === me.id || me.is_admin;
+  const bisaUbah = x => x.kategori === "SOP" ? me.is_admin : (x.dibuat_oleh === me.id || me.is_admin);
+  const kategoriBoleh = me.is_admin ? KATEGORI_LINK : KATEGORI_LINK.filter(k => k !== "SOP");
   const list = el("div", { class:"stack", style:"gap:18px" });
   function form() {
     const f = { judul:"", url:"", kategori:"Lainnya", keterangan:"", ...(edit === "baru" ? {} : edit) };
@@ -1143,7 +1147,8 @@ async function viewTautan() {
       el("div", { class:"grid2" },
         el("label", { class:"lbl" }, "Nama link *", input(f, "judul", { placeholder:"Contoh: Kalender konten Oktober" })),
         el("label", { class:"lbl" }, "URL *", input(f, "url", { placeholder:"https://…" }))),
-      el("div", { class:"lbl" }, "Kategori", pilihan(KATEGORI_LINK, { get: () => f.kategori, set: v => f.kategori = v })),
+      el("div", { class:"lbl" }, "Kategori", pilihan(kategoriBoleh, { get: () => f.kategori, set: v => f.kategori = v })),
+      !me.is_admin ? el("p", { class:"hint" }, "Link SOP hanya bisa ditambahkan oleh leader dan admin.") : null,
       el("label", { class:"lbl" }, "Keterangan (opsional)", input(f, "keterangan", { placeholder:"Contoh: diisi setiap Jumat sebelum jam 3" })),
       el("div", { class:"row" },
         el("button", { class:"btn", onclick: async () => {
@@ -1161,7 +1166,7 @@ async function viewTautan() {
       msg);
   }
   function tile(x, i) {
-    const warnaKat = { "Kalender konten":"t-yellow", "Aset & Drive":"t-sky", "Template":"t-lime", "Dashboard & data":"t-orange", "SOP & panduan":"t-white", "Akun & tools":"t-sky", "Lainnya":"t-white" };
+    const warnaKat = { "Kalender konten":"t-yellow", "Aset & Drive":"t-sky", "Template":"t-lime", "Dashboard & data":"t-orange", "SOP":"t-yellow", "Akun & tools":"t-sky", "Lainnya":"t-white" };
     const warna = warnaKat[x.kategori] || "t-white";
     let host = ""; try { host = new URL(x.url).hostname.replace(/^www\./, ""); } catch (e) {}
     return el("div", { class:"tile " + (x.disematkan ? "t-pink" : warna), style:"justify-content:space-between;min-height:130px" },
@@ -1180,12 +1185,12 @@ async function viewTautan() {
     const s = cari.trim().toLowerCase();
     const xs = rows.filter(x => (!kat || x.kategori === kat) && (!s || (x.judul + " " + x.keterangan + " " + x.url).toLowerCase().includes(s)));
     const pin = xs.filter(x => x.disematkan), lain = xs.filter(x => !x.disematkan);
-    const grup = [...new Set(lain.map(x => x.kategori))];
+    const grup = [...new Set(lain.map(x => x.kategori))].sort((a, b) => (KATEGORI_LINK.indexOf(a) + 99) % 99 - (KATEGORI_LINK.indexOf(b) + 99) % 99);
     list.replaceChildren(
       !rows.length ? el("div", { class:"panel pad" }, el("p", { class:"empty" }, "Belum ada link. Tambahkan link kerja pertama tim, misalnya kalender konten atau folder aset.")) : null,
       rows.length && !xs.length ? el("p", { class:"empty" }, "Tidak ada link yang cocok.") : null,
       pin.length ? el("div", { class:"tiles links" }, pin.map(tile)) : null,
-      grup.map(g => el("div", { class:"stack", style:"gap:10px" }, el("h2", g), el("div", { class:"tiles links" }, lain.filter(x => x.kategori === g).map(tile)))));
+      grup.map(g => el("div", { class:"stack", style:"gap:10px" }, el("h2", g === "SOP" ? "📘 SOP" : g), g === "SOP" ? el("p", { class:"hint", style:"margin-top:-6px" }, "Standar kerja tim. Dikelola leader dan admin.") : null, el("div", { class:"tiles links" }, lain.filter(x => x.kategori === g).map(tile)))));
   }
   function draw() {
     const cariIn = el("input", { class:"field", placeholder:"Cari link…", style:"max-width:320px", value: cari });
@@ -1580,7 +1585,7 @@ async function viewHariLeader() {
   const cuti = new Set(dcs.filter(d => d.cuti).map(d => d.member_id));
   const sudahCI = new Set(cis.map(c => c.member_id));
   const disapa = new Set(pesanHariIni.map(p => p.member_id));
-  const perluPerhatian = cis.filter(c => c.energi <= 2 || ["Tidak yakin prioritas", "Menunggu orang lain", "Tidak tahu caranya", "Waktu habis untuk hal lain"].includes(c.hambatan) || c.bantuan);
+  const perluPerhatian = cis.filter(c => c.energi <= 2 || (!tanpaKendala(c.hambatan) && c.hambatan !== "Energi sedang turun") || c.bantuan);
   const perhatianDisapa = perluPerhatian.filter(c => disapa.has(c.member_id)).length;
   const belumCI = orang.filter(m => !sudahCI.has(m.id) && !cuti.has(m.id));
   const belumDiingatkan = belumCI.filter(m => !disapa.has(m.id));
@@ -2060,7 +2065,7 @@ async function raporTim(r, lalu) {
   const cutiHK = dcs.filter(d => d.cuti && !isWeekend(d.tanggal)).length;
   const slot = orang.length * hari.length - cutiHK;
   const pcts = []; sms.forEach(m => hari.forEach(k => { const dc = dcs.find(d => d.member_id === m.id && d.tanggal === k); if (dc && dc.cuti) return; pcts.push(pctOf(dc, m, k) ?? 0); }));
-  const hambatan = {}; ciMinggu.forEach(c => { if (c.hambatan && c.hambatan !== "Tidak ada hambatan") hambatan[c.hambatan] = (hambatan[c.hambatan] || 0) + 1; });
+  const daftarHambatan = ciMinggu.filter(c => !tanpaKendala(c.hambatan)).sort((x, y) => y.tanggal.localeCompare(x.tanggal));
   const energiHari = hari.map(k => { const xs = ciMinggu.filter(c => c.tanggal === k).map(c => c.energi); return { k, v: xs.length ? xs.reduce((s, v) => s + v, 0) / xs.length : null }; });
   const nilai = (p, id) => p.find(x => x.kategori === "jangkau" && x.member_id === id);
   const gerak = sms.map(m => { const a = nilai(papan, m.id), b = nilai(papanLalu, m.id); return a && b ? { m, d: a.nilai - b.nilai, a: a.nilai } : null; }).filter(Boolean).sort((x, y) => y.d - x.d);
@@ -2069,7 +2074,7 @@ async function raporTim(r, lalu) {
     el("div", { class:"stats" },
       kotakAngka("Kehadiran check-in", slot > 0 ? Math.round(ciMinggu.length / slot * 100) + "%" : "–"),
       kotakAngka("Rata-rata checklist", pcts.length ? Math.round(pcts.reduce((s, v) => s + v, 0) / pcts.length) + "%" : "–", "social media", "appr"),
-      kotakAngka("Permintaan bantuan", String(ciMinggu.filter(c => c.bantuan).length), "", "attn"),
+      kotakAngka("Laporan kendala", String(daftarHambatan.length), "", "attn"),
       kotakAngka(S.me.peran === "leader" ? "Masukan anonim" : "Ide baru", String(S.me.peran === "leader" ? masukan : ide.length))),
     el("section", { class:"panel pad stack", style:"gap:10px" }, el("h2", "Energi tim per hari"),
       el("div", { class:"tren" }, energiHari.map(x => el("div", { class:"tren-kol" }, el("small", x.v == null ? "–" : x.v.toFixed(1)),
@@ -2077,8 +2082,8 @@ async function raporTim(r, lalu) {
         el("span", fmt(x.k, { weekday:"short" })))))),
     trenEnergi(cis, batas),
     el("div", { class:"grid2" },
-      el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Hambatan tersering"),
-        Object.keys(hambatan).length ? Object.entries(hambatan).sort((a, b) => b[1] - a[1]).map(([h, n]) => el("div", { class:"row between" }, el("span", h), el("b", n + "×"))) : el("p", { class:"hint" }, "Tidak ada hambatan yang dilaporkan.")),
+      el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Kendala minggu ini"),
+        daftarHambatan.length ? daftarHambatan.slice(0, 10).map(c => el("div", { class:"line-p" }, el("small", namaOf(c.member_id) + " · " + fmt(c.tanggal, { weekday:"short", day:"numeric" })), el("span", c.hambatan))) : el("p", { class:"hint" }, "Tidak ada kendala yang dilaporkan.")),
       el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Aktivitas tim"),
         [[eks.length, "eksperimen selesai"], [riset.length, "riset kompetitor"], [ide.length, "ide baru"]].map(x => el("div", { class:"row between" }, el("span", x[1]), el("b", String(x[0])))))),
     el("section", { class:"panel pad stack", style:"gap:10px" }, el("h2", "Pergerakan jangkauan vs minggu lalu"),
@@ -2212,8 +2217,8 @@ async function susunLaporan(me, k) {
 
   // ---------- Kendala ----------
   const kd = [];
-  if (ci && ci.hambatan && ci.hambatan !== "Tidak ada hambatan") {
-    kd.push("Kendala yang saya alami hari ini adalah " + ci.hambatan.toLowerCase() + ".");
+  if (ci && !tanpaKendala(ci.hambatan)) {
+    kd.push("Kendala yang saya alami hari ini: " + kecilAwal(titik(ci.hambatan)));
     if (ci.bantuan) kd.push("Untuk mengatasinya, " + kecilAwal(ci.bantuan));
     else kd.push("Saya sudah mengomunikasikan kendala ini kepada leader agar bisa segera ditindaklanjuti.");
   } else if (ci) {
@@ -2649,6 +2654,7 @@ async function viewTim() {
       else if (c.energi <= 2) attn.push("Energi rendah hari ini");
       const map = { "Tidak yakin prioritas":"Butuh keputusan prioritas", "Menunggu orang lain":"Menunggu orang lain", "Tidak tahu caranya":"Butuh dicontohkan", "Waktu habis untuk hal lain":"Waktu tersita" };
       if (map[c.hambatan]) attn.push(map[c.hambatan]);
+      else if (!tanpaKendala(c.hambatan)) attn.push("Ada kendala");
       if (c.bantuan) attn.push("Minta bantuan");
     }
     const ex = exps.filter(x => x.member_id === m.id && (x.hasil === "a" || x.hasil === "b"));
@@ -2814,7 +2820,7 @@ async function viewAtur() {
             el("td", el("div", { class:"row", style:"gap:6px;flex-wrap:nowrap" },
               m.user_id ? el("button", { class:"btn ghost sm", onclick: () => satu("reset", m) }, "Reset sandi") : el("button", { class:"btn sm", onclick: () => satu("create", m) }, "Buat akun"),
               m.id !== S.me.id && m.peran !== "leader" ? el("button", { class:"btn ghost sm", onclick: async () => {
-                if (!confirm(`${m.is_admin ? "Cabut" : "Beri"} akses admin untuk ${m.nama}? Admin bisa membaca mood dan hambatan seluruh tim.`)) return;
+                if (!confirm(`${m.is_admin ? "Cabut" : "Beri"} akses admin untuk ${m.nama}? Admin bisa membaca mood dan kendala seluruh tim.`)) return;
                 await q(sb.from("members").update({ is_admin: !m.is_admin }).eq("id", m.id)); await loadBase(); draw(); } }, m.is_admin ? "Cabut admin" : "Jadikan admin") : null,
               m.id !== S.me.id ? el("button", { class:"btn danger sm", onclick: async () => {
                 if (!confirm(`${m.aktif ? "Nonaktifkan" : "Aktifkan kembali"} ${m.nama}?`)) return;
