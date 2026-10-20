@@ -1470,6 +1470,9 @@ async function viewIde() {
   const [rows, duk] = await Promise.all([
     q(sb.from("ide").select("*").order("created_at", { ascending:false }).limit(300)),
     q(sb.from("ide_dukungan").select("*"))]);
+  // Kartu lama dari riset menyimpan teks terpotong; teks lengkap diambil dari data riset kompetitornya
+  const idRisetLama = [...new Set(rows.filter(x => x.sumber === "riset" && x.sumber_ref && !x.sumber_ref.includes("-")).map(x => x.sumber_ref))];
+  const risetLengkap = idRisetLama.length ? Object.fromEntries((await q(sb.from("riset_kompetitor").select("id,akun,kompetitor,ide").in("id", idRisetLama)).catch(() => [])).map(r => [String(r.id), r])) : {};
   let urut = "dukungan", filter = "semua";
   const box = el("div", { class:"stack" });
   const jml = id => duk.filter(d => d.ide_id === id).length;
@@ -1493,10 +1496,20 @@ async function viewIde() {
       el("div", { class:"row between" },
         el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip" }, x.kategori), el("span", { class:"chip " + stWarna }, stLabel)),
         el("span", { class:"hint" }, namaOf(x.member_id) + " · " + fmt(keyOf(new Date(x.created_at)), { day:"numeric", month:"short" }))),
-      el("h3", { style:"font-size:1.15rem" }, (x.judul || "").length > 90 ? ringkasJudul(x.judul) : x.judul),
+      el("h3", { style:"font-size:1.15rem" }, (() => {
+        const asli = x.sumber === "riset" && risetLengkap[x.sumber_ref];
+        const items = asli ? ideItems(asli.ide) : [];
+        if (items.length > 1) return ringkasJudul(items[0].judul) + " (+" + (items.length - 1) + " ide lain)";
+        return (x.judul || "").length > 90 ? ringkasJudul(x.judul) : x.judul;
+      })()),
       x.sumber === "riset" ? el("a", { class:"chip brand", href:"#/riset", style:"text-decoration:none" }, "🕵️ Dari riset kompetitor") : null,
       ...(() => {
         let isi = x.isi || "", sumber = null;
+        const asli = x.sumber === "riset" && risetLengkap[x.sumber_ref];
+        if (asli && asli.ide) {
+          // Tampilkan semua ide lengkap per poin dari riset aslinya
+          return [teksRapi(ideItems(asli.ide).map(i => i.judul + (i.detail ? ": " + i.detail : "")).join("\n")), el("small", { class:"hint" }, "Sumber: riset kompetitor " + asli.akun + (asli.kompetitor?.length ? " (" + asli.kompetitor.join(", ") + ")" : ""))];
+        }
         if (x.sumber === "riset") {
           const m = isi.match(/\n*Sumber: (riset kompetitor[^\n]*)\s*$/);
           if (m) { sumber = m[1]; isi = isi.slice(0, m.index); }
