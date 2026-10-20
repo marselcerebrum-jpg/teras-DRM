@@ -883,6 +883,23 @@ function teksRapi(teks, judul) {
   const tombol = el("button", { type:"button", class:"btn ghost sm", onclick: () => { const t = wadah.classList.toggle("lipat"); tombol.textContent = t ? "Lihat selengkapnya" : "Tutup"; } }, "Lihat selengkapnya");
   return el("div", { class:"stack", style:"gap:6px" }, wadah, el("div", tombol));
 }
+// Meringkas kalimat ide panjang jadi judul singkat (maks. 12 kata) tanpa basa-basi pembuka
+function ringkasJudul(teks) {
+  let s = (teks || "").replace(/\s+/g, " ").trim();
+  const pembuka = [/^untuk penerapannya\b.*?(?:,\s*|\s+(?=kita\b))/i, /^(menurut saya|saran( saya)?|ide( saya)?)[:,]?\s*/i,
+    /^(bagaimana|gimana) (jika|kalau) kita\s*/i, /^(mungkin )?kita (bisa|juga bisa|perlu|harus) (coba |mencoba )?/i, /^(sebaiknya|coba)\s+/i, /^(di|untuk) (poster|carousel|konten)[^,]*,\s*/i];
+  for (let i = 0; i < 3; i++) pembuka.forEach(p => { s = s.replace(p, ""); });
+  s = s.split(/[.!?]\s|\s+-\s+|;\s*/)[0].replace(/[.!?,]+$/, "").trim();
+  if (s.split(" ").length > 12 && s.indexOf(", ") > 0) s = s.slice(0, s.indexOf(", "));
+  const kata = s.split(" ");
+  if (kata.length > 12) s = kata.slice(0, 12).join(" ") + "…";
+  return s ? s.charAt(0).toUpperCase() + s.slice(1) : (teks || "").slice(0, 80);
+}
+// Isi kartu Bank Ide dari riset: ide utuh + sumbernya (tanpa temuan, supaya fokus ke ide kita)
+function isiIdeRiset(item, akun, komp) {
+  const utuh = item.judul.trim() + (item.detail.trim() ? "\n" + item.detail.trim() : "");
+  return utuh + "\n\nSumber: riset kompetitor " + akun + (komp && komp.length ? " (" + komp.join(", ") + ")" : "");
+}
 // Ide dari riset disimpan per baris: "- judul — detail"
 function ideItems(teks) {
   return pecahPoin(teks).map(x => { const i = x.indexOf(" — "); return i > 0 ? { judul: x.slice(0, i).trim(), detail: x.slice(i + 3).trim() } : { judul: x, detail:"" }; });
@@ -1426,8 +1443,30 @@ function labelPeriode(p) {
 /* ================= KOTAK IDE ================= */
 const KATEGORI_IDE = ["Konten", "Event", "Produk", "Cara kerja", "Lainnya"];
 const STATUS_IDE = { baru:["Baru",""], dibahas:["Dibahas","brand"], dipakai:["Dipakai","calm"], ditunda:["Ditunda","appr"] };
+// Ide dari riset versi lama (isi berupa temuan, judul terpotong, atau banyak ide dalam satu kartu) dirapikan otomatis
+// saat pemiliknya membuka Bank Ide. Kartu yang sudah didukung atau sudah ditanggapi leader tidak diubah.
+async function rapikanIdeRisetLama(rows, duk) {
+  const me = S.me;
+  const lama = rows.filter(x => x.member_id === me.id && x.sumber === "riset" && x.status === "baru" && !duk.some(d => d.ide_id === x.id) &&
+    (!x.sumber_ref.includes("-") || /Temuan:/.test(x.isi || "") || (x.judul || "").length > 90));
+  if (!lama.length) return false;
+  const idRiset = [...new Set(lama.map(x => x.sumber_ref.split("-")[0]))];
+  const riset = await q(sb.from("riset_kompetitor").select("*").in("id", idRiset)).catch(() => []);
+  for (const r of riset) {
+    const items = ideItems(r.ide);
+    if (!items.length) continue;
+    const milikRiset = lama.filter(x => x.sumber_ref.split("-")[0] === String(r.id));
+    for (const x of milikRiset) await sb.from("ide").delete().eq("id", x.id);
+    for (let n = 0; n < items.length; n++) await simpanIdeDariSumber("riset", r.id + "-" + n, ringkasJudul(items[n].judul), isiIdeRiset(items[n], r.akun, r.kompetitor));
+  }
+  return true;
+}
 async function viewIde() {
   const me = S.me;
+  {
+    const [r0, d0] = await Promise.all([q(sb.from("ide").select("*").eq("member_id", me.id).eq("sumber", "riset")), q(sb.from("ide_dukungan").select("*"))]).catch(() => [[], []]);
+    if (await rapikanIdeRisetLama(r0, d0).catch(() => false)) toast("Ide dari riset kompetitor sudah dirapikan ✨");
+  }
   const [rows, duk] = await Promise.all([
     q(sb.from("ide").select("*").order("created_at", { ascending:false }).limit(300)),
     q(sb.from("ide_dukungan").select("*"))]);
@@ -1454,9 +1493,18 @@ async function viewIde() {
       el("div", { class:"row between" },
         el("div", { class:"row", style:"gap:6px" }, el("span", { class:"chip" }, x.kategori), el("span", { class:"chip " + stWarna }, stLabel)),
         el("span", { class:"hint" }, namaOf(x.member_id) + " · " + fmt(keyOf(new Date(x.created_at)), { day:"numeric", month:"short" }))),
-      el("h3", { style:"font-size:1.15rem" }, x.judul),
+      el("h3", { style:"font-size:1.15rem" }, (x.judul || "").length > 90 ? ringkasJudul(x.judul) : x.judul),
       x.sumber === "riset" ? el("a", { class:"chip brand", href:"#/riset", style:"text-decoration:none" }, "🕵️ Dari riset kompetitor") : null,
-      x.isi ? teksRapi(x.isi) : null,
+      ...(() => {
+        let isi = x.isi || "", sumber = null;
+        if (x.sumber === "riset") {
+          const m = isi.match(/\n*Sumber: (riset kompetitor[^\n]*)\s*$/);
+          if (m) { sumber = m[1]; isi = isi.slice(0, m.index); }
+          isi = isi.replace(/\s*Dari riset kompetitor[\s\S]*$/, "").trim();
+          if ((x.judul || "").length > 90) isi = (x.judul + (isi ? "\n" + isi : "")).trim();
+        }
+        return [isi ? teksRapi(isi) : null, sumber ? el("small", { class:"hint" }, "Sumber: " + sumber) : null];
+      })(),
       x.tanggapan ? el("div", { class:"note" }, el("b", "Tanggapan leader: "), x.tanggapan) : null,
       el("div", { class:"row" },
         el("button", { class:"btn sm" + (aku ? "" : " ghost"), disabled: x.member_id === me.id, title: x.member_id === me.id ? "Ide sendiri tidak bisa didukung" : "", onclick: async () => {
@@ -2157,7 +2205,7 @@ function kartuRisetMingguan(akunku, risetMinggu) {
       if (rs.keBank) {
         for (let n = 0; n < ideValid.length; n++) {
           const x = ideValid[n];
-          await simpanIdeDariSumber("riset", baris.id + "-" + n, x.judul.trim().slice(0, 200), (x.detail.trim() ? x.detail.trim() + "\n\n" : "") + "Dari riset kompetitor " + rs.akun + " (" + komp.join(", ") + "). Temuan: " + rs.temuan.trim());
+          await simpanIdeDariSumber("riset", baris.id + "-" + n, ringkasJudul(x.judul), isiIdeRiset(x, rs.akun, komp));
           keIde++;
         }
         const lama = await q(sb.from("ide").select("id,sumber_ref,status").eq("member_id", me.id).eq("sumber", "riset")).catch(() => []);
