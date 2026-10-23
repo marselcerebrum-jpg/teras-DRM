@@ -332,6 +332,12 @@ td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
 .rapi.lipat{max-height:9.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 .ide-item{border:2px dashed var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;background:#fff}
 
+/* ---------- info pembaruan ---------- */
+.rilis{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+.rilis ul.poin{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.92rem;line-height:1.45}
+.mot.rilis-pop{background:var(--sky);max-width:560px}
+.mot.rilis-pop::after{background:var(--lime)}
+
 /* ---------- motivasi harian ---------- */
 .overlay{position:fixed;inset:0;z-index:80;background:rgba(18,18,18,.45);display:grid;place-items:center;padding:20px;animation:muncul .2s ease-out}
 .mot{width:100%;max-width:460px;background:var(--yellow);border:2px solid var(--ink);border-radius:24px;box-shadow:8px 8px 0 var(--ink);padding:26px 26px 24px;display:flex;flex-direction:column;align-items:flex-start;gap:14px;position:relative;overflow:hidden}

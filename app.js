@@ -399,6 +399,7 @@ async function boot() {
     route();
     tampilkanMotivasi();
     cekApresiasi();
+    tampilkanPembaruan();
     daftarSW();
   } catch (e) {
     console.error(e);
@@ -553,6 +554,11 @@ function checkinCard(ci, t, evaluasi) {
     btn.disabled = true;
     try {
       await q(sb.from("checkins").upsert(data));
+      // Pelajaran dari kemarin (opsional) disimpan sebagai catatan pribadi; leader tidak bisa membacanya
+      const isiCatatan = (f.pelajaran || "").trim();
+      if (isiCatatan) await q(sb.from("catatan_evaluasi").upsert({ member_id: me.id, tanggal: t, isi: isiCatatan, updated_at: new Date().toISOString() }));
+      else if (catatan) await q(sb.from("catatan_evaluasi").delete().eq("member_id", me.id).eq("tanggal", t));
+      catatan = isiCatatan;
       ci = data; editing = false; err = ""; hapusDraf("checkin-" + t); toast("Check-in terkirim. Terima kasih!"); }
     catch (e) { err = "Gagal menyimpan: " + e.message; btn.disabled = false; }
     draw();
@@ -564,7 +570,7 @@ function checkinCard(ci, t, evaluasi) {
         el("div", { class:"row between" }, el("h2", "Check-in pagi"), el("span", { class:"chip calm" }, "Terkirim")),
         el("div", { class:"note" }, ci.ringkasan),
         el("div", { class:"mini" }, baris("Mood", ci.energi + "/5 · " + ENERGI[ci.energi-1]), baris("Goals", ci.fokus),
-          baris("Kendala", tampilKendala(ci.hambatan))),
+          baris("Kendala", tampilKendala(ci.hambatan)), baris("🔒 Pelajaran", catatan)),
         el("div", el("button", { class:"btn ghost sm", onclick: () => {
           const adaKendala = !tanpaKendala(ci.hambatan);
           f = { ...blank(), energi: ci.energi, pelajaran: catatan, fokus: ci.fokus, status: ci.hambatan ? (adaKendala ? "ada" : "tidak") : null,
@@ -583,6 +589,17 @@ function checkinCard(ci, t, evaluasi) {
       q2(3, "Ada kendala & butuh bantuan gak nih? *", null,
         pilihan([{ v:"tidak", label:"Tidak ada kendala" }, { v:"ada", label:"Ada kendala" }], { get: () => f.status, set: v => f.status = v, onChange: () => { bungkusKendala.hidden = f.status !== "ada"; if (f.status === "ada") kotakKendala.focus(); } }),
         bungkusKendala),
+      (() => {
+        // Opsional dan terlipat supaya check-in tetap terasa singkat
+        const bukaAwal = !!(f.pelajaran || "").trim();
+        const kotak = input(f, "pelajaran", { multiline:true, rows:"2", placeholder:"Kalau mengulang kemarin, apa yang akan kamu lakukan berbeda? Contoh: hook pertanyaan lebih nendang daripada hook angka di video TIU.", draf:"checkin-" + t });
+        const isi = el("div", { class:"stack", style:"gap:6px", hidden: !bukaAwal },
+          el("b", "Satu pelajaran dari hari kemarin (opsional)"),
+          el("small", { class:"hint" }, "🔒 Catatan pribadi, leader tidak bisa membaca. Dipakai untuk Laporan harian dan Rapor mingguanmu. Minimal 30 karakter dihitung +1 poin Si Paling Evaluasi (maksimal sekali sehari)."),
+          kotak);
+        const tombol = el("button", { type:"button", class:"btn ghost sm", hidden: bukaAwal, onclick: () => { isi.hidden = false; tombol.hidden = true; kotak.focus(); } }, "＋ Tambah pelajaran dari kemarin (opsional, +1 poin evaluasi)");
+        return el("div", { class:"stack", style:"gap:8px" }, tombol, isi);
+      })(),
       el("div", { class:"row" }, btn, ci ? el("button", { type:"button", class:"btn ghost", onclick: () => { editing = false; err = ""; draw(); } }, "Batal") : null),
       err ? el("p", { class:"err", role:"alert" }, err) : null));
   }
@@ -1441,7 +1458,7 @@ const KATEGORI_JUARA = [
   { k:"strategis", emoji:"🧠", nama:"Si Paling Strategis", desc:"Eksperimen yang selesai dengan hasil jelas, ditambah ide yang dipakai tim." },
   { k:"detektif", emoji:"🕵️", nama:"Detektif Kompetitor", desc:"Riset kompetitor terbanyak.", sms:true },
   { k:"ilmu", emoji:"📚", nama:"Si Paling Haus Ilmu", desc:"Modul belajar yang diselesaikan." },
-  { k:"evaluasi", emoji:"🪞", nama:"Si Paling Evaluasi", desc:"Paling banyak mengevaluasi strategi di menu Strategi." },
+  { k:"evaluasi", emoji:"🪞", nama:"Si Paling Evaluasi", desc:"Evaluasi strategi = 3 poin, pelajaran harian di check-in (min. 30 karakter) = 1 poin." },
   { k:"tertib", emoji:"📊", nama:"Si Paling Tertib Data", desc:"Persentase hari (sampai H-3) yang angka jangkauan akunnya sudah lengkap di spreadsheet.", sms:true },
   { k:"suportif", emoji:"🤝", nama:"Si Paling Suportif", desc:"Dukungan 🔥 terbanyak untuk ide rekan di Bank Ide." },
   { k:"berani", emoji:"🧪", nama:"Si Paling Berani Coba", desc:"Eksperimen baru yang dimulai, apa pun hasilnya nanti." },
@@ -2221,7 +2238,10 @@ async function raporSaya(r, lalu) {
   const juara = KATEGORI_JUARA.map(k => { const xs = papan.filter(p => p.kategori === k.k && Number(p.nilai) > 0).sort((a, b) => b.nilai - a.nilai).slice(0, 3); const i = xs.findIndex(p => p.member_id === me.id); return i >= 0 ? ["🥇", "🥈", "🥉"][i] + " " + k.nama : null; }).filter(Boolean);
   const stratAll = await q(sb.from("strategi").select("*").eq("member_id", me.id)).catch(() => []);
   const pelajaran = stratAll.filter(x => x.dievaluasi_at && keyOf(new Date(x.dievaluasi_at)) >= r.awal && keyOf(new Date(x.dievaluasi_at)) <= r.akhir)
-    .map(x => ({ k: keyOf(new Date(x.dievaluasi_at)), p: x.judul + " → " + labelDari(HASIL_STRATEGI, x.hasil_label) + ", " + labelDari(KEPUTUSAN_STRATEGI, x.keputusan).toLowerCase() + ". " + x.hasil }));
+    .map(x => ({ k: keyOf(new Date(x.dievaluasi_at)), p: "🎯 " + x.judul + " → " + labelDari(HASIL_STRATEGI, x.hasil_label) + ", " + labelDari(KEPUTUSAN_STRATEGI, x.keputusan).toLowerCase() + ". " + x.hasil }));
+  const catatanMinggu = await q(sb.from("catatan_evaluasi").select("tanggal,isi").eq("member_id", me.id).gte("tanggal", r.awal).lte("tanggal", r.akhir)).catch(() => []);
+  catatanMinggu.forEach(c => pelajaran.push({ k: c.tanggal, p: "🔒 " + c.isi }));
+  pelajaran.sort((x, y) => x.k.localeCompare(y.k));
   return [
     el("div", { class:"stats" },
       kotakAngka("Hari check-in", ciMinggu.filter(c => !isWeekend(c.tanggal)).length + "/" + hk.length),
@@ -2234,7 +2254,7 @@ async function raporSaya(r, lalu) {
     juara.length || ls.length ? el("section", { class:"panel pad stack", style:"gap:10px" }, el("h2", "Pencapaian 🏆"),
       juara.length ? el("div", { class:"row", style:"gap:8px" }, juara.map(j => el("span", { class:"chip appr" }, j))) : null,
       ls.length ? el("div", { class:"row", style:"gap:8px" }, ls.map(l => { const i = infoLencana(l.kode); return el("span", { class:"chip brand" }, i.emoji + " " + i.nama); })) : null) : null,
-    pelajaran.length ? el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Evaluasi strategimu minggu ini"),
+    pelajaran.length ? el("section", { class:"panel pad stack", style:"gap:8px" }, el("h2", "Evaluasi & pelajaranmu minggu ini"),
       pelajaran.map(x => el("div", { class:"line-p" }, el("small", fmt(x.k, { weekday:"short", day:"numeric", month:"short" })), el("span", x.p)))) : null,
     el("div", { class:"mot-mini" }, el("small", "Catatan dari Spill"), el("p", PENUTUP_RAPOR[Number(r.awal.slice(8)) % PENUTUP_RAPOR.length]))];
 }
@@ -2909,6 +2929,70 @@ function kartuStrategiku(rows) {
         el("span", x.judul), el("span", { class:"chip " + (lama >= 7 ? "attn" : "calm") }, lama >= 7 ? "Waktunya evaluasi" : lama + " hari")); }));
 }
 
+
+/* ================= INFO PEMBARUAN ================= */
+// Setiap kali Spill diperbarui, tambahkan catatan baru di PALING ATAS daftar ini.
+// untuk: "semua", "sms" (social media specialist), "kerja" (Sabina & Puan), "leader", "admin"
+const CATATAN_RILIS = [
+  { versi:"2026-10-23", judul:"Pelajaran harian kembali (opsional)", poin:[
+    { untuk:"semua", teks:"📝 Di check-in ada lagi tombol **＋ Tambah pelajaran dari kemarin**. Opsional, isinya pribadi (leader tidak bisa membaca), dan otomatis dipakai di Laporan harian." },
+    { untuk:"semua", teks:"🪞 **Si Paling Evaluasi**: evaluasi strategi bernilai 3 poin, pelajaran harian (minimal 30 karakter) bernilai 1 poin, maksimal sekali sehari." },
+  ]},
+  { versi:"2026-10-22", judul:"Strategi, Rekap kerja, dan check-in yang lebih ringkas", poin:[
+    { untuk:"semua", teks:"🎯 Menu baru **Strategi**: catat strategi yang sedang dijalankan, evaluasi hasilnya, lalu putuskan dilanjutkan, diubah, atau dihentikan. Semua tim bisa saling belajar." },
+    { untuk:"semua", teks:"☀️ Check-in pagi sekarang cuma 3 pertanyaan: mood, goals, dan kendala. Kendala bisa diceritakan bebas." },
+    { untuk:"semua", teks:"🪞 **Si Paling Evaluasi** sekarang dihitung dari jumlah strategi yang kamu evaluasi." },
+    { untuk:"sms", teks:"🕵️ Riset kompetitor sekarang boleh diisi juga di hari Sabtu dan Minggu, tetap dihitung ke target mingguan." },
+    { untuk:"sms", teks:"💡 Ide dari riset kompetitor ditulis per poin, dan setiap ide masuk Bank Ide sebagai kartu sendiri dengan judul ringkas." },
+    { untuk:"kerja", teks:"📋 Papan kerja sekarang punya **tenggat**, **prioritas**, dan kolom **hasil kerja** saat tugas selesai. Leader bisa memberi tugas dan menilai hasilmu." },
+    { untuk:"leader", teks:"📊 Menu baru **Tim → Rekap kerja**: lihat tugas selesai, ketepatan waktu, dan beri penilaian ⭐/👍/🔁 untuk Sabina & Puan." },
+    { untuk:"leader", teks:"🕐 Absen pulang dihapus. Cukup absen masuk." },
+  ]},
+];
+function poinUntukSaya(c) {
+  const me = S.me;
+  return c.poin.filter(p => p.untuk === "semua" || p.untuk === me.peran || (p.untuk === "admin" && me.is_admin) || (p.untuk === "leader" && me.peran === "leader"));
+}
+// Teks **tebal** sederhana
+function teksTebal(s) { return s.split(/\*\*(.+?)\*\*/g).map((x, i) => i % 2 ? el("b", x) : x); }
+function kartuRilis(c, ringkas) {
+  const poin = poinUntukSaya(c);
+  return el("div", { class:"rilis" },
+    el("div", { class:"row between" }, el("b", c.judul), el("small", { class:"hint" }, fmt(c.versi, { day:"numeric", month:"long", year:"numeric" }))),
+    el("ul", { class:"poin" }, poin.map(p => el("li", teksTebal(p.teks)))));
+}
+// Pop-up "Yang baru di Spill": muncul sekali per pembaruan, setelah pop-up lain ditutup
+function tampilkanPembaruan() {
+  if (!S.me || !CATATAN_RILIS.length) return;
+  const kunci = "spill-rilis-lihat-" + S.me.id;
+  let lihat = ""; try { lihat = localStorage.getItem(kunci) || ""; } catch (e) {}
+  const baru = CATATAN_RILIS.filter(c => c.versi > lihat && poinUntukSaya(c).length).slice(0, lihat ? 3 : 1);
+  if (!baru.length) return;
+  const tunggu = setInterval(() => {
+    if (document.querySelector(".overlay")) return;
+    clearInterval(tunggu);
+    const tutup = () => { try { localStorage.setItem(kunci, CATATAN_RILIS[0].versi); } catch (e) {} ov.remove(); document.removeEventListener("keydown", esc); };
+    const esc = e => { if (e.key === "Escape") tutup(); };
+    const btn = el("button", { class:"btn", onclick: tutup }, "Oke, mengerti!");
+    const ov = el("div", { class:"overlay", role:"dialog", "aria-modal":"true", "aria-labelledby":"rilis-judul", onclick: e => { if (e.target === ov) tutup(); } },
+      el("div", { class:"mot rilis-pop" },
+        el("span", { class:"sticker" }, "✨ Yang baru di Spill"),
+        el("p", { id:"rilis-judul", class:"mot-sapa" }, "Spill baru saja diperbarui. Ini yang berubah buat kamu:"),
+        el("div", { class:"stack", style:"gap:12px;max-height:55vh;overflow-y:auto;width:100%" }, baru.map(c => kartuRilis(c))),
+        el("div", { class:"row" }, btn, el("a", { class:"btn ghost sm", href:"#/akun", onclick: tutup }, "Lihat semua riwayat"))));
+    document.body.append(ov);
+    document.addEventListener("keydown", esc);
+    btn.focus();
+  }, 700);
+}
+// Bagian "Riwayat pembaruan" di halaman Akun
+function riwayatPembaruan() {
+  const xs = CATATAN_RILIS.filter(c => poinUntukSaya(c).length);
+  return el("section", { class:"panel pad stack", style:"gap:12px" },
+    el("h2", "✨ Riwayat pembaruan Spill"),
+    xs.length ? xs.map(c => kartuRilis(c)) : el("p", { class:"hint" }, "Belum ada catatan pembaruan."));
+}
+
 /* ================= AKUN ================= */
 async function viewAkun() {
   const me = S.me;
@@ -2921,6 +3005,7 @@ async function viewAkun() {
       el("div", { class:"line" }, el("span", { class:"hint" }, "Username"), el("span", me.username)),
       el("div", { class:"line" }, el("span", { class:"hint" }, "Peran"), el("span", PERAN_LABEL[me.peran] + (me.is_admin ? " · admin" : "")))),
     kartuNotif(),
+    riwayatPembaruan(),
     el("section", { class:"panel pad stack", style:"gap:12px" },
       el("h2", "Ganti kata sandi"),
       el("label", { class:"lbl" }, "Kata sandi baru (minimal 8 karakter)", input(f, "p", { type:"password", autocomplete:"new-password" })),
