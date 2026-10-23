@@ -468,7 +468,7 @@ async function route() {
     utama.map(x => el("a", { href:"#/" + x.k, class: x.k === r ? "on" : "" }, { masukan:"Masukan", juara:"Si Paling", ide:"Bank Ide", kerja:"Kerja", tim:"Tim" }[x.k] || x.label, x.k === "masukan" ? badge() : null)),
     el("a", { href:"#/lainnya", class: lainAktif ? "on" : "" }, "Lainnya"));
   const mtop = el("header", { class:"mtop" }, logo(), el("span", { class:"who" }, S.me.nama));
-  root().replaceChildren(el("div", { class:"shell" }, side, el("div", { class:"col-main" }, mtop, main)), mtabs);
+  root().replaceChildren(...[bannerBayangan(), el("div", { class:"shell" }, side, el("div", { class:"col-main" }, mtop, main)), mtabs].filter(Boolean));
   hitungBelumDibaca().then(n => { if (n > 0) badges.forEach(b => { b.textContent = n; b.hidden = false; }); }).catch(() => {});
   try {
     const v = await VIEWS[r]();
@@ -489,7 +489,7 @@ async function viewLainnya() {
     el("div", el("button", { class:"btn ghost", onclick: keluar }, "Keluar")));
 }
 async function hitungBelumDibaca() {
-  if (S.me.peran !== "leader") return 0;
+  if (S.me.peran !== "leader" || S.lihatSebagai) return 0;
   const { count } = await sb.from("masukan").select("id", { count:"exact", head:true }).eq("status", "baru");
   return count || 0;
 }
@@ -1990,6 +1990,7 @@ async function matikanNotif() {
 }
 // Kartu ajakan menyalakan notifikasi (dipakai di Hari ini dan Akun)
 function kartuNotif({ ringkas = false } = {}) {
+  if (S.lihatSebagai) return null;
   const sec = el("section", { class:"panel pad stack notif-kartu", style:"gap:10px" });
   const kunciTutup = "spill-notif-tutup-" + S.me.id;
   (async () => {
@@ -2930,10 +2931,66 @@ function kartuStrategiku(rows) {
 }
 
 
+
+/* ================= AKUN BAYANGAN (LIHAT SEBAGAI) ================= */
+// Leader bisa melihat Spill persis seperti yang dilihat anggota tertentu, tanpa bisa mengubah apa pun.
+// Data pribadi anggota (pelajaran harian, energi pribadi) tetap tidak terlihat karena dikunci di database.
+const _fromAsli = sb.from.bind(sb), _rpcAsli = sb.rpc.bind(sb);
+const _diblokir = { data:null, error:{ message:"Mode akun bayangan: hanya lihat, perubahan tidak disimpan." } };
+const _palsu = new Proxy({}, { get: (_, p) => p === "then" ? (ok => ok(_diblokir)) : () => _palsu });
+sb.from = tabel => {
+  const b = _fromAsli(tabel);
+  if (!S.lihatSebagai) return b;
+  ["insert", "update", "upsert", "delete"].forEach(m => { b[m] = () => _palsu; });
+  return b;
+};
+sb.rpc = (fn, args) => S.lihatSebagai && fn !== "papan" ? Promise.resolve({ data:null, error:null }) : _rpcAsli(fn, args);
+function lihatSebagai(id) {
+  const m = S.members.find(x => x.id === id);
+  if (!m || (S.asli || S.me).peran !== "leader") return;
+  S.asli = S.asli || S.me;
+  S.me = { ...m }; S.lihatSebagai = true;
+  ["hook", "isi", "strategiFilter", "akunkuMetrik", "laporanTgl"].forEach(k => { if (k in S) S[k] = null; });
+  document.body.classList.add("bayangan");
+  location.hash = "#/hari"; route();
+  toast("Melihat sebagai " + m.nama + " 👁");
+}
+function keluarBayangan() {
+  if (!S.asli) return;
+  S.me = S.asli; S.asli = null; S.lihatSebagai = false;
+  document.body.classList.remove("bayangan");
+  location.hash = "#/tim"; route();
+}
+function bannerBayangan() {
+  if (!S.lihatSebagai) return null;
+  return el("div", { class:"banner-bayangan", role:"status" },
+    el("span", "👁 Akun bayangan: kamu melihat Spill sebagai ", el("b", S.me.nama), ". Hanya lihat, tidak ada yang tersimpan."),
+    el("div", { class:"row", style:"gap:6px" },
+      el("select", { class:"field", style:"width:auto;padding:6px 10px", "aria-label":"Ganti anggota", onchange: e => lihatSebagai(e.target.value) },
+        S.members.filter(m => m.aktif && m.peran !== "leader").map(m => el("option", { value:m.id, selected: m.id === S.me.id }, m.nama))),
+      el("button", { class:"btn sm", onclick: keluarBayangan }, "Kembali ke akunku")));
+}
+// Pilihan di halaman Akun leader
+function kartuPilihBayangan() {
+  if ((S.asli || S.me).peran !== "leader" || S.lihatSebagai) return null;
+  const pilih = { id:"" };
+  return el("section", { class:"panel pad stack", style:"gap:10px" },
+    el("h2", "👁 Akun bayangan"),
+    el("p", { class:"hint" }, "Lihat Spill persis seperti yang dilihat anggota tim: halaman Hari ini, checklist, Papan kerja, rapor, dan lainnya. Mode ini hanya untuk melihat, tidak ada yang bisa diubah. Catatan pribadi mereka tetap tidak terlihat."),
+    el("div", { class:"row" },
+      el("select", { class:"field", style:"max-width:260px", onchange: e => { pilih.id = e.target.value; } },
+        el("option", { value:"" }, "Pilih anggota…"),
+        S.members.filter(m => m.aktif && m.peran !== "leader").map(m => el("option", { value:m.id }, m.nama + " · " + PERAN_LABEL[m.peran]))),
+      el("button", { class:"btn", onclick: () => pilih.id ? lihatSebagai(pilih.id) : toast("Pilih anggotanya dulu") }, "Lihat sebagai")));
+}
+
 /* ================= INFO PEMBARUAN ================= */
 // Setiap kali Spill diperbarui, tambahkan catatan baru di PALING ATAS daftar ini.
 // untuk: "semua", "sms" (social media specialist), "kerja" (Sabina & Puan), "leader", "admin"
 const CATATAN_RILIS = [
+  { versi:"2026-10-23b", judul:"Akun bayangan untuk leader", poin:[
+    { untuk:"leader", teks:"👁 **Akun bayangan**: lihat Spill persis seperti yang dilihat anggota tim, dari tombol **Lihat sebagai** di Ringkasan tim atau di menu Akun. Hanya lihat, tidak ada yang bisa diubah." },
+  ]},
   { versi:"2026-10-23", judul:"Pelajaran harian kembali (opsional)", poin:[
     { untuk:"semua", teks:"📝 Di check-in ada lagi tombol **＋ Tambah pelajaran dari kemarin**. Opsional, isinya pribadi (leader tidak bisa membaca), dan otomatis dipakai di Laporan harian." },
     { untuk:"semua", teks:"🪞 **Si Paling Evaluasi**: evaluasi strategi bernilai 3 poin, pelajaran harian (minimal 30 karakter) bernilai 1 poin, maksimal sekali sehari." },
@@ -3005,6 +3062,7 @@ async function viewAkun() {
       el("div", { class:"line" }, el("span", { class:"hint" }, "Username"), el("span", me.username)),
       el("div", { class:"line" }, el("span", { class:"hint" }, "Peran"), el("span", PERAN_LABEL[me.peran] + (me.is_admin ? " · admin" : "")))),
     kartuNotif(),
+    kartuPilihBayangan(),
     riwayatPembaruan(),
     el("section", { class:"panel pad stack", style:"gap:12px" },
       el("h2", "Ganti kata sandi"),
@@ -3099,6 +3157,7 @@ async function viewTim() {
       el("button", { class:"btn ghost sm", onclick: () => kirim("Kerja bagus hari ini, terima kasih. Lanjutkan!", "apresiasi") }, "Beri apresiasi"),
       x.grup === "attn" ? el("button", { class:"btn ghost sm", onclick: () => kirim("Kita ngobrol 15 menit hari ini ya, nanti saya kabari jamnya.", "1on1") }, "Ajak 1:1") : null,
       el("button", { class:"btn ghost sm", onclick: () => { const ada = card.querySelector(".subform"); if (ada) ada.remove(); else card.append(panelCatatan(m)); } }, "📝 Catatan 1:1"),
+      S.me.peran === "leader" ? el("button", { class:"btn ghost sm", onclick: () => lihatSebagai(m.id) }, "👁 Lihat sebagai") : null,
 ), form);
     return card;
   }

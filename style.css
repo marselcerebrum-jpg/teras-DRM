@@ -332,6 +332,12 @@ td .field{min-width:130px;padding:6px 8px;font-size:.88rem}
 .rapi.lipat{max-height:9.5em;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 .ide-item{border:2px dashed var(--line);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:6px;background:#fff}
 
+/* ---------- akun bayangan ---------- */
+.banner-bayangan{position:sticky;top:0;z-index:60;background:var(--ink);color:#fff;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));font-size:.9rem;border-bottom:3px solid var(--lime)}
+.banner-bayangan b{color:var(--lime)}
+.banner-bayangan select.field{color:var(--ink)}
+body.bayangan .side{top:52px}
+
 /* ---------- info pembaruan ---------- */
 .rilis{border:2px solid var(--ink);border-radius:14px;background:#fff;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
 .rilis ul.poin{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:.92rem;line-height:1.45}
