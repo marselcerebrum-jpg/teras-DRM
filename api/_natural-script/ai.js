@@ -36,18 +36,31 @@ function skemaGemini(s) {
   return o;
 }
 
-async function viaGemini(brief) {
+// Model Gemini terbaru "berpikir" dulu sebelum menjawab; level rendah membuat respons jauh lebih cepat.
+// GEMINI_THINKING bisa diisi "minimal", "low", "medium", atau "high" (bawaan: low).
+async function panggilGemini(brief, pakaiThinking) {
   const model = encodeURIComponent(process.env.GEMINI_MODEL.trim());
-  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+  const generationConfig = { responseMimeType: 'application/json', responseSchema: skemaGemini(outputSchema), temperature: 0.9, maxOutputTokens: 6000 };
+  if (pakaiThinking) generationConfig.thinkingConfig = { thinkingLevel: (process.env.GEMINI_THINKING || 'low').trim().toLowerCase() };
+  return fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
     method: 'POST',
     headers: { 'x-goog-api-key': process.env.GEMINI_API_KEY, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       systemInstruction: { parts: [{ text: getInstructions() }] },
       contents: [{ role: 'user', parts: [{ text: inputPengguna(brief) }] }],
-      generationConfig: { responseMimeType: 'application/json', responseSchema: skemaGemini(outputSchema), temperature: 0.9, maxOutputTokens: 8192 }
+      generationConfig
     }),
-    signal: AbortSignal.timeout(50000)
+    signal: AbortSignal.timeout(55000)
   });
+}
+async function viaGemini(brief) {
+  let r = await panggilGemini(brief, true);
+  // Model yang tidak mengenal pengaturan thinking menolak dengan 400: ulangi tanpa pengaturan itu
+  if (r.status === 400) {
+    const teks = await r.text();
+    if (/thinking/i.test(teks)) r = await panggilGemini(brief, false);
+    else { console.error('Natural Script Gemini error 400', teks.slice(0, 700)); throw new AIError(502, 'Layanan AI menolak permintaan. Periksa nama model Gemini.'); }
+  }
   if (r.status === 429) throw new AIError(429, 'Kuota gratis Gemini sedang habis. Coba lagi beberapa menit lagi.');
   if (!r.ok) {
     console.error('Natural Script Gemini error', r.status, (await r.text()).slice(0, 700));
