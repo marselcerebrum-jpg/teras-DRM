@@ -34,6 +34,10 @@ module.exports = async function handler(req, res) {
     return res.status(200).json({ ok: true, result, usage, sisa });
   } catch (error) {
     if (error && error.status) return res.status(error.status).json({ error: error.message });
+    if (error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+      console.error('Natural Script timeout');
+      return res.status(504).json({ error: 'AI terlalu lama merespons. Coba generate lagi.' });
+    }
     console.error('Natural Script request error:', String(error));
     return res.status(502).json({ error: 'Gagal terhubung ke AI. Coba lagi.' });
   }
