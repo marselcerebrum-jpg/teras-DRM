@@ -1,0 +1,392 @@
+[
+  {
+    "id": 1,
+    "category": "Favorit: Warning",
+    "template": "JANGAN [X] KALAU KAMU [Y]"
+  },
+  {
+    "id": 2,
+    "category": "Favorit: Contrarian",
+    "template": "Unpopular Opinion: [Tren/Produk Viral] itu sebenarnya [Kebenaran Pahit]"
+  },
+  {
+    "id": 3,
+    "category": "Favorit: Warning",
+    "template": "Berhenti [Kebiasaan Umum] kalau kamu mau [Hasil yang Diinginkan]"
+  },
+  {
+    "id": 4,
+    "category": "Favorit: Discovery",
+    "template": "Aku nyesel baru nyadar kalau [Keyakinan Umum] itu bohong"
+  },
+  {
+    "id": 5,
+    "category": "Favorit: Self-check",
+    "template": "Tanda kamu [Kondisi Negatif], padahal kamu pikir kamu [Kondisi Positif]"
+  },
+  {
+    "id": 6,
+    "category": "Favorit: POV",
+    "template": "POV: Kamu akhirnya sadar kalau [Ekspektasi] itu nggak seindah [Realita]"
+  },
+  {
+    "id": 7,
+    "category": "Favorit: Audience Callout",
+    "template": "Khusus buat kamu yang [Kondisi Spesifik/Struggle], stop scroll"
+  },
+  {
+    "id": 8,
+    "category": "Favorit: Solution",
+    "template": "Cara [Lakukan X] tanpa harus [Hal yang Paling Dibenci Audiens]"
+  },
+  {
+    "id": 9,
+    "category": "Favorit: List",
+    "template": "[Jumlah] [Tools/Hacks] yang bikin [Pesaing/Orang Lain] panik"
+  },
+  {
+    "id": 10,
+    "category": "Favorit: Results",
+    "template": "Gimana caranya aku [Hasil Spektakuler] padahal [Kondisi Terbatas]"
+  },
+  {
+    "id": 11,
+    "category": "Favorit: Mistakes",
+    "template": "Kesalahan [Target Audience] yang bikin [Akibat Fatal] (dan cara benerinnya)"
+  },
+  {
+    "id": 12,
+    "category": "Favorit: Secrets",
+    "template": "Rahasia [Hasil] yang disembunyikan [Industri/Orang Sukses]"
+  },
+  {
+    "id": 13,
+    "category": "Favorit: Audience Callout",
+    "template": "Kalau kamu [Target Audience], kamu wajib tau [Hal Spesifik] ini"
+  },
+  {
+    "id": 14,
+    "category": "Favorit: Warning",
+    "template": "Stop [Aktivitas] sampai kamu nonton video ini sampai habis"
+  },
+  {
+    "id": 15,
+    "category": "Warning & Strong Command",
+    "template": "Sebelum kamu [MELAKUKAN X], cek dulu [HAL PENTING] ini."
+  },
+  {
+    "id": 16,
+    "category": "Warning & Strong Command",
+    "template": "Jangan buru-buru [MELAKUKAN X] kalau [KONDISI] kamu masih [Y]."
+  },
+  {
+    "id": 17,
+    "category": "Warning & Strong Command",
+    "template": "[AKTIVITAS X] boleh aja, asal jangan [KESALAHAN Y]."
+  },
+  {
+    "id": 18,
+    "category": "Warning & Strong Command",
+    "template": "Tolong jangan samain [HAL A] sama [HAL B] cuma karena [KESAMAAN]."
+  },
+  {
+    "id": 19,
+    "category": "Warning & Strong Command",
+    "template": "Kamu nggak harus [MELAKUKAN X] cuma karena semua orang [MELAKUKANNYA]."
+  },
+  {
+    "id": 20,
+    "category": "Warning & Strong Command",
+    "template": "[TINDAKAN A] dulu sebelum [TINDAKAN B], biar nggak [RISIKO]."
+  },
+  {
+    "id": 21,
+    "category": "Warning & Strong Command",
+    "template": "Mending [ALTERNATIF A] daripada [KEBIASAAN B] kalau kamu [KONDISI]."
+  },
+  {
+    "id": 22,
+    "category": "Warning & Strong Command",
+    "template": "Kalau masih [KONDISI NEGATIF], tahan dulu buat [TINDAKAN BERISIKO]."
+  },
+  {
+    "id": 23,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Aku justru lebih pilih [A] daripada [B] buat [TUJUAN]."
+  },
+  {
+    "id": 24,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Katanya [NASIHAT POPULER], tapi emang cocok buat [AUDIENS]?"
+  },
+  {
+    "id": 25,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Semua orang sibuk bahas [A], aku malah pengin bahas [B]."
+  },
+  {
+    "id": 26,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Buat [TARGET AUDIENS], [HAL POPULER] belum tentu jadi prioritas."
+  },
+  {
+    "id": 27,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "[HAL YANG DIREMEHKAN] justru paling kerasa pas [MOMEN PENTING]."
+  },
+  {
+    "id": 28,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "[A] kelihatannya lebih bagus, tapi udah dibandingin sama [B]?"
+  },
+  {
+    "id": 29,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Kalau harus ngulang [PROSES] dari nol, aku nggak bakal [KEBIASAAN UMUM] lagi."
+  },
+  {
+    "id": 30,
+    "category": "Contrarian & Unpopular Takes",
+    "template": "Menurutku, [NASIHAT VIRAL] terlalu dibesar-besarkan buat [KONDISI]."
+  },
+  {
+    "id": 31,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "Ada satu kesalahan pas [AKTIVITAS] yang sering bikin [DAMPAK]."
+  },
+  {
+    "id": 32,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "Udah [MELAKUKAN USAHA], tapi [HASIL] masih segitu-gitu aja? Cek [DETAIL] ini."
+  },
+  {
+    "id": 33,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "[AKTIVITAS] bisa sia-sia kalau kamu masih [KEBIASAAN]."
+  },
+  {
+    "id": 34,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "[KESALAHAN KECIL] biasanya baru kerasa pas [MOMEN KRUSIAL]."
+  },
+  {
+    "id": 35,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "Kamu bisa kehilangan [WAKTU/UANG/PELUANG] gara-gara [KEBIASAAN]."
+  },
+  {
+    "id": 36,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "[HASIL NEGATIF] kadang dimulai dari [DETAIL YANG DIABAIKAN]."
+  },
+  {
+    "id": 37,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "Bagian paling rawan waktu [AKTIVITAS] itu justru pas [TAHAP SPESIFIK]."
+  },
+  {
+    "id": 38,
+    "category": "Hidden Mistakes & Consequences",
+    "template": "Udah merasa [PROGRES], tapi pernah cek [INDIKATOR SEBENARNYA]?"
+  },
+  {
+    "id": 39,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Aku nemu satu hal aneh waktu [MELAKUKAN X]."
+  },
+  {
+    "id": 40,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Cuma beda [SATU DETAIL], hasilnya ternyata [TEMUAN]."
+  },
+  {
+    "id": 41,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Ada bagian dari [PROSES] yang sering kelewat: [DETAIL]."
+  },
+  {
+    "id": 42,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Kenapa [HAL YANG FAMILIAR] malah bisa bikin [HASIL TAK TERDUGA]?"
+  },
+  {
+    "id": 43,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Ada satu pertanyaan soal [TOPIK] yang jarang ditanyain."
+  },
+  {
+    "id": 44,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Pas [KEJADIAN], coba perhatiin [DETAIL] ini."
+  },
+  {
+    "id": 45,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Aku penasaran kenapa [KONDISI A] bisa menghasilkan [KONDISI B]."
+  },
+  {
+    "id": 46,
+    "category": "Curiosity & Unexpected Discovery",
+    "template": "Lihat [CONTOH/DATA] ini. Kamu nemu yang aneh nggak?"
+  },
+  {
+    "id": 47,
+    "category": "POV & Relatable Situations",
+    "template": "POV: Kamu udah [BERUSAHA], terus malah [KEJADIAN TAK TERDUGA]."
+  },
+  {
+    "id": 48,
+    "category": "POV & Relatable Situations",
+    "template": "POV: Baru mulai [AKTIVITAS], langsung ketemu [HAMBATAN]."
+  },
+  {
+    "id": 49,
+    "category": "POV & Relatable Situations",
+    "template": "POV: [DEADLINE] tinggal [WAKTU], tapi [MASALAH] belum selesai."
+  },
+  {
+    "id": 50,
+    "category": "POV & Relatable Situations",
+    "template": "Buat yang tiap [RUTINITAS] selalu kesulitan di [BAGIAN SPESIFIK]."
+  },
+  {
+    "id": 51,
+    "category": "POV & Relatable Situations",
+    "template": "Cerita paling relate buat [AUDIENS]: [SITUASI SPESIFIK]."
+  },
+  {
+    "id": 52,
+    "category": "POV & Relatable Situations",
+    "template": "Pernah ada di posisi [SITUASI], terus [KEJADIAN]?"
+  },
+  {
+    "id": 53,
+    "category": "POV & Relatable Situations",
+    "template": "Kalau tiap [AKTIVITAS] kamu selalu [KEBIASAAN], ini pasti relate."
+  },
+  {
+    "id": 54,
+    "category": "POV & Relatable Situations",
+    "template": "\"[UCAPAN ASLI TARGET AUDIENS]\" — yuk bahas kenapa bisa begitu."
+  },
+  {
+    "id": 55,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Aku bandingin [A] sama [B] pakai [KRITERIA]. Hasilnya?"
+  },
+  {
+    "id": 56,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Aku tes [KLAIM POPULER] pakai [PERCOBAAN]. Ini hasilnya."
+  },
+  {
+    "id": 57,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Ini [KONDISI SEBELUM]. Sekarang lihat setelah [PERUBAHAN]."
+  },
+  {
+    "id": 58,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Satu [CONTOH/SOAL] ini bisa ngetes [KEMAMPUAN SPESIFIK]."
+  },
+  {
+    "id": 59,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Coba hitung bareng: [BIAYA] dibagi [DURASI], jadinya berapa?"
+  },
+  {
+    "id": 60,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Aku pakai [METODE] buat [MASALAH]. Ini prosesnya."
+  },
+  {
+    "id": 61,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Ini hasil [AKTIVITAS] sebelum aku ubah [SATU VARIABEL]."
+  },
+  {
+    "id": 62,
+    "category": "Proof, Experiment & Demonstration",
+    "template": "Kalau [TEORI] benar, seharusnya [PREDIKSI]. Kita cek."
+  },
+  {
+    "id": 63,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Cuma punya [DURASI]? Mulai dari [PRIORITAS] ini."
+  },
+  {
+    "id": 64,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Modal [BUDGET] bisa dipakai buat [MANFAAT]. Nih, hitungannya."
+  },
+  {
+    "id": 65,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Buat pemula, urutan [PROSES] yang paling masuk akal itu [TAHAP]."
+  },
+  {
+    "id": 66,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Baru mau mulai [AKTIVITAS]? Siapin [KEBUTUHAN MINIMUM] dulu."
+  },
+  {
+    "id": 67,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "[AKTIVITAS PENTING] ini bisa kamu kerjain sambil [RUTINITAS]."
+  },
+  {
+    "id": 68,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "[TUJUAN YANG DIINGINKAN] versi budget [NOMINAL]."
+  },
+  {
+    "id": 69,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Cuma punya [ALAT/SUMBER DAYA]? Masih bisa [TUJUAN] dengan cara ini."
+  },
+  {
+    "id": 70,
+    "category": "Quick Wins, Budget & Shortcuts",
+    "template": "Aku pilihkan [JUMLAH] alternatif [PRODUK/METODE] buat kamu yang [KONDISI]."
+  },
+  {
+    "id": 71,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Coba jawab [PERTANYAAN] ini tanpa [BANTUAN]."
+  },
+  {
+    "id": 72,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Tebak mana yang lebih [EFEKTIF/MURAH/TEPAT]: [A] atau [B]?"
+  },
+  {
+    "id": 73,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Kalau kamu ada di posisi [SITUASI], pilih [A] atau [B]?"
+  },
+  {
+    "id": 74,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Dari [JUMLAH] contoh ini, mana yang sebenarnya salah?"
+  },
+  {
+    "id": 75,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Berapa detik kamu butuh buat [MENYELESAIKAN TANTANGAN]?"
+  },
+  {
+    "id": 76,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Aku punya dua pilihan buat [TUJUAN]. Kamu bakal ambil yang mana?"
+  },
+  {
+    "id": 77,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Aku kasih [DATA/FAKTA SINGKAT]. Menurutmu kesimpulannya apa?"
+  },
+  {
+    "id": 78,
+    "category": "Challenge, Quiz & Interactive Hooks",
+    "template": "Sebelum aku kasih jawabannya, coba tentuin [PILIHAN] dulu."
+  }
+]
