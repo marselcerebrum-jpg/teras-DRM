@@ -1,0 +1,30 @@
+/* Natural Script AI: stylesheet tambahan dengan awalan .nsai, memakai variabel warna Spill (style.css).
+   Tidak mengubah gaya lama Spill. */
+.nsai { --ns-border: var(--ink, #121212); --ns-shadow: var(--sh, 4px 4px 0 #121212); max-width: 920px; color: var(--ink, #121212); }
+.nsai * { box-sizing: border-box; }
+.nsai .nsai-card { border: 2px solid var(--ns-border); border-radius: 20px; background: var(--surface, #fff); box-shadow: var(--ns-shadow); padding: 18px; margin-top: 4px; }
+.nsai .nsai-form { display: grid; gap: 14px; }
+.nsai .nsai-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.nsai .nsai-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.nsai .nsai-label { font-weight: 800; font-size: .88rem; }
+.nsai .nsai-input, .nsai .nsai-editor { font: inherit; background: #fff; width: 100%; color: var(--ink, #121212); border: 2px solid var(--ns-border); padding: 10px 12px; border-radius: 12px; resize: vertical; }
+.nsai .nsai-input:focus, .nsai .nsai-editor:focus { outline: 3px solid var(--sky, #6cc6ff); outline-offset: 1px; }
+.nsai .nsai-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+.nsai .nsai-button { font: inherit; font-weight: 800; font-size: .92rem; border: 2px solid var(--ink, #121212); border-radius: 14px; padding: 9px 16px; cursor: pointer; box-shadow: 3px 3px 0 var(--ink, #121212); color: var(--ink, #121212); transition: transform .08s, box-shadow .08s; }
+.nsai .nsai-button:hover:not(:disabled) { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink, #121212); }
+.nsai .nsai-primary { background: var(--lime, #c8f13a); }
+.nsai .nsai-secondary { background: #fff; }
+.nsai .nsai-button:disabled { opacity: .5; cursor: default; transform: none; }
+.nsai .nsai-status { margin: 2px 0 0; font-size: .9rem; font-weight: 600; }
+.nsai .nsai-note { margin: 0; padding: 10px 12px; border: 2px solid var(--ink, #121212); border-radius: 14px; background: var(--yellow, #ffd84d); font-weight: 600; font-size: .9rem; }
+.nsai .nsai-muted { color: var(--muted, #5d5a66); font-size: .89rem; margin: 4px 0; }
+.nsai .nsai-small { color: var(--muted, #5d5a66); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; }
+.nsai .nsai-subtitle { font-family: var(--disp, inherit); font-size: 1.05rem; margin: 0 0 8px; }
+.nsai .nsai-result-section { padding: 12px 0; border-bottom: 2px dashed var(--line, #e2dfe8); }
+.nsai .nsai-result-section:last-child { border-bottom: 0; }
+.nsai .nsai-hook, .nsai .nsai-cta { border-radius: 14px; background: var(--surface-2, #f7f5fc); border: 2px solid var(--ink, #121212); padding: 12px; margin: 9px 0; }
+.nsai .nsai-hook-text { font-family: var(--disp, inherit); font-weight: 800; font-size: 1.05rem; margin: 6px 0; }
+.nsai .nsai-link { font: inherit; font-weight: 800; background: none; border: 0; padding: 4px 0; text-decoration: underline; cursor: pointer; color: var(--ink, #121212); }
+.nsai .nsai-editor { white-space: pre-wrap; line-height: 1.55; min-height: 280px; }
+.nsai .nsai-result-section p { white-space: pre-wrap; line-height: 1.55; }
+@media (max-width: 640px) { .nsai .nsai-grid { grid-template-columns: 1fr; } .nsai .nsai-card { padding: 14px; } }

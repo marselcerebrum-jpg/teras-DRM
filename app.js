@@ -426,6 +426,7 @@ function tabs() {
   t.push({ k:"masukan", label:"Kritik & saran", g: me.is_admin ? "Tim" : "Harian" });
   if (me.is_admin) t.push({ k:"catatan", label:"Catatan 1:1", g:"Tim" });
   if (me.peran === "sms" || me.is_admin) t.push({ k:"hook", label:"Hook Generator", g:"Kreasi konten" });
+  if (me.peran === "sms" || me.is_admin) t.push({ k:"skrip", label:"Natural Script AI", g:"Kreasi konten" });
   t.push({ k:"juara", label:"Si Paling", g:"Juara & ide" }, { k:"ide", label:"Bank Ide", g:"Juara & ide" });
   if (me.peran === "sms" || me.is_admin) t.push({ k:"eksperimen", label:"Eksperimen", g:"Belajar bareng" }, { k:"riset", label:"Riset kompetitor", g:"Belajar bareng" });
   t.push({ k:"strategi", label:"Strategi", g:"Belajar bareng" });
@@ -2984,10 +2985,25 @@ function kartuPilihBayangan() {
       el("button", { class:"btn", onclick: () => pilih.id ? lihatSebagai(pilih.id) : toast("Pilih anggotanya dulu") }, "Lihat sebagai")));
 }
 
+/* ================= NATURAL SCRIPT AI ================= */
+// Modul terpisah (natural-script-panel.js + /api/generate-script). Hook Generator lama tetap utuh.
+async function viewNaturalScriptAI() {
+  if (!window.NaturalScriptAI) return el("p", { class:"err" }, "Modul Natural Script AI belum termuat. Muat ulang halaman.");
+  const me = S.me;
+  const peg = await q(sb.from("akun_pegangan").select("akun").eq("member_id", me.id)).catch(() => []);
+  const panel = el("div", { class:"stack" });
+  window.NaturalScriptAI.mount(panel, { supabaseClient: sb, brands: DAFTAR_AKUN, defaultBrand: peg[0]?.akun || "", readOnly: !!S.lihatSebagai });
+  return panel;
+}
+
 /* ================= INFO PEMBARUAN ================= */
 // Setiap kali Spill diperbarui, tambahkan catatan baru di PALING ATAS daftar ini.
 // untuk: "semua", "sms" (social media specialist), "kerja" (Sabina & Puan), "leader", "admin"
 const CATATAN_RILIS = [
+  { versi:"2026-10-26", judul:"Natural Script AI", poin:[
+    { untuk:"sms", teks:"🤖 Menu baru **Kreasi konten → Natural Script AI**: tulis topik dan fakta produk, lalu AI menyusun skrip siap rekam lengkap dengan 3 pilihan hook, 2 CTA, dan arahan visual. Hook Generator lama tetap ada." },
+    { untuk:"admin", teks:"🤖 Menu baru **Kreasi konten → Natural Script AI**: generator skrip berbasis AI (dibatasi per orang per jam dan per hari). Hook Generator lama tetap ada." },
+  ]},
   { versi:"2026-10-23b", judul:"Akun bayangan untuk leader", poin:[
     { untuk:"leader", teks:"👁 **Akun bayangan**: lihat Spill persis seperti yang dilihat anggota tim, dari tombol **Lihat sebagai** di Ringkasan tim atau di menu Akun. Hanya lihat, tidak ada yang bisa diubah." },
   ]},
@@ -3341,6 +3357,6 @@ setInterval(cekVersi, 5 * 60 * 1000);
 document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") cekVersi(); });
 
 /* ================= MULAI ================= */
-const VIEWS = { rekapkerja: viewRekapKerja, strategi: viewStrategi, hook: viewHook, laporan: viewLaporan, rapor: viewRapor, catatan: viewCatatan, absensi: viewAbsensi, juara: viewJuara, ide: viewIde, modul: viewModul, link: viewTautan, struktur: viewStruktur, lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, masukan: viewMasukan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
+const VIEWS = { skrip: viewNaturalScriptAI, rekapkerja: viewRekapKerja, strategi: viewStrategi, hook: viewHook, laporan: viewLaporan, rapor: viewRapor, catatan: viewCatatan, absensi: viewAbsensi, juara: viewJuara, ide: viewIde, modul: viewModul, link: viewTautan, struktur: viewStruktur, lainnya: viewLainnya, hari: viewHari, kerja: viewKerja, eksperimen: viewEksperimen, riset: viewRiset, masukan: viewMasukan, akun: viewAkun, tim: viewTim, rekap: viewRekap, atur: viewAtur };
 sb.auth.onAuthStateChange((ev) => { if (ev === "SIGNED_OUT") { S.me = null; } });
 boot();

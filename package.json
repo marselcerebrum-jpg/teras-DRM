@@ -3,6 +3,8 @@
   "private": true,
   "description": "Spill: check-in harian tim social media",
   "dependencies": {
-    "web-push": "3.6.7"
+    "web-push": "3.6.7",
+    "@upstash/redis": "1.39.0",
+    "@upstash/ratelimit": "2.2.0"
   }
 }
