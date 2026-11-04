@@ -2425,6 +2425,9 @@ function kartuRisetMingguan(akunku, risetMinggu, akhirPekan = false) {
         el("div", el("h2", "🕵️ Riset kompetitor minggu ini"), el("p", { class:"hint" }, akhirPekan ? "Akhir pekan: riset boleh diisi kalau sempat, tidak wajib. Tetap dihitung ke target minggu ini." : "Target " + TARGET_RISET_MINGGUAN + "× seminggu (Senin–Minggu), cukup 1–" + MAKS_KOMPETITOR + " kompetitor per riset. Lebih baik sedikit tapi dalam.")),
         el("b", n + "/" + TARGET_RISET_MINGGUAN)),
       el("div", { class:"progress" }, el("i", { style:"width:" + pct + "%" })),
+      // Penanda untuk pemegang 2 aplikasi atau lebih: aplikasi mana yang sudah dan belum diriset minggu ini.
+      akunku.length > 1 ? el("div", { class:"row", style:"gap:6px;flex-wrap:wrap" },
+        akunku.map(a => risetMinggu.some(r => r.akun === a) ? el("span", { class:"chip calm" }, "✓ " + a) : el("span", { class:"chip" }, "Belum: " + a))) : null,
       risetMinggu.length ? el("div", { class:"stack", style:"gap:6px" }, risetMinggu.map(r => el("div", { class:"row", style:"gap:6px" },
         el("span", { class:"hint", style:"min-width:70px" }, fmt(r.tanggal, { weekday:"short", day:"numeric", month:"short" })),
         r.akun ? el("span", { class:"chip appr" }, r.akun) : null,
