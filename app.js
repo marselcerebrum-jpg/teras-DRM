@@ -1477,9 +1477,108 @@ async function viewStruktur() {
         })))),
       el("datalist", { id:"daftar-divisi" }, URUTAN_DIVISI.map(d => el("option", { value:d }))));
   }
+  // Bagikan: menggambar bagan tim dan daftar PIC aplikasi ke kanvas, lalu dibagikan (HP) atau diunduh (komputer) sebagai PNG.
+  function gambarStruktur() {
+    const W = 1400, P = 48, CW = 260, CH = 96, G = 16, SK = 2;
+    const warna = ["#6cc6ff", "#c8f13a", "#ffd84d", "#ff8a3d", "#ff4f8b"], INK = "#121212", MUTED = "#5d5a66";
+    const FD = "'Bricolage Grotesque', sans-serif", FB = "'Plus Jakarta Sans', sans-serif";
+    const isi = d => orang.filter(m => (m.divisi || "Lainnya") === d);
+    const atas = divisi.filter(d => d === "Leader" || d === "Asisten"), bawah = divisi.filter(d => !atas.includes(d));
+    const lukis = ctx => {
+      let y = P, i = 0;
+      const cx = W / 2;
+      const rr = (x, yy, w, h, r) => { ctx.beginPath(); ctx.roundRect(x, yy, w, h, r); };
+      const teks = (t, x, yy, font, w, rata = "left") => { ctx.font = font; ctx.fillStyle = w; ctx.textAlign = rata; ctx.textBaseline = "alphabetic"; ctx.fillText(t, x, yy); };
+      const potong = (t, lebar, font) => { ctx.font = font; if (ctx.measureText(t).width <= lebar) return t; while (t.length > 1 && ctx.measureText(t + "…").width > lebar) t = t.slice(0, -1); return t + "…"; };
+      const bungkus = (item, lebar, font) => {
+        ctx.font = font; const out = []; let cur = "";
+        item.forEach(t => { const coba = cur ? cur + ", " + t : t; if (!cur || ctx.measureText(coba).width <= lebar) cur = coba; else { out.push(cur + ","); cur = t; } });
+        if (cur) out.push(cur);
+        return out.length > 2 ? [out[0], potong(out.slice(1).join(" "), lebar, font)] : out;
+      };
+      const label = (t, x, yy) => {
+        const u = t.toUpperCase(); ctx.font = "800 13px " + FB; const w = ctx.measureText(u).width + 28;
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = INK; ctx.lineWidth = 2.5; rr(x - w / 2, yy, w, 26, 13); ctx.fill(); ctx.stroke();
+        teks(u, x, yy + 18, "800 13px " + FB, INK, "center");
+      };
+      const kartu = (m, x, yy, lead) => {
+        const cw = lead ? CW + 40 : CW;
+        ctx.fillStyle = INK; rr(x + 4, yy + 4, cw, CH, 16); ctx.fill();
+        ctx.fillStyle = lead ? "#c8f13a" : "#fff"; ctx.strokeStyle = INK; ctx.lineWidth = 3; rr(x, yy, cw, CH, 16); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = warna[i++ % warna.length]; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(x + 34, yy + CH / 2, 20, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        teks(m.nama.slice(0, 1).toUpperCase(), x + 34, yy + CH / 2 + 7, "800 20px " + FD, INK, "center");
+        const tx = x + 66, tw = cw - 66 - 14;
+        teks(potong(m.nama, tw, "800 17px " + FD), tx, yy + 28, "800 17px " + FD, INK);
+        teks(potong(m.jabatan || PERAN_LABEL[m.peran], tw, "500 13px " + FB), tx, yy + 47, "500 13px " + FB, MUTED);
+        const peg = akunOf(m.id).length ? akunOf(m.id) : (m.pegangan ? [m.pegangan] : []);
+        bungkus(peg, tw, "700 12px " + FB).forEach((t, n) => teks(t, tx, yy + 66 + n * 16, "700 12px " + FB, INK));
+      };
+      const baris = (list, yy, lead, kiri, lebar) => {
+        const cw = lead ? CW + 40 : CW, kolom = Math.max(1, Math.floor((lebar + G) / (cw + G)));
+        for (let k = 0; k < list.length; k += kolom) {
+          const bagian = list.slice(k, k + kolom), total = bagian.length * cw + (bagian.length - 1) * G;
+          let x = kiri + (lebar - total) / 2;
+          bagian.forEach(m => { kartu(m, x, yy, lead); x += cw + G; });
+          yy += CH + G;
+        }
+        return yy - G;
+      };
+      ctx.fillStyle = "#efeaff"; ctx.fillRect(0, 0, W, 6000);
+      teks("Struktur tim", P, y + 36, "800 44px " + FD, INK);
+      teks("Per " + fmt(today(), { day:"numeric", month:"long", year:"numeric" }), P, y + 62, "500 15px " + FB, MUTED);
+      y += 96;
+      atas.forEach((d, di) => {
+        if (di > 0) { ctx.fillStyle = INK; ctx.fillRect(cx - 1.5, y, 3, 26); y += 26; }
+        label(d, cx, y); y += 38;
+        y = baris(isi(d), y, d === "Leader", P, W - 2 * P);
+      });
+      if (bawah.length && atas.length) { ctx.fillStyle = INK; ctx.fillRect(cx - 1.5, y, 3, 26); y += 26; }
+      bawah.forEach(d => {
+        const list = isi(d), lebar = W - 2 * P, dalam = lebar - 48;
+        const kolom = Math.max(1, Math.floor((dalam + G) / (CW + G))), rows = Math.ceil(list.length / kolom);
+        const tinggi = 20 + 38 + rows * CH + (rows - 1) * G + 22;
+        ctx.setLineDash([9, 7]); ctx.strokeStyle = INK; ctx.lineWidth = 2.5; ctx.fillStyle = "rgba(255,255,255,.45)"; rr(P, y, lebar, tinggi, 22); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+        label(d + " · " + list.length + " orang", cx, y + 20);
+        baris(list, y + 20 + 38, false, P + 24, dalam);
+        y += tinggi + 16;
+      });
+      y += 16;
+      const rowH = 34, barisN = Math.ceil(DAFTAR_AKUN.length / 2), tinggiP = 20 + 38 + barisN * rowH + 14, kolomW = (W - 2 * P) / 2;
+      ctx.fillStyle = "#fff"; ctx.strokeStyle = INK; ctx.lineWidth = 3; rr(P, y, W - 2 * P, tinggiP, 22); ctx.fill(); ctx.stroke();
+      label("PIC aplikasi", cx, y + 20);
+      DAFTAR_AKUN.forEach((a, k) => {
+        const x = P + 28 + (k % 2) * kolomW, yy = y + 20 + 38 + Math.floor(k / 2) * rowH;
+        const nama = picOf(a).map(id => S.members.find(m => m.id === id)).filter(m => m && m.aktif).map(m => m.nama).join(", ");
+        teks(a, x, yy + 20, "800 15px " + FD, INK);
+        teks(potong(nama || "Belum ada PIC", kolomW - 28 - 170 - 16, "600 15px " + FB), x + 170, yy + 20, "600 15px " + FB, nama ? INK : MUTED);
+      });
+      return y + tinggiP;
+    };
+    const H = Math.ceil(lukis(document.createElement("canvas").getContext("2d"))) + P;
+    const c = document.createElement("canvas"); c.width = W * SK; c.height = H * SK;
+    const ctx = c.getContext("2d"); ctx.scale(SK, SK); lukis(ctx);
+    return c;
+  }
+  async function bagikanGambar(btn) {
+    btn.disabled = true;
+    try {
+      await Promise.all(["800 40px 'Bricolage Grotesque'", "500 14px 'Plus Jakarta Sans'", "700 14px 'Plus Jakarta Sans'", "800 14px 'Plus Jakarta Sans'"].map(f => document.fonts.load(f)));
+      const blob = await new Promise(res => gambarStruktur().toBlob(res, "image/png"));
+      if (!blob) throw new Error("kanvas kosong");
+      const file = new File([blob], "struktur-tim.png", { type:"image/png" });
+      if (navigator.canShare && navigator.canShare({ files:[file] })) {
+        try { await navigator.share({ files:[file], title:"Struktur tim" }); return; } catch (e) { if (e.name === "AbortError") return; }
+      }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "struktur-tim.png";
+      document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+      toast("Gambar diunduh");
+    } catch (e) { toast("Gagal membuat gambar: " + e.message); }
+    finally { btn.disabled = false; }
+  }
   function draw() {
     box.replaceChildren(
-      el("div", el("h1", "Struktur tim"), el("p", { class:"hint", style:"margin-top:6px" }, "Siapa memegang apa, supaya tahu harus bertanya ke siapa." + (me.is_admin ? " Lewat tombol Ubah, kamu bisa mengatur jabatan, divisi, kontak, dan akun yang dipegang. Akun yang dipegang dipakai untuk menghitung lencana jangkauan dari spreadsheet." : ""))),
+      el("div", el("h1", "Struktur tim"),el("p", { class:"hint", style:"margin-top:6px" }, "Siapa memegang apa, supaya tahu harus bertanya ke siapa." + (me.is_admin ? " Lewat tombol Ubah, kamu bisa mengatur jabatan, divisi, kontak, dan akun yang dipegang. Akun yang dipegang dipakai untuk menghitung lencana jangkauan dari spreadsheet." : ""))),
+      el("div", el("button", { class:"btn sm", onclick: e => bagikanGambar(e.currentTarget) }, "Bagikan sebagai gambar")),
       bagan(), picAplikasi(), tabel());
   }
   draw();
