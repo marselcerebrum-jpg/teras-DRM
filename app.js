@@ -1381,9 +1381,11 @@ const URUTAN_DIVISI = ["Leader", "Asisten", "Social Media", "Marketplace & Live"
 const DAFTAR_AKUN = ["CEREBRUM", "JADIASN", "JADIBUMN", "JADIPCPM", "JADIPOLISI", "JADIPPPK", "JADISEKDIN", "JADIPRAJURIT", "PSIKOTES KERJA", "JADIBEASISWA", "JADIPPG", "JADIOJK", "TOEFL ACADEMY", "JAGOTPA"];
 async function viewStruktur() {
   await loadBase();
-  const pegangan = await q(sb.from("akun_pegangan").select("*"));
+  let pegangan = await q(sb.from("akun_pegangan").select("*"));
   const akunOf = id => pegangan.filter(p => p.member_id === id).map(p => p.akun);
+  const picOf = a => pegangan.filter(p => p.akun === a).map(p => p.member_id);
   const me = S.me;
+  let editAkun = null;
   const orang = S.members.filter(m => m.aktif);
   const divisi = [...new Set([...URUTAN_DIVISI.filter(d => orang.some(m => m.divisi === d)), ...orang.map(m => m.divisi || "Lainnya")])];
   const warnaAv = ["var(--sky)", "var(--lime)", "var(--yellow)", "var(--orange)", "var(--pink)"];
@@ -1406,6 +1408,40 @@ async function viewStruktur() {
       bawah.length ? el("div", { class:"org-divs" }, bawah.map(d => el("div", { class:"org-div" + (isi(d).length > 3 ? " lebar" : "") },
         el("div", { class:"org-label" }, d + ` · ${isi(d).length} orang`),
         el("div", { class:"org-row" }, isi(d).map(m => kartu(m, d)))))) : null);
+  }
+  // PIC per aplikasi: kebalikan dari tabel tim (yang mengatur akun per orang). Hanya admin yang bisa mengubah.
+  function picAplikasi() {
+    const calon = id => { const m = S.members.find(x => x.id === id); return m ? m.nama + (m.aktif ? "" : " (nonaktif)") : "?"; };
+    return el("section", { class:"panel pad stack", style:"gap:10px" },
+      el("div", { class:"row between" }, el("h2", "PIC aplikasi"), el("span", { class:"hint" }, DAFTAR_AKUN.length + " aplikasi")),
+      el("p", { class:"hint" }, "Siapa yang memegang tiap aplikasi." + (me.is_admin ? " Kalau PIC berganti, klik Ubah pada barisnya. Perubahan langsung dipakai untuk kartu Akunku, lencana jangkauan, dan riset kompetitor." : "")),
+      el("div", { class:"table-wrap" }, el("table",
+        el("thead", el("tr", el("th", "Aplikasi"), el("th", "PIC"), me.is_admin ? el("th", "") : null)),
+        el("tbody", DAFTAR_AKUN.map(a => {
+          if (editAkun === a) {
+            const awal = picOf(a);
+            const f = { pic: [...awal] };
+            const ids = [...new Set([...orang.filter(m => m.peran !== "leader").sort((x, y) => (x.peran === "sms" ? 0 : 1) - (y.peran === "sms" ? 0 : 1) || x.nama.localeCompare(y.nama)).map(m => m.id), ...awal])];
+            return el("tr",
+              el("td", el("b", a)),
+              el("td", { style:"min-width:260px" }, pilihan(ids.map(id => ({ v:id, label:calon(id) })), { get: () => f.pic, multi:true })),
+              el("td", el("div", { class:"row", style:"gap:6px;flex-wrap:nowrap" },
+                el("button", { class:"btn sm", onclick: async () => {
+                  try {
+                    const hapus = awal.filter(id => !f.pic.includes(id)), tambah = f.pic.filter(id => !awal.includes(id));
+                    if (hapus.length) await q(sb.from("akun_pegangan").delete().eq("akun", a).in("member_id", hapus));
+                    if (tambah.length) await q(sb.from("akun_pegangan").insert(tambah.map(member_id => ({ member_id, akun: a }))));
+                    pegangan = await q(sb.from("akun_pegangan").select("*"));
+                    toast("PIC " + a + " tersimpan"); editAkun = null; draw(); }
+                  catch (e) { toast("Gagal: " + e.message); } } }, "Simpan"),
+                el("button", { class:"btn ghost sm", onclick: () => { editAkun = null; draw(); } }, "Batal"))));
+          }
+          const pic = picOf(a);
+          return el("tr",
+            el("td", el("b", a)),
+            el("td", pic.length ? el("div", { class:"row", style:"gap:4px" }, pic.map(id => el("span", { class:"chip brand" }, calon(id)))) : el("span", { class:"hint" }, "Belum ada PIC")),
+            me.is_admin ? el("td", el("button", { class:"btn ghost sm", onclick: () => { editAkun = a; draw(); } }, "Ubah")) : null);
+        })))));
   }
   function tabel() {
     const urut = [...orang].sort((a, b) => (URUTAN_DIVISI.indexOf(a.divisi) + 99) % 99 - (URUTAN_DIVISI.indexOf(b.divisi) + 99) % 99 || a.nama.localeCompare(b.nama));
@@ -1444,7 +1480,7 @@ async function viewStruktur() {
   function draw() {
     box.replaceChildren(
       el("div", el("h1", "Struktur tim"), el("p", { class:"hint", style:"margin-top:6px" }, "Siapa memegang apa, supaya tahu harus bertanya ke siapa." + (me.is_admin ? " Lewat tombol Ubah, kamu bisa mengatur jabatan, divisi, kontak, dan akun yang dipegang. Akun yang dipegang dipakai untuk menghitung lencana jangkauan dari spreadsheet." : ""))),
-      bagan(), tabel());
+      bagan(), picAplikasi(), tabel());
   }
   draw();
   return box;
