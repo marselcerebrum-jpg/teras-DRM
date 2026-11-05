@@ -2233,16 +2233,86 @@ async function kartuAkunku(akunku) {
   return sec;
 }
 
+/* ================= BAHAN OBROLAN 1:1 ================= */
+// Ringkasan 30 hari per anggota, dihitung dari data yang sudah ada (tanpa tabel baru).
+async function ambilBahan() {
+  const t = today(), awal = addDays(t, -29);
+  const [cis, dcs, tks, eks, ris, sts, pg] = await Promise.all([
+    q(sb.from("checkins").select("member_id,tanggal,energi,hambatan,bantuan").gte("tanggal", awal).lte("tanggal", t)),
+    q(sb.from("daily_checklists").select("member_id,tanggal,cuti").gte("tanggal", awal).lte("tanggal", t)),
+    q(sb.from("tasks").select("member_id,judul,status,tenggat,selesai_at")).catch(() => []),
+    q(sb.from("experiments").select("member_id")).catch(() => []),
+    q(sb.from("riset_kompetitor").select("member_id")).catch(() => []),
+    q(sb.from("strategi").select("member_id")).catch(() => []),
+    q(sb.from("akun_pegangan").select("member_id,akun")).catch(() => [])]);
+  const data = {};
+  for (const m of team()) {
+    const ci = cis.filter(c => c.member_id === m.id).sort((a, b) => a.tanggal.localeCompare(b.tanggal));
+    const tk = tks.filter(x => x.member_id === m.id);
+    const telat = tk.filter(x => x.tenggat && (x.status !== "sudah" ? x.tenggat < t : x.selesai_at && x.selesai_at.slice(0, 10) > x.tenggat && x.selesai_at.slice(0, 10) >= awal));
+    data[m.id] = { ci, nCi: ci.length, nDc: dcs.filter(c => c.member_id === m.id && !c.cuti).length,
+      tugas: tk.length, tugasSudah: tk.filter(x => x.status === "sudah").length, telat,
+      nEks: eks.filter(x => x.member_id === m.id).length, nRis: ris.filter(x => x.member_id === m.id).length, nStr: sts.filter(x => x.member_id === m.id).length,
+      akun: pg.filter(x => x.member_id === m.id).map(x => x.akun), terakhir: ci[ci.length - 1] || null };
+  }
+  const nilai = Object.values(data);
+  const rekor = { ci: Math.max(1, ...nilai.map(b => b.nCi)), dc: Math.max(1, ...team().filter(m => m.peran === "sms").map(m => data[m.id].nDc)) };
+  return { data, rekor };
+}
+// Flag "perlu diajak ngobrol": ukuran sementara, mudah diubah di sini.
+function flagBahan(m, b, rekor) {
+  const f = [];
+  if (b.nCi < rekor.ci * 0.75) f.push("Check-in jarang");
+  if (m.peran === "sms" && b.nDc < rekor.dc * 0.5) f.push("Checklist jarang");
+  const e = b.ci.slice(-3);
+  if (e.length === 3 && e.every(c => c.energi <= 2)) f.push("Energi rendah 3 hari");
+  if (b.telat.length) f.push(b.telat.length + " task telat");
+  return f;
+}
+function bahanObrolan(m, b, rekor) {
+  const flag = flagBahan(m, b, rekor), akhir = b.terakhir, adaStrategi = b.nEks + b.nRis + b.nStr > 0;
+  const sapa = [];
+  if (flag.includes("Energi rendah 3 hari")) sapa.push("Energimu rendah beberapa hari terakhir, lagi ada apa?");
+  if (akhir?.bantuan) sapa.push("Kamu minta bantuan: \"" + akhir.bantuan.slice(0, 80) + "\". Sudah ketemu jalannya?");
+  if (akhir && !tanpaKendala(akhir.hambatan)) sapa.push("Hambatan \"" + akhir.hambatan + "\" masih mengganggu?");
+  if (b.telat.length) sapa.push("Task \"" + b.telat[0].judul + "\" lewat tenggat. Apa yang menahan?");
+  if (b.akun.length && !adaStrategi) sapa.push("Di " + b.akun.join(" & ") + ", ada eksperimen atau riset yang ingin dicoba tapi belum sempat?");
+  if (flag.includes("Checklist jarang")) sapa.push("Ada item checklist yang terasa tidak relevan atau bikin ribet?");
+  sapa.push("Apa yang bisa aku bantu supaya kerjamu lebih ringan?");
+  const e7 = b.ci.slice(-7).map(c => c.energi);
+  const energi = [...Array(7 - e7.length).fill(null), ...e7];
+  return el("div", { class:"stack", style:"gap:8px" },
+    el("b", "Bahan obrolan (30 hari terakhir)"),
+    el("div", { class:"row", style:"gap:6px;flex-wrap:wrap" },
+      flag.length ? flag.map(x => el("span", { class:"chip attn" }, x)) : el("span", { class:"chip calm" }, "Tidak ada flag"),
+      el("span", { class:"chip" }, adaStrategi ? "Strategi: " + b.nEks + " eksperimen · " + b.nRis + " riset" + (b.nStr ? " · " + b.nStr + " strategi" : "") : "Belum isi eksperimen/riset")),
+    el("div", { class:"stats" },
+      el("div", { class:"stat" }, el("b", String(b.nCi)), el("span", "Check-in (tertinggi tim " + rekor.ci + ")")),
+      m.peran === "sms" ? el("div", { class:"stat" }, el("b", String(b.nDc)), el("span", "Checklist (tertinggi tim " + rekor.dc + ")")) : null,
+      b.tugas ? el("div", { class:"stat" }, el("b", b.tugasSudah + "/" + b.tugas), el("span", "Task selesai")) : null),
+    el("div", { class:"row", style:"gap:8px" }, weekBars(energi), el("small", { class:"hint" }, "Energi 7 check-in terakhir")),
+    akhir && !tanpaKendala(akhir.hambatan) ? el("p", { style:"font-size:14px" }, el("b", "Hambatan terakhir: "), akhir.hambatan) : null,
+    akhir?.bantuan ? el("div", { class:"ask" }, akhir.bantuan) : null,
+    el("div", el("b", "Alur 15 menit")),
+    el("ol", { style:"margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px;font-size:14px" },
+      el("li", el("b", "Mereka dulu (5 menit). "), "Buka dengan: \"Minggu ini apa yang paling bikin kamu nyangkut?\""),
+      el("li", el("b", "Data (5 menit). "), "Angkat satu: " + sapa.slice(0, 2).map(x => "\"" + x + "\"").join(" atau ")),
+      el("li", el("b", "Komitmen (5 menit). "), "Satu aksi konkret dan tanggalnya, isi di kolom Tindak lanjut dan Tenggat.")));
+}
+
 /* ================= CATATAN 1:1 (LEADER/ADMIN) ================= */
 function panelCatatan(m) {
   const box = el("div", { class:"subform", style:"gap:10px" });
   box.append(el("p", { class:"hint" }, "Memuat catatan…"));
   (async () => {
-    const rows = await q(sb.from("catatan_1on1").select("*").eq("member_id", m.id).order("tanggal", { ascending:false }).limit(6)).catch(() => []);
+    const [rows, bahan] = await Promise.all([
+      q(sb.from("catatan_1on1").select("*").eq("member_id", m.id).order("tanggal", { ascending:false }).limit(6)).catch(() => []),
+      ambilBahan().catch(() => null)]);
     const f = { topik:"", kesepakatan:"", tindak:"", tenggat:"" };
     box.replaceChildren(
       el("b", "Catatan 1:1 dengan " + m.nama),
       el("p", { class:"hint" }, "Pribadi, hanya kamu yang bisa membaca."),
+      bahan && bahan.data[m.id] ? bahanObrolan(m, bahan.data[m.id], bahan.rekor) : null,
       rows.length ? rows.map(c => el("div", { class:"catatan-1on1" + (c.selesai ? " selesai" : "") },
         el("small", fmt(c.tanggal, { day:"numeric", month:"short", year:"numeric" })),
         c.topik ? el("div", el("b", "Dibahas: "), c.topik) : null,
@@ -2265,6 +2335,8 @@ function panelCatatan(m) {
 }
 async function viewCatatan() {
   const rows = await q(sb.from("catatan_1on1").select("*").order("tanggal", { ascending:false }).limit(300));
+  const bahan = await ambilBahan().catch(() => null);
+  const flagOf = m => bahan?.data[m.id] ? flagBahan(m, bahan.data[m.id], bahan.rekor) : [];
   const t = today();
   const terbuka = rows.filter(c => c.tindak_lanjut && !c.selesai).sort((a, b) => (a.tenggat || "9999").localeCompare(b.tenggat || "9999"));
   let pilih = null;
@@ -2283,12 +2355,13 @@ async function viewCatatan() {
           : el("p", { class:"hint" }, "Tidak ada tindak lanjut yang menggantung. Mantap.")),
       el("section", { class:"panel pad stack", style:"gap:10px" },
         el("h2", "Per anggota"),
-        el("p", { class:"hint" }, "Diurutkan dari yang paling lama belum diajak ngobrol."),
-        el("div", { class:"table-wrap" }, el("table", el("tbody", [...orang].sort((a, b) => (terakhir(a.id) || "").localeCompare(terakhir(b.id) || "")).map(m => el("tr",
+        el("p", { class:"hint" }, "Yang kena flag di atas, lalu diurutkan dari yang paling lama belum diajak ngobrol. Flag dihitung dari check-in, checklist, energi, dan task 30 hari terakhir."),
+        el("div", { class:"table-wrap" }, el("table", el("tbody", [...orang].sort((a, b) => (flagOf(b).length > 0) - (flagOf(a).length > 0) || (terakhir(a.id) || "").localeCompare(terakhir(b.id) || "")).map(m => el("tr",
           el("td", el("b", m.nama)),
+          el("td", el("div", { class:"row", style:"gap:4px;flex-wrap:wrap" }, flagOf(m).map(x => el("span", { class:"chip attn" }, x)))),
           el("td", terakhir(m.id) ? "Terakhir " + fmt(terakhir(m.id), { day:"numeric", month:"short" }) : el("span", { class:"chip appr" }, "Belum pernah")),
           el("td", { class:"num" }, el("button", { class:"btn ghost sm", onclick: () => { pilih = pilih === m.id ? null : m.id; draw(); } }, pilih === m.id ? "Tutup" : "Buka catatan"))))))),
-        pilih ? panelCatatan(member(pilih)) : null));
+        pilih ? panelCatatan(memberById(pilih)) : null));
   }
   draw();
   return box;
