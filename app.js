@@ -408,10 +408,17 @@ async function boot() {
   }
 }
 async function loadBase() {
-  const [m, i] = await Promise.all([
+  const [m, i, apl] = await Promise.all([
     q(sb.from("members").select("*").order("nama")),
-    q(sb.from("checklist_items").select("*").order("urutan"))]);
+    q(sb.from("checklist_items").select("*").order("urutan")),
+    sb.from("aplikasi").select("*").order("urutan").order("nama").then(r => r.error ? null : r.data, () => null)]);
   S.members = m; S.items = i;
+  // Daftar aplikasi diatur admin di Struktur tim. Kalau tabel belum bisa dibaca, pakai daftar bawaan di kode.
+  if (apl && apl.length) {
+    S.aplikasi = apl;
+    DAFTAR_AKUN = apl.filter(a => a.aktif).map(a => a.nama);
+    apl.forEach(a => { if (a.audiens) PROFIL_AKUN[a.nama] = { aud: a.audiens, hasil: a.tujuan || "lolos tes" }; });
+  }
 }
 function tabs() {
   const me = S.me, t = [];
@@ -648,7 +655,7 @@ function checklistCard(dc, t, wk, risetList = [], akunku = []) {
   function risetForm() {
     const btn = el("button", { type:"button", class:"btn sm" }, "Simpan hasil riset");
     btn.onclick = () => simpanRiset(btn);
-    const pilihanAkun = akunku.length ? akunku : DAFTAR_AKUN;
+    const akunAktif = akunku.filter(a => DAFTAR_AKUN.includes(a)), pilihanAkun = akunAktif.length ? akunAktif : DAFTAR_AKUN;
     return el("div", { class:"subform" },
       akunku.length === 1 ? el("p", { class:"hint" }, "Riset untuk aplikasi ", el("b", akunku[0]))
         : el("div", { class:"lbl" }, "Riset untuk aplikasi kita yang mana? *", pilihan(pilihanAkun, { get: () => rs.akun, set: v => { rs.akun = v; isiDari(risetList.find(r => r.akun === v)); draw(); } })),
@@ -1377,8 +1384,8 @@ async function viewTautan() {
 
 /* ================= STRUKTUR TIM ================= */
 const URUTAN_DIVISI = ["Leader", "Asisten", "Social Media", "Marketplace & Live"];
-// Nama akun sesuai baris 1 tab DRM MARKETING di spreadsheet
-const DAFTAR_AKUN = ["CEREBRUM", "JADIASN", "JADIBUMN", "JADIPCPM", "JADIPOLISI", "JADIPPPK", "JADISEKDIN", "JADIPRAJURIT", "PSIKOTES KERJA", "JADIBEASISWA", "JADIPPG", "JADIOJK", "TOEFL ACADEMY", "JAGOTPA"];
+// Nama akun sesuai baris 1 tab DRM MARKETING di spreadsheet. Ini daftar cadangan; daftar aktif dimuat dari tabel aplikasi.
+let DAFTAR_AKUN = ["CEREBRUM", "JADIASN", "JADIBUMN", "JADIPCPM", "JADIPOLISI", "JADIPPPK", "JADISEKDIN", "JADIPRAJURIT", "PSIKOTES KERJA", "JADIBEASISWA", "JADIPPG", "JADIOJK", "TOEFL ACADEMY", "JAGOTPA"];
 async function viewStruktur() {
   await loadBase();
   let pegangan = await q(sb.from("akun_pegangan").select("*"));
@@ -1442,6 +1449,55 @@ async function viewStruktur() {
             el("td", pic.length ? el("div", { class:"row", style:"gap:4px" }, pic.map(id => el("span", { class:"chip brand" }, calon(id)))) : el("span", { class:"hint" }, "Belum ada PIC")),
             me.is_admin ? el("td", el("button", { class:"btn ghost sm", onclick: () => { editAkun = a; draw(); } }, "Ubah")) : null);
         })))));
+  }
+  // Daftar aplikasi: admin bisa menambah aplikasi baru atau menonaktifkannya. Data lama aplikasi nonaktif tetap tersimpan.
+  let tambahApl = null;
+  function daftarAplikasi() {
+    if (!me.is_admin || !S.aplikasi) return null;
+    const semua = S.aplikasi;
+    const muatUlang = async () => { await loadBase(); draw(); };
+    const ubahAktif = async a => {
+      if (a.aktif && !confirm("Nonaktifkan " + a.nama + "? Aplikasi ini hilang dari daftar PIC, riset kompetitor, dan Hook Generator. Data lamanya tetap tersimpan.")) return;
+      try { await q(sb.from("aplikasi").update({ aktif: !a.aktif }).eq("nama", a.nama)); toast(a.nama + (a.aktif ? " dinonaktifkan" : " aktif lagi")); await muatUlang(); }
+      catch (e) { toast("Gagal: " + e.message); }
+    };
+    let formTambah = null;
+    if (tambahApl) {
+      const f = tambahApl;
+      const msg = el("p", { class:"hint" });
+      formTambah = el("div", { class:"stack", style:"gap:10px;border-top:2px dashed var(--line, #121212);padding-top:12px" },
+        el("div", { class:"grid2" },
+          el("label", { class:"lbl" }, "Nama aplikasi *", input(f, "nama", { placeholder:"Samakan dengan baris 1 tab DRM MARKETING, contoh: JAGOUKP" })),
+          el("label", { class:"lbl" }, "Sebutan audiens (Hook Generator)", input(f, "audiens", { placeholder:"Contoh: calon konsultan pajak" }))),
+        el("label", { class:"lbl" }, "Tujuan audiens (Hook Generator)", input(f, "tujuan", { placeholder:"Contoh: lulus UKP" })),
+        el("div", { class:"row" },
+          el("button", { class:"btn", onclick: async () => {
+            const nama = f.nama.trim().toUpperCase().replace(/\s+/g, " ");
+            msg.className = "err";
+            if (nama.length < 2) { msg.textContent = "Isi nama aplikasi."; return; }
+            const ada = semua.find(a => a.nama === nama);
+            if (ada) { msg.textContent = nama + " sudah ada" + (ada.aktif ? "." : " tapi nonaktif. Klik Aktifkan di barisnya."); return; }
+            try {
+              await q(sb.from("aplikasi").insert({ nama, audiens: f.audiens.trim(), tujuan: f.tujuan.trim(), urutan: Math.max(0, ...semua.map(a => a.urutan)) + 1 }));
+              toast(nama + " ditambahkan"); tambahApl = null; await muatUlang();
+            } catch (e) { msg.textContent = "Gagal: " + e.message; }
+          } }, "Simpan aplikasi"),
+          el("button", { class:"btn ghost", onclick: () => { tambahApl = null; draw(); } }, "Batal")),
+        msg);
+    }
+    return el("section", { class:"panel pad stack", style:"gap:10px" },
+      el("div", { class:"row between" }, el("h2", "Daftar aplikasi"),
+        el("div", { class:"row", style:"gap:8px" }, el("span", { class:"hint" }, DAFTAR_AKUN.length + " aktif dari " + semua.length),
+          !tambahApl ? el("button", { class:"btn sm", onclick: () => { tambahApl = { nama:"", audiens:"", tujuan:"" }; draw(); } }, "+ Tambah aplikasi") : null)),
+      el("p", { class:"hint" }, "Hanya admin yang melihat panel ini. Aplikasi nonaktif disembunyikan dari daftar PIC, riset kompetitor, dan Hook Generator, tapi datanya tidak dihapus dan bisa diaktifkan lagi."),
+      formTambah,
+      el("div", { class:"table-wrap" }, el("table",
+        el("thead", el("tr", el("th", "Aplikasi"), el("th", "Audiens · tujuan"), el("th", "Status"), el("th", ""))),
+        el("tbody", semua.map(a => el("tr",
+          el("td", el("b", a.nama)),
+          el("td", a.audiens ? a.audiens + " · " + (a.tujuan || "-") : el("span", { class:"hint" }, "Belum diisi")),
+          el("td", el("span", { class: "chip " + (a.aktif ? "appr" : "attn") }, a.aktif ? "Aktif" : "Nonaktif")),
+          el("td", el("button", { class:"btn ghost sm", onclick: () => ubahAktif(a) }, a.aktif ? "Nonaktifkan" : "Aktifkan"))))))));
   }
   function tabel() {
     const urut = [...orang].sort((a, b) => (URUTAN_DIVISI.indexOf(a.divisi) + 99) % 99 - (URUTAN_DIVISI.indexOf(b.divisi) + 99) % 99 || a.nama.localeCompare(b.nama));
@@ -1579,7 +1635,7 @@ async function viewStruktur() {
     box.replaceChildren(
       el("div", el("h1", "Struktur tim"),el("p", { class:"hint", style:"margin-top:6px" }, "Siapa memegang apa, supaya tahu harus bertanya ke siapa." + (me.is_admin ? " Lewat tombol Ubah, kamu bisa mengatur jabatan, divisi, kontak, dan akun yang dipegang. Akun yang dipegang dipakai untuk menghitung lencana jangkauan dari spreadsheet." : ""))),
       el("div", el("button", { class:"btn sm", onclick: e => bagikanGambar(e.currentTarget) }, "Bagikan sebagai gambar")),
-      bagan(), picAplikasi(), tabel());
+      bagan(), picAplikasi(), daftarAplikasi(), tabel());
   }
   draw();
   return box;
@@ -2503,7 +2559,7 @@ function kartuRisetMingguan(akunku, risetMinggu, akhirPekan = false) {
   function form() {
     const btn = el("button", { type:"button", class:"btn sm" }, "Simpan riset");
     btn.onclick = () => simpan(btn);
-    const pilihanAkun = akunku.length ? akunku : DAFTAR_AKUN;
+    const akunAktif = akunku.filter(a => DAFTAR_AKUN.includes(a)), pilihanAkun = akunAktif.length ? akunAktif : DAFTAR_AKUN;
     return el("div", { class:"subform" },
       akunku.length === 1 ? el("p", { class:"hint" }, "Riset untuk aplikasi ", el("b", akunku[0]))
         : el("div", { class:"lbl" }, "Riset untuk aplikasi kita yang mana? *", pilihan(pilihanAkun, { get: () => rs.akun, set: v => { rs.akun = v; isiDari(punyaHariIni()); draw(); } })),
